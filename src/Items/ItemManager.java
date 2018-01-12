@@ -7,6 +7,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.LinkedList;
 
+import Game.Hauptmenu;
+
 
 public class ItemManager {
 	public Item[] waffen;

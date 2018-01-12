@@ -69,7 +69,7 @@ public class Boss {
 			//durchgang hochzählen
 			durchgang++;
 			//falls durchgang=länge der Trivias heißt dass das bereits alle
-			//Trivias freigeschaltet wurden. Dann Ende setzen um ein einfrieren
+			//Trivias freigeschaltet wurden. Dann Ende setzen um eine Endlosschleife
 			//zu verhindern
 			if (durchgang == triviaUnlocked.length) {
 				Ende = true;

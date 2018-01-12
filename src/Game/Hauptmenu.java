@@ -1,15 +1,14 @@
 package Game;
 
+import Actors.BossManager;
+import Items.ItemManager;
+
 public class Hauptmenu {
 
 	public static void main(String[] args) {
-		// TODO Labyrinth
-		// Strategie
-		// Kampf
-		// Auslesen
+		ItemManager im = new ItemManager();
+		BossManager bo = new BossManager(im);
 		
-		//Für alle Gruppenmitglieder
-
 	}
 
 }

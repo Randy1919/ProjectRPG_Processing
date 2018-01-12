@@ -6,9 +6,11 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.LinkedList;
+
+import Items.Item;
 import Items.ItemManager;
 
-public class Bossmanager {
+public class BossManager {
 	
 	public Boss[] Bosse;
 	private LinkedList<Boss> bo = new LinkedList<Boss>();
@@ -19,12 +21,13 @@ public class Bossmanager {
 	//****************************************************************
 	
 	
-	public Bossmanager(ItemManager im) {
+	public BossManager(ItemManager im) {
 		
 		items=im;
 		//Listen mit Items füllen lassen
 		parseBosses();
 		
+		Bosse = bo.toArray(new Boss[bo.size()]);
 		
 		//Listen werden gelcleared
 		bo.clear();
@@ -75,6 +78,7 @@ public class Bossmanager {
 				}
 				if (sa[0].toLowerCase().equals("waffe")) { //Waffe
 					template.waffe = items.getWeaponByName(sa[1]);
+					System.out.println(template.getWaffeCat());
 				}
 				if (sa[0].toLowerCase().equals("rüstung")) { //Rüstung
 					template.armor = items.getArmorByName(sa[1]);
