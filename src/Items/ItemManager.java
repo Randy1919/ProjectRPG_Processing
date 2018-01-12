@@ -7,8 +7,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.LinkedList;
 
-import Game.Hauptmenu;
-
 
 public class ItemManager {
 	public Item[] waffen;
@@ -23,6 +21,8 @@ public class ItemManager {
 	
 	public ItemManager() {
 		
+		//DebugEquipment wird generiert um zu verhindern das die Liste je leer ist, 
+		//um NullPointerExceptions zu verhindern
 		CreateDebugEquip();
 		
 		//Listen mit Items füllen lassen
@@ -33,7 +33,7 @@ public class ItemManager {
 		waffen = lw.toArray(new Item[lw.size()]);
 		armors = la.toArray(new Item[la.size()]);
 		
-		//Listen werden gelcleared
+		//Listen werden gecleared
 		lw.clear();
 		la.clear();
 	}
@@ -42,6 +42,8 @@ public class ItemManager {
 	//***	Hilfsmethoden										   ***
 	//****************************************************************	
 	
+	
+	//Sucht durch das Array der Waffen nach einem Namen. Wenn gefunden gibt es die entsprechende Waffe zurück. Sonst die DebugWaffe
 	public Item getWeaponByName(String s) {
 		for(int i =0;i<waffen.length;i++) {
 			if(waffen[i].name.toLowerCase().equals(s.toLowerCase())) {
@@ -50,7 +52,8 @@ public class ItemManager {
 		}
 		return getWeaponByName("Unbewaffnet");
 	}
-	
+
+	//Sucht durch das Array der Rüstungen nach einem Namen. Wenn gefunden gibt es die entsprechende Rüstung zurück. Sonst die DebugArmor
 	public Item getArmorByName(String s) {
 		for(int i =0;i<armors.length;i++) {
 			if(armors[i].name.toLowerCase().equals(s.toLowerCase())) {
@@ -60,24 +63,15 @@ public class ItemManager {
 		return getArmorByName("Nackt");		
 	}
 	
-	private void CreateDebugEquip() {
-			Item template = new Item("Unbewaffnet");
-			template.kategorie = "Debug";
-			template.starkGegen = "";
-			template.schwachGegen = "";
-			template.beschreibung = "";
-			template.slot = 0;
-			lw.add(template);
-			template=null;
-			template = new Item("Nackt");
-			template.kategorie = "Debug";
-			template.starkGegen = "";
-			template.schwachGegen = "";
-			template.beschreibung = "";
-			template.slot = 0;
-			la.add(template);
-			template=null;
+	//Gibt die Debugwaffe zurück. Eigentlich nur damit ich aus anderen Klassen aufrufen kann ohne mir den Namen merken zu müssen. Ich bin faul...
+	public Item getDebugWeapon() {
+		return getWeaponByName("Unbewaffnet");
 	}
+	//Gibt die DebugArmor zurück. Eigentlich nur damit ich aus anderen Klassen aufrufen kann ohne mir den Namen merken zu müssen. Ich bin faul...
+	public Item getDebugArmor() {
+		return getArmorByName("Nackt");	
+	}
+	
 	//****************************************************************
 	//***	Gruppenparse										   ***
 	//****************************************************************
@@ -212,5 +206,25 @@ public class ItemManager {
 			e.printStackTrace();
 		}
 	}
+	
+	//Erstellt die Debug- Waffe und Rüstung um zu verhindern dass das Array je leer ist, um NullPointers zu verhindern.
+	private void CreateDebugEquip() {
+		Item template = new Item("Unbewaffnet");
+		template.kategorie = "Debug";
+		template.starkGegen = "";
+		template.schwachGegen = "";
+		template.beschreibung = "";
+		template.slot = 0;
+		lw.add(template);
+		template=null;
+		template = new Item("Nackt");
+		template.kategorie = "Debug";
+		template.starkGegen = "";
+		template.schwachGegen = "";
+		template.beschreibung = "";
+		template.slot = 0;
+		la.add(template);
+		template=null;
+}
 
 }

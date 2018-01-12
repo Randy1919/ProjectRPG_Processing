@@ -7,50 +7,45 @@ public class Boss {
 	public Item armor = null;
 
 	// Boss Trivia. Jeder Index ist ein Trivia. Reihenfolge beachten!
-	// 0 = Alter
-	// 1 =
-	// 2 =
-	// 3 =
+	// 0 = Alter, 1 = , 2=
+	// 3 = , 4 = ,5 = Hobby,  
+	// 6 = Sport, 7 = Lieblingsfarbe, 8 = Lieblingsessen
+	// 9 = 
+	String[] triviaCategory = {"Alter","","","","","Hobby","Sport","Lieblingsfarbe","Lieblingsessen",""};	
 	String[] trivia;
-
 	boolean[] triviaUnlocked;
 
+	
+	//Konstruktor
 	Boss(String n) {
 		name = n;
 
 		trivia = new String[10];
 		triviaUnlocked = new boolean[trivia.length];
 	}
-	
-	Boss(String n, Item w, Item a) {
-		name = n;
-		waffe = w;
-		armor = a;
 
-		trivia = new String[3];
-		triviaUnlocked = new boolean[trivia.length];
-	}
-
+	//Gibt Kategorie der Waffe zurück
 	public String getWaffeCat() {
 		if(waffe!=null) {
 		return waffe.kategorie;
 		}else {return "";}
 	}
 
+	//Gibt Kategorie der Rüstung zurück
 	public String getArmorCat() {
 		if(armor!=null) {
 		return armor.kategorie;
 		}else {return "";}
 	}
 
-	public void unlockRandomTrivia() {
+	//Zufällige Trivia wird freigeschaltet und eine passende Meldung wird zurückgegeben
+	public String unlockRandomTrivia() {
 		// Zufallszahl zwischen Null und wie viele Trivias es gibt
 		int zufall = 0 + (int) (Math.random() * triviaUnlocked.length);
 		int durchgang = 0;
-		boolean Ende = false;
 
 		// Solange Ende nicht gegeben
-		while (!Ende) {
+		while (true) {
 
 			// Schauen ob Trivia an Stelle Zufallszahl schon frei ist.
 			if (triviaUnlocked[zufall] == true) {
@@ -64,7 +59,8 @@ public class Boss {
 			} else {
 				//Wenn nicht schon freigeschaltet, freischalten und Ende setzen
 				triviaUnlocked[zufall] = true;
-				Ende = true;
+				String s = "Du hast folgendes über den Gegner herausgefunden: "+triviaCategory[zufall];
+				return s;
 			}
 			//durchgang hochzählen
 			durchgang++;
@@ -72,7 +68,7 @@ public class Boss {
 			//Trivias freigeschaltet wurden. Dann Ende setzen um eine Endlosschleife
 			//zu verhindern
 			if (durchgang == triviaUnlocked.length) {
-				Ende = true;
+				return "Es sind bereits alle Informationen freigeschaltet!";
 			}
 		}
 
