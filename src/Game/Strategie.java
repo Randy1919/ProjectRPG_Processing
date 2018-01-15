@@ -10,4 +10,6 @@ public class Strategie {
 		held = s;
 	}
 	
+	//Hier kann man seine Ausrüstung anpassen!
+	
 }

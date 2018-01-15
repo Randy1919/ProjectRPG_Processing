@@ -12,4 +12,6 @@ public class Archiv {
 		bm=b;
 		gegner=bm.getCurrentBoss();
 	}
+	
+	//Hier kann man sich die Informationen über den Boss ansehen! 
 }
