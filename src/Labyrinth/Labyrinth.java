@@ -2,10 +2,6 @@ package Labyrinth;
 
 import java.io.*;
 
-import Actors.BossManager;
-import Actors.Spieler;
-import Items.ItemManager;
-import Kampf.Kampf;
 import processing.core.PApplet;
 
 /**
