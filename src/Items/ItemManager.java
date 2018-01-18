@@ -11,9 +11,11 @@ import java.util.LinkedList;
 public class ItemManager {
 	public Item[] waffen;
 	public Item[] armors;
+	public Item[] items;
 	
 	private LinkedList<Item> lw = new LinkedList<Item>();
 	private LinkedList<Item> la = new LinkedList<Item>();
+	private LinkedList<Item> li = new LinkedList<Item>();
 	
 	//****************************************************************
 	//***	Konstruktor											   ***
@@ -28,14 +30,17 @@ public class ItemManager {
 		//Listen mit Items füllen lassen
 		parseWeapons();
 		parseArmors();
+		parseItems();
 		
 		//Gefüllte Listen werden als Arrays finalisiert
 		waffen = lw.toArray(new Item[lw.size()]);
 		armors = la.toArray(new Item[la.size()]);
+		items = li.toArray(new Item[li.size()]);
 		
 		//Listen werden gecleared
 		lw.clear();
 		la.clear();
+		li.clear();
 	}
 	
 	//****************************************************************
@@ -61,6 +66,16 @@ public class ItemManager {
 			}
 		}
 		return getArmorByName("Nackt");		
+	}
+	
+	//Sucht durch das Array der Items nach einem Namen. Wenn gefunden gibt es das entsprechende Item zurück.
+	public Item getItemByName(String s) {
+		for(int i =0;i<items.length;i++) {
+			if(items[i].name.toLowerCase().equals(s.toLowerCase())) {
+				return items[i];
+			}
+		}
+		return null;		
 	}
 	
 	//Gibt die Debugwaffe zurück. Eigentlich nur damit ich aus anderen Klassen aufrufen kann ohne mir den Namen merken zu müssen. Ich bin faul...
@@ -94,6 +109,17 @@ public class ItemManager {
 		for (File file : files) {// Alle Dateien Werden gelesen
 			if (file.isFile()) { 
 				parseArmor(file);//und geparsed
+			}
+		}
+	}
+	
+	//Alle Items parsen
+	private void parseItems() {
+		File verzeichnis = new File("Items/Consumables"); // Verzeichnis wird aufgerufen
+		File[] files = verzeichnis.listFiles(); // Dateien werden gelistet
+		for (File file : files) {// Alle Dateien Werden gelesen
+			if (file.isFile()) { 
+				parseItem(file);//und geparsed
 			}
 		}
 	}
@@ -206,6 +232,63 @@ public class ItemManager {
 			e.printStackTrace();
 		}
 	}
+
+	private void parseItem(File f) {
+		try {
+			// Template wird erstellt, zuerst mit Namen der Textdatei
+			Item template = new Item(f.getName());
+
+			// File lesen
+			FileReader input;
+
+			//Hier wird die Datei gelesen und die Informationen extrahiert
+			input = new FileReader(f);
+			BufferedReader bufRead = new BufferedReader(input);
+			String myLine = null;
+			while ((myLine = bufRead.readLine()) != null) {
+				String[] sa = myLine.split("="); // Split beim =, da Syntax "Variable=Value"
+				if (sa[0].toLowerCase().equals("name")) { //Name(Falls angegeben kann hier der Dateiname überschrieben werde)
+					template.name = sa[1];
+				}
+				if (sa[0].toLowerCase().equals("kategorie")) { //Kategorie
+					template.kategorie = sa[1];
+				}
+				
+				if (sa[0].toLowerCase().equals("typ")) { //Schwäche
+					template.typ = sa[1];
+				}
+				
+				if (sa[0].toLowerCase().equals("stärke")) { //Stärke
+					template.starkGegen = sa[1];
+				}
+				if (sa[0].toLowerCase().equals("schwäche")) { //Schwäche
+					template.schwachGegen = sa[1];
+				}
+				if (sa[0].toLowerCase().equals("beschreibung")) { //Beschreibung
+					template.beschreibung = sa[1];
+				}
+					template.slot = 2;
+				
+				//Wird ein Attribut nicht gefunden gilt der Standard von Item. 
+			}
+			
+			//Fertiges Template wird zum einsortieren in die Liste übergeben
+			li.add(template);
+			System.out.println(template.name + " zu Items hinzugefügt" );
+			
+			//Dann wird das Template geleert
+			template=null;
+			
+		//Sinnloses Blabla
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	
 	//Erstellt die Debug- Waffe und Rüstung um zu verhindern dass das Array je leer ist, um NullPointers zu verhindern.
 	private void CreateDebugEquip() {

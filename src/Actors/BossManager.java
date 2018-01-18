@@ -37,7 +37,7 @@ public class BossManager {
 		bo.clear();
 
 		//Erster Boss wird gesetzt. Falls keine vorhanden wird auf den DebugBoss gesetzt
-		if (bosse.length < 1) {
+		if (bosse.length > 1) {
 			currentBoss = 1;
 		} else {
 			currentBoss = 0;
@@ -118,7 +118,6 @@ public class BossManager {
 				}
 				if (sa[0].toLowerCase().equals("waffe")) { // Waffe
 					template.waffe = items.getWeaponByName(sa[1]);
-					System.out.println(template.getWaffeCat());
 				}
 				if (sa[0].toLowerCase().equals("rüstung")) { // Rüstung
 					template.armor = items.getArmorByName(sa[1]);

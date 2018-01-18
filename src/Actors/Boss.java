@@ -1,10 +1,7 @@
 package Actors;
-import Items.Item;
+import Kampf.Actor;
 
-public class Boss {
-	public String name = "John Doe";
-	public Item waffe = null;
-	public Item armor = null;
+public class Boss extends Actor{
 
 	// Boss Trivia. Jeder Index ist ein Trivia. Reihenfolge beachten!
 	// 0 = Alter, 1 = , 2=
@@ -18,25 +15,13 @@ public class Boss {
 	
 	//Konstruktor
 	Boss(String n) {
-		name = n;
+		super(n);
 
 		trivia = new String[10];
 		triviaUnlocked = new boolean[trivia.length];
 	}
 
-	//Gibt Kategorie der Waffe zurück
-	public String getWaffeCat() {
-		if(waffe!=null) {
-		return waffe.kategorie;
-		}else {return "";}
-	}
 
-	//Gibt Kategorie der Rüstung zurück
-	public String getArmorCat() {
-		if(armor!=null) {
-		return armor.kategorie;
-		}else {return "";}
-	}
 
 	//Zufällige Trivia wird freigeschaltet und eine passende Meldung wird zurückgegeben
 	public String unlockRandomTrivia() {

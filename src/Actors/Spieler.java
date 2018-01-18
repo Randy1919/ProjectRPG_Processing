@@ -1,16 +1,24 @@
 package Actors;
 import Items.Item;
+import Kampf.Actor;
 
-public class Spieler {
-	public String name = "John Doe";
+public class Spieler extends Actor{
 
-	public Item waffe = null;
-	public Item Armor = null;
-	public int Siege = 0;
+	public int siege = 0;
+	
+	public Item item1;
+	public int item1Anzahl=3;
+	
+	public Item item2;
+	public int item2Anzahl=3;
+	
+	public Item item3;
+	public int item3Anzahl=3;
 
-	Spieler(String n) {
-		name = n;
-		Siege = 0;
+	
+	public Spieler(String n) {
+		super(n);
+		siege = 0;
 	}
 
 }
