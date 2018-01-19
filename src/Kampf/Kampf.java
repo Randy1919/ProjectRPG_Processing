@@ -17,6 +17,9 @@ public class Kampf {
 		Spieler hero = new Spieler("Name");
 		hero.waffe = im.getWeaponByName("Kendoschwert");
 		hero.armor = im.getArmorByName("Kendorüstung");
+		hero.item1 = im.getItemByName("Schneefestung");
+		hero.item2 = im.getItemByName("Schneeball");
+		hero.item3 = im.getItemByName("Pizza Hawaii");
 
 		Kampf k = new Kampf(hero, bo);
 		k.start();
@@ -136,8 +139,8 @@ public class Kampf {
 		} else {
 			System.out.println("Spezialangriff - Schon genutzt!");
 		}
-		System.out.println("3 Item");
-		System.out.println("4 Verteidigung");
+		System.out.println("3 Verteidigung");
+		System.out.println("4 Item");
 		System.out.println("5 Fliehen");
 		System.out.println("");
 
@@ -151,7 +154,7 @@ public class Kampf {
 			}
 		}
 		if (befehl == 4) {
-			itemEinsetzen();
+			itemBefehl();
 		}
 		if (befehl == 3) {
 			verteidigung(held);
@@ -270,8 +273,74 @@ public class Kampf {
 	}
 
 	// Item einsetzen
-	private void itemEinsetzen() {
-
+	private void itemBefehl() {
+		if (held.item1!=null) {
+			System.out.println("1: "+held.item1.name+": "+held.item1Anzahl);
+		} else {
+			System.out.println("1: Leer");
+		}
+		if (held.item2!=null) {
+			System.out.println("2: "+held.item2.name+": "+held.item2Anzahl);
+		} else {
+			System.out.println("2: Leer");
+		}
+		if (held.item3!=null) {
+			System.out.println("3: "+held.item3.name+": "+held.item3Anzahl);
+		} else {
+			System.out.println("3: Leer");
+		}
+		
+		int befehl = s.nextInt(); // Kommando auswählen
+		if (held.item1!=null) {
+			if (befehl == 1) {
+				itemEinsatz(1);
+			}
+		}
+		if (held.item2!=null) {
+			if (befehl == 2) {
+				itemEinsatz(2);
+			}
+		}
+		if (held.item3!=null) {
+			if (befehl == 3) {
+				itemEinsatz(3);
+			}
+		}
+	}
+	
+	private void itemEinsatz(int index) {
+		Item item=null;
+		if(index==1) {
+			held.item1Anzahl--;
+			item = held.item1;	
+			if(held.item1Anzahl==0) {
+				held.item1=null;
+			}
+		}
+		if(index==1) {
+			held.item2Anzahl--;	
+			item = held.item2;
+			if(held.item2Anzahl==0) {
+				held.item2=null;
+			}
+		}
+		if(index==1) {
+			held.item3Anzahl--;	
+			item = held.item3;
+			if(held.item3Anzahl==0) {
+				held.item3=null;
+			}
+		}
+		
+		if(item.typ.toLowerCase().equals("stun")) {
+			
+		}
+		if(item.typ.toLowerCase().equals("heal")) {
+			
+		}
+		if(item.typ.toLowerCase().equals("shield")) {
+			
+		}
 	}
 
 	// ****************************************************************

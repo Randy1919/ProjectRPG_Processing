@@ -254,8 +254,13 @@ public class ItemManager {
 					template.kategorie = sa[1];
 				}
 				
-				if (sa[0].toLowerCase().equals("typ")) { //Schwäche
-					template.typ = sa[1];
+				if (sa[0].toLowerCase().equals("typ")) {//Schwäche
+					if(sa[1].toLowerCase().equals("shield")||sa[1].toLowerCase().equals("stun")||sa[1].toLowerCase().equals("heal")) {
+						template.typ = sa[1];
+					}else {
+					template=null;
+					return;
+					}
 				}
 				
 				if (sa[0].toLowerCase().equals("stärke")) { //Stärke
