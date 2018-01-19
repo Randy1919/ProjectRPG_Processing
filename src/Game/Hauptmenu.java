@@ -9,6 +9,6 @@ public class Hauptmenu
 	{
 		ItemManager im = new ItemManager();
 		BossManager bo = new BossManager(im);
-		//test
+		//testTESTESTESTESTEST
 	}
 }
