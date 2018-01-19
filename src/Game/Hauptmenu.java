@@ -11,4 +11,9 @@ public class Hauptmenu
 		BossManager bo = new BossManager(im);
 		//testTESTESTESTESTEST
 	}
+	
+	public void drawMenu()
+	{
+		
+	}
 }
