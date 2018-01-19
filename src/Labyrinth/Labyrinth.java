@@ -15,10 +15,10 @@ public class Labyrinth extends PApplet {
 
 	int[][] nLabMatrix = new int[20][20];
 
-	int nTilePositionX = 50;
-	int nTilePositionY = 50;
-	int nTileWidth = 50;
-	int nTileHeight = 50;
+	int nTilePositionX = 30;
+	int nTilePositionY = 30;
+	int nTileWidth = 30;
+	int nTileHeight = 30;
 
 	// ----------------------Dev---------------------------
 	/**
@@ -31,53 +31,46 @@ public class Labyrinth extends PApplet {
 		lab.loadLabyrinth();
 
 		PApplet.main("Labyrinth.Labyrinth");
-		// System.out.print(lab.getLayoutAsString());
 
 	}
 	
 	public void settings() {
-		size(500,500);
+		size(700,700);
 	}
 
 	public void setup() {
 		
-		
-		try {
-			File file = new File(".");
-			File[] files = file.listFiles();
-			System.out.println("Current dir : " + file.getCanonicalPath());
-			for (int fileInList = 0; fileInList < files.length; fileInList++) {
-				System.out.println(files[fileInList].toString());
-			}
-		} catch (IOException ex) {
-		}
 	}
 
 	public void draw() {
-		background(0);
-
+		
+		background(255);
+		
 		nTilePositionY = 50;
 
 		for (int i = 0; i < this.nLabMatrix.length; i++) {
 			nTilePositionX = 50;
 
 			for (int j = 0; j < this.nLabMatrix[i].length; j++) {
+				
 				if (this.nLabMatrix[i][j] == 1) {
-					fill(255);
+					fill(0,0,0);
 					rect(nTilePositionX, nTilePositionY, nTileWidth, nTileHeight);
 				} else if (this.nLabMatrix[i][j] == 2) {
 					fill(0, 200, 0);
 					rect(nTilePositionX, nTilePositionY, nTileWidth, nTileHeight);
 				} else {
-					fill(0);
+					fill(255,255,255);
 					rect(nTilePositionX, nTilePositionY, nTileWidth, nTileHeight);
 				}
 
-				nTilePositionX += nTilePositionX;
+				nTilePositionX += nTileWidth;
 			}
 
-			nTilePositionY += nTilePositionY;
+			nTilePositionY += nTileHeight;
 		}
+		
+
 	}
 
 	private String getLayoutAsString() {
@@ -99,8 +92,6 @@ public class Labyrinth extends PApplet {
 	 * werden soll. (Noch nicht implementiert)
 	 */
 	public Labyrinth() {
-		this.genLabyrinth();
-		this.loadLabyrinth();
 	}
 
 	/**
@@ -129,7 +120,6 @@ public class Labyrinth extends PApplet {
 		} catch (IOException eIO) {
 			eIO.getMessage();
 		}
-
 	}
 
 	/**
@@ -142,7 +132,7 @@ public class Labyrinth extends PApplet {
 	private void processFile() throws IOException {
 		// Lädt die Datei ein.
 		try {
-			BufferedReader br = new BufferedReader(new FileReader(this.LabLayout));
+			BufferedReader br = new BufferedReader(new FileReader(this.LabLayout.getAbsolutePath()));
 
 			String strLine = "";
 			int nLine = 0;
@@ -170,10 +160,11 @@ public class Labyrinth extends PApplet {
 				nLine++;
 			} 
 			
+			br.close();		
 		}catch (NullPointerException eNull) {
-			eNull.getMessage();			
+			System.out.print(eNull.getMessage());			
 		} finally {
-
+			
 		}
 	}
 }
