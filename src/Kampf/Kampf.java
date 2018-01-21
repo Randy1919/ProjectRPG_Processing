@@ -17,9 +17,9 @@ public class Kampf {
 		Spieler hero = new Spieler("Name");
 		hero.waffe = im.getWeaponByName("Kendoschwert");
 		hero.armor = im.getArmorByName("Kendorüstung");
-		hero.item1 = im.getItemByName("Schneefestung");
-		hero.item2 = im.getItemByName("Schneeball");
-		hero.item3 = im.getItemByName("Pizza Hawaii");
+		hero.item[1] = im.getItemByName("Schneefestung");
+		hero.item[2] = im.getItemByName("Schneeball");
+		hero.item[3] = im.getItemByName("Pizza Hawaii");
 
 		Kampf k = new Kampf(hero, bo);
 		k.start();
@@ -31,10 +31,12 @@ public class Kampf {
 	// Spieler
 	Spieler held;
 	boolean spezialangriffEingesetzt;
+	boolean heldStun;
 
 	// Boss
 	Boss gegner;
 	boolean spezialangriffVorbereitetCOM;
+	boolean gegnerStun;
 
 	// ****************************************************************
 	// *** Konstruktor ***
@@ -64,7 +66,7 @@ public class Kampf {
 
 	// Prüft ob i1 effektiv gegen i2 ist und gibt das Ergebnis als Boolean zurück
 	private boolean istEffektiv(Item i1, Item i2) {
-		int h =0;
+		int h = 0;
 		if (i1.starkGegen.equals(i2.kategorie)) {
 			h++;
 		}
@@ -77,16 +79,16 @@ public class Kampf {
 		if (i2.starkGegen.equals(i1.kategorie)) {
 			h--;
 		}
-		if(h>=1) {
-		return true;	
-		}else {
-		return false;
+		if (h >= 1) {
+			return true;
+		} else {
+			return false;
 		}
 	}
 
 	// Prüft ob i1 schwach gegen i2 ist und gibt das Ergebnis als Boolean zurück
 	private boolean istIneffektiv(Item i1, Item i2) {
-		int h =0;
+		int h = 0;
 		if (i2.starkGegen.equals(i1.kategorie)) {
 			h++;
 		}
@@ -99,11 +101,25 @@ public class Kampf {
 		if (i1.starkGegen.equals(i2.kategorie)) {
 			h--;
 		}
-		if(h>=1) {
-		return true;	
-		}else {
-		return false;
+		if (h >= 1) {
+			return true;
+		} else {
+			return false;
 		}
+	}
+
+	//Prüft ob der Spieler noch verfügbare Items hat
+	private boolean itemHeldVerfuegbar() {
+		if(held.item[1]!=null) {
+			return true;
+		}
+		if(held.item[2]!=null) {
+			return true;
+		}
+		if(held.item[3]!=null) {
+			return true;
+		}
+		return false;
 	}
 
 	// ****************************************************************
@@ -115,23 +131,52 @@ public class Kampf {
 		held.leben = 100;
 		gegner.leben = 100;
 		spezialangriffEingesetzt = false;
+		heldStun = false;
+		gegnerStun = false;
 
 		s = new Scanner(System.in);
 		while (true) {
-			nextTurn();
+			turn();
 		}
 	}
 
-	// Eine Spieler Runde
-	private void nextTurn() {
+	// Eine Runde
+	private void turn() {
+		boolean legitTurn = false;
 
+		if (!heldStun) {
+			while (!legitTurn) {// Ist Runde gültig? Wird durch Turn bestimmt
+				legitTurn = playerTurn(); // Spieler ist dran.
+			}
+		} else {
+			System.out.println("");
+			System.out.println(held.name + " ist benommen und kann sich nicht bewegen!");
+			System.out.println("");
+		}
+		checkWin(); // Wurde gewonnen?
+
+		if (!gegnerStun) {
+			legitTurn = false;
+			while (!legitTurn) {// Ist Runde gültig? Wird durch Turn bestimmt
+				legitTurn = gegnerTurn(); // Spieler ist dran
+			}
+		} else {
+			System.out.println("");
+			System.out.println(gegner.name + " ist benommen und kann sich nicht bewegen!");
+			System.out.println("");
+		}
+		checkWin(); // Wurde gewonnen?
+	}
+
+	// Eine Spieler Runde
+	private boolean playerTurn() {
 		held.def = false; // Defensive läuft bei nächster Runde ab
-		checkWin(); // Wurde durch einen Effekt gewonnen?
 
 		System.out.println("");
 		System.out.println("Spieler: " + held.leben);
 		System.out.println("Gegner: " + gegner.leben);
 		System.out.println("");
+
 		System.out.println("Befehl Auswählen:");
 		System.out.println("1 Angriff");
 		if (!spezialangriffEingesetzt) {
@@ -140,39 +185,57 @@ public class Kampf {
 			System.out.println("Spezialangriff - Schon genutzt!");
 		}
 		System.out.println("3 Verteidigung");
-		System.out.println("4 Item");
+		if (!itemHeldVerfuegbar()) {
+			System.out.println("4 Item");
+		} else {
+			System.out.println("Keine Items verfügbar!");
+		}
 		System.out.println("5 Fliehen");
 		System.out.println("");
 
 		int befehl = s.nextInt(); // Kommando auswählen
-		if (befehl == 1) {
+		if (befehl == 1) {// Befehl 1: Ein einfacher Angriff
 			angriff(held, gegner);
+			return true;
 		}
-		if (!spezialangriffEingesetzt) {
-			if (befehl == 2) {
+		if (befehl == 2) {// Befehl 2: Spezialangriff. Nur einmal pro Kampf nutzbar
+			if (!spezialangriffEingesetzt) {
 				spezialangriff(held, gegner);
+				return true;
+			} else {
+				System.out.println("");
+				System.out.println(held.name + " hat seinen Spezialangriff schon eingesetzt!");
+				System.out.println("");
 			}
 		}
-		if (befehl == 4) {
-			itemBefehl();
-		}
-		if (befehl == 3) {
+		if (befehl == 3) {// Befehl 3: Verteidigung. Spieler verteidigt sich diese Runde und kann nicht getroffen werden
 			verteidigung(held);
+			return true;
 		}
-		if (befehl == 5) {
+		if (befehl == 4) {// Befehl 4: Item einsetzen. Nur verfügbar wenn noch Items vorhanden
+			if (itemHeldVerfuegbar()) {
+				return itemBefehl();
+			} else {
+				System.out.println("");
+				System.out.println(held.name + " hat keine Items mehr!");
+				System.out.println("");
+			}
+		}
+		if (befehl == 5) {// Befehl 5: Fliehen. Spieler verliert automatisch.
 			fliehen();
+			return true;
 		}
-
-		gegnerTurn(); // Gegner ist dran
+		return false;
 	}
 
 	// Eine Gegner Runde
-	private void gegnerTurn() {
+	private boolean gegnerTurn() {
 		gegner.def = false; // Verteidigung läuft mit neuer Runde ab
 		if (spezialangriffVorbereitetCOM) {
 			gegnerSpezialangriff();
+			return true;
 		} else {
-
+			return true;
 		}
 	}
 
@@ -209,7 +272,6 @@ public class Kampf {
 			}
 		}
 		verteidiger.leben = verteidiger.leben - schaden;// Schaden zufügen
-		checkWin();// Hat Schaden den Sieg gebracht?
 	}
 
 	// Verteidigen
@@ -269,78 +331,64 @@ public class Kampf {
 		}
 		verteidiger.leben = verteidiger.leben - schaden;// Schaden zufügen
 		spezialangriffEingesetzt = true; // Spezialangriff verwendet
-		checkWin();// Hat Schaden den Sieg gebracht?
 	}
 
 	// Item einsetzen
-	private void itemBefehl() {
-		if (held.item1!=null) {
-			System.out.println("1: "+held.item1.name+": "+held.item1Anzahl);
+	private boolean itemBefehl() {
+		if (held.item[1] != null) {
+			System.out.println("1: " + held.item[1].name + ": " + held.itemAnzahl[1]);
 		} else {
 			System.out.println("1: Leer");
 		}
-		if (held.item2!=null) {
-			System.out.println("2: "+held.item2.name+": "+held.item2Anzahl);
+		if (held.item[2] != null) {
+			System.out.println("2: " + held.item[2].name + ": " + held.itemAnzahl[2]);
 		} else {
 			System.out.println("2: Leer");
 		}
-		if (held.item3!=null) {
-			System.out.println("3: "+held.item3.name+": "+held.item3Anzahl);
+		if (held.item[3] != null) {
+			System.out.println("3: " + held.item[3].name + ": " + held.itemAnzahl[3]);
 		} else {
 			System.out.println("3: Leer");
 		}
-		
-		int befehl = s.nextInt(); // Kommando auswählen
-		if (held.item1!=null) {
-			if (befehl == 1) {
-				itemEinsatz(1);
-			}
+
+		int befehl = s.nextInt(); // Item auswählen
+		if (held.item[befehl] != null) {
+				return itemEinsatz(befehl);
 		}
-		if (held.item2!=null) {
-			if (befehl == 2) {
-				itemEinsatz(2);
-			}
-		}
-		if (held.item3!=null) {
-			if (befehl == 3) {
-				itemEinsatz(3);
-			}
-		}
+		return false;
 	}
-	
-	private void itemEinsatz(int index) {
-		Item item=null;
-		if(index==1) {
-			held.item1Anzahl--;
-			item = held.item1;	
-			if(held.item1Anzahl==0) {
-				held.item1=null;
-			}
+
+	private boolean itemEinsatz(int index) {
+		Item item = null;
+		
+		//Der übergebene Index(1-3) wird als Item gesetzt, die Anzahl der übrigen Items 
+		//um einen verringert und wenn keine mehr übrig sind das Item gelöscht
+		if(index>=1&&index<=3) {
+			held.itemAnzahl[index]--;
+			item = held.item[index];
+			if (held.itemAnzahl[index] == 0) {
+				held.item[index] = null;
+			}			
 		}
-		if(index==1) {
-			held.item2Anzahl--;	
-			item = held.item2;
-			if(held.item2Anzahl==0) {
-				held.item2=null;
+
+
+		
+		//Das gesetzte Item bestimmt hier die Wirkung
+
+		if (item.typ.toLowerCase().equals("stun")) {
+			if() {
+			gegnerStun=true;
 			}
+			return true;
 		}
-		if(index==1) {
-			held.item3Anzahl--;	
-			item = held.item3;
-			if(held.item3Anzahl==0) {
-				held.item3=null;
-			}
+		if (item.typ.toLowerCase().equals("heal")) {
+			return true;
+		}
+		if (item.typ.toLowerCase().equals("shield")) {
+			return true;
 		}
 		
-		if(item.typ.toLowerCase().equals("stun")) {
-			
-		}
-		if(item.typ.toLowerCase().equals("heal")) {
-			
-		}
-		if(item.typ.toLowerCase().equals("shield")) {
-			
-		}
+		return false;
 	}
 
 	// ****************************************************************
@@ -370,14 +418,13 @@ public class Kampf {
 		}
 
 		if (held.def) {// Wenn Gegner verteidigt halber Schaden
-			System.out.println(held.name
-					+ " hat versucht den Angriff zu blockieren! Der Angriff war zu stark, wurde aber abgeschwächt!");
+			System.out.println(held.name + " hat versucht den Angriff zu blockieren! Der Angriff war zu stark, wurde aber abgeschwächt!");
 			held.def = false;
 			schaden = schaden / 2;
 		}
 
 		held.leben = held.leben - schaden;// Schaden zufügen
-		spezialangriffVorbereitetCOM=false;
+		spezialangriffVorbereitetCOM = false;
 		checkWin();// Hat Schaden den Sieg gebracht?
 	}
 }
