@@ -1,8 +1,10 @@
 package Kampf;
 
+import java.io.File;
 import java.util.Scanner;
 import java.util.concurrent.ThreadLocalRandom;
 
+import Actors.Actor;
 import Actors.Boss;
 import Actors.BossManager;
 import Actors.Spieler;
@@ -11,12 +13,24 @@ import Items.ItemManager;
 
 public class Kampf {
 
+	// To-Do: Grafik
+	// To-Do: Gegner KI
+	
 	public static void main(String[] args) {
 		ItemManager im = new ItemManager();
 		BossManager bo = new BossManager(im);
 		Spieler hero = new Spieler("Name");
-		hero.waffe = im.getWeaponByName("Kendoschwert");
-		hero.armor = im.getArmorByName("Kendorüstung");
+		hero.setWaffe(im.getWeaponByName("Kendoschwert"));
+		hero.setArmor(im.getArmorByName("Kendorüstung"));
+		hero.item[1] = im.getItemByName("Powerkugel");
+		hero.item[2] = im.getItemByName("Schneeball");
+		hero.item[3] = im.getItemByName("Pizza Hawaii");
+		
+		File f = new File("Held.txt");
+		if(f.exists()) {
+			hero.setWaffe(im.getWeaponByName("Master-Schwert"));
+			hero.setArmor(im.getArmorByName("Heldenkleidung"));			
+		}
 
 		Kampf k = new Kampf(hero, bo);
 		k.start();
@@ -28,10 +42,14 @@ public class Kampf {
 	// Spieler
 	Spieler held;
 	boolean spezialangriffEingesetzt;
+	int heldSchild;
+	int heldStun;
 
 	// Boss
 	Boss gegner;
 	boolean spezialangriffVorbereitetCOM;
+	int gegnerSchild;
+	int gegnerStun;
 
 	// ****************************************************************
 	// *** Konstruktor ***
@@ -59,48 +77,18 @@ public class Kampf {
 		System.exit(0);
 	}
 
-	// Prüft ob i1 effektiv gegen i2 ist und gibt das Ergebnis als Boolean zurück
-	private boolean istEffektiv(Item i1, Item i2) {
-		int h =0;
-		if (i1.starkGegen.equals(i2.kategorie)) {
-			h++;
+	// Prüft ob der Spieler noch verfügbare Items hat
+	private boolean itemHeldVerfuegbar() {
+		if (held.item[1] != null) {
+			return true;
 		}
-		if (i2.schwachGegen.equals(i1.kategorie)) {
-			h++;
+		if (held.item[2] != null) {
+			return true;
 		}
-		if (i1.schwachGegen.equals(i2.kategorie)) {
-			h--;
+		if (held.item[3] != null) {
+			return true;
 		}
-		if (i2.starkGegen.equals(i1.kategorie)) {
-			h--;
-		}
-		if(h>=1) {
-		return true;	
-		}else {
 		return false;
-		}
-	}
-
-	// Prüft ob i1 schwach gegen i2 ist und gibt das Ergebnis als Boolean zurück
-	private boolean istIneffektiv(Item i1, Item i2) {
-		int h =0;
-		if (i2.starkGegen.equals(i1.kategorie)) {
-			h++;
-		}
-		if (i1.schwachGegen.equals(i2.kategorie)) {
-			h++;
-		}
-		if (i2.schwachGegen.equals(i1.kategorie)) {
-			h--;
-		}
-		if (i1.starkGegen.equals(i2.kategorie)) {
-			h--;
-		}
-		if(h>=1) {
-		return true;	
-		}else {
-		return false;
-		}
 	}
 
 	// ****************************************************************
@@ -108,27 +96,62 @@ public class Kampf {
 	// ****************************************************************
 	public void start() {
 		System.out.println(held.name + " vs " + gegner.name);
-		System.out.println(held.waffe.name + " vs " + gegner.waffe.name);
+		System.out.println(held.getWaffeName() + " vs " + gegner.getWaffeName());
 		held.leben = 100;
+		heldSchild=0;
 		gegner.leben = 100;
+		gegnerSchild=0;
 		spezialangriffEingesetzt = false;
+		heldStun = 0;
+		gegnerStun = 0;
+		gegner.parseCats();
+		held.parseCats();
 
 		s = new Scanner(System.in);
 		while (true) {
-			nextTurn();
+			turn();
 		}
 	}
 
-	// Eine Spieler Runde
-	private void nextTurn() {
+	// Eine Runde
+	private void turn() {
+		boolean legitTurn = false;
 
+		if (heldStun==0) {
+			while (!legitTurn) {// Ist Runde gültig? Wird durch Turn bestimmt
+				legitTurn = playerTurn(); // Spieler ist dran.
+			}
+		} else {
+			System.out.println("");
+			System.out.println(held.name + " ist benommen und kann sich nicht bewegen!");
+			System.out.println("");
+			heldStun--;
+		}
+		checkWin(); // Wurde gewonnen?
+
+		if (gegnerStun==0) {
+			legitTurn = false;
+			while (!legitTurn) {// Ist Runde gültig? Wird durch Turn bestimmt
+				legitTurn = gegnerTurn(); // Spieler ist dran
+			}
+		} else {
+			System.out.println("");
+			System.out.println(gegner.name + " ist benommen und kann sich nicht bewegen!");
+			System.out.println("");
+			gegnerStun--;
+		}
+		checkWin(); // Wurde gewonnen?
+	}
+
+	// Eine Spieler Runde
+	private boolean playerTurn() {
 		held.def = false; // Defensive läuft bei nächster Runde ab
-		checkWin(); // Wurde durch einen Effekt gewonnen?
 
 		System.out.println("");
 		System.out.println("Spieler: " + held.leben);
 		System.out.println("Gegner: " + gegner.leben);
 		System.out.println("");
+
 		System.out.println("Befehl Auswählen:");
 		System.out.println("1 Angriff");
 		if (!spezialangriffEingesetzt) {
@@ -136,40 +159,59 @@ public class Kampf {
 		} else {
 			System.out.println("Spezialangriff - Schon genutzt!");
 		}
-		System.out.println("3 Item");
-		System.out.println("4 Verteidigung");
+		System.out.println("3 Verteidigung");
+		if (itemHeldVerfuegbar()) {
+			System.out.println("4 Item");
+		} else {
+			System.out.println("Keine Items verfügbar!");
+		}
 		System.out.println("5 Fliehen");
 		System.out.println("");
 
 		int befehl = s.nextInt(); // Kommando auswählen
-		if (befehl == 1) {
+		if (befehl == 1) {// Befehl 1: Ein einfacher Angriff
 			angriff(held, gegner);
+			return true;
 		}
-		if (!spezialangriffEingesetzt) {
-			if (befehl == 2) {
+		if (befehl == 2) {// Befehl 2: Spezialangriff. Nur einmal pro Kampf nutzbar
+			if (!spezialangriffEingesetzt) {
 				spezialangriff(held, gegner);
+				return true;
+			} else {
+				System.out.println("");
+				System.out.println(held.name + " hat seinen Spezialangriff schon eingesetzt!");
+				System.out.println("");
 			}
 		}
-		if (befehl == 4) {
-			itemEinsetzen();
-		}
-		if (befehl == 3) {
+		if (befehl == 3) {// Befehl 3: Verteidigung. Spieler verteidigt sich diese Runde und kann nicht
+							// getroffen werden
 			verteidigung(held);
+			return true;
 		}
-		if (befehl == 5) {
+		if (befehl == 4) {// Befehl 4: Item einsetzen. Nur verfügbar wenn noch Items vorhanden
+			if (itemHeldVerfuegbar()) {
+				return itemBefehl();
+			} else {
+				System.out.println("");
+				System.out.println(held.name + " hat keine Items mehr!");
+				System.out.println("");
+			}
+		}
+		if (befehl == 5) {// Befehl 5: Fliehen. Spieler verliert automatisch.
 			fliehen();
+			return true;
 		}
-
-		gegnerTurn(); // Gegner ist dran
+		return false;
 	}
 
 	// Eine Gegner Runde
-	private void gegnerTurn() {
+	private boolean gegnerTurn() {
 		gegner.def = false; // Verteidigung läuft mit neuer Runde ab
 		if (spezialangriffVorbereitetCOM) {
 			gegnerSpezialangriff();
+			return true;
 		} else {
-
+			return true;
 		}
 	}
 
@@ -184,21 +226,30 @@ public class Kampf {
 	// Ein Angriff
 	private void angriff(Actor angreifer, Actor verteidiger) {
 		double schaden;
-		System.out.println(angreifer.name + " greift mit " + angreifer.waffe.name + " an!");
+		System.out.println(angreifer.name + " greift mit " + angreifer.getWaffeName() + " an!");
 		if (verteidiger.def) {// Wenn Gegner verteidigt kein Schaden
 			System.out.println("Aber " + verteidiger.name + " hat den Angriff geblockt!");
 			verteidiger.def = false;
 			schaden = 0;
 		} else {// Sonst Berechnung
 			if (ThreadLocalRandom.current().nextInt(0, 100 + 1) >= 1) {// Wenn Angriff nicht zufällig daneben geht
+				if(angreifer.getWaffeName().equals("Master-Schwert")) {
+					System.out.println("Das legendäre Master-Schwert blitzt in seiner Hand!");	
+					schaden=15;
+				}else {
 				schaden = 5; // Grundschaden
-				if (istEffektiv(angreifer.waffe, verteidiger.armor)) {// Wenn Effektiv verdoppeln
+				}
+				if (verteidiger.starkOderSchwach(angreifer.getWaffeCat()).equals("stark")) {// Wenn Effektiv verdoppeln
 					System.out.println("Und es ist sehr effektiv!");
 					schaden = schaden * 2;
 				}
-				if (istIneffektiv(angreifer.waffe, verteidiger.armor)) {// Wenn Ineffektiv halbieren
+				if (verteidiger.starkOderSchwach(angreifer.getWaffeCat()).equals("schwach")) {// Wenn Ineffektiv halbieren
 					System.out.println("Aber es ist nicht sehr effektiv!");
 					schaden = schaden / 2;
+				}
+				if(verteidiger.getArmorName().equals("Heldenkleidung")) {
+					System.out.println("Die Kleidung des legendären Helden schützt seinen Träger!");
+					schaden=schaden/2;
 				}
 			} else {// Wenn der Angriff zufällig daneben geht
 				System.out.println("Aber er hat verfehlt!");
@@ -206,7 +257,6 @@ public class Kampf {
 			}
 		}
 		verteidiger.leben = verteidiger.leben - schaden;// Schaden zufügen
-		checkWin();// Hat Schaden den Sieg gebracht?
 	}
 
 	// Verteidigen
@@ -248,14 +298,23 @@ public class Kampf {
 			verteidiger.def = false;
 			schaden = 0;
 		} else {// Sonst Berechnung
+			if(angreifer.getWaffeName().equals("Master-Schwert")) {
+				schaden=20;
+				System.out.println("Das legendäre Master-Schwert blitzt in seiner Hand!");				
+			}else {
 			schaden = 10; // Grundschaden
-			if (istEffektiv(angreifer.waffe, verteidiger.armor)) {// Wenn Effektiv verdoppeln
+			}
+			if (verteidiger.starkOderSchwach(angreifer.getWaffeCat()).equals("stark")) {// Wenn Effektiv verdoppeln
 				System.out.println("Und es ist sehr effektiv!");
 				schaden = schaden + 5;
 			}
-			if (istIneffektiv(angreifer.waffe, verteidiger.armor)) {// Wenn Ineffektiv halbieren
+			if (verteidiger.starkOderSchwach(angreifer.getWaffeCat()).equals("schwach")) {// Wenn Ineffektiv halbieren
 				System.out.println("Aber es ist nicht sehr effektiv!");
 				schaden = schaden - 5;
+			}
+			if(verteidiger.getArmorName().equals("Heldenkleidung")) {
+				System.out.println("Die Kleidung des legendären Helden schützt seinen Träger!");
+				schaden=schaden/2;
 			}
 			if (spezialangriffVorbereitetCOM) {// Wenn Gegner seinen Spezialangriff vorbereitet
 				System.out.println(
@@ -266,12 +325,110 @@ public class Kampf {
 		}
 		verteidiger.leben = verteidiger.leben - schaden;// Schaden zufügen
 		spezialangriffEingesetzt = true; // Spezialangriff verwendet
-		checkWin();// Hat Schaden den Sieg gebracht?
 	}
 
 	// Item einsetzen
-	private void itemEinsetzen() {
+	private boolean itemBefehl() {
+		if (held.item[1] != null) {
+			System.out.println("1: " + held.item[1].name + ": " + held.item[1].anzahl);
+		} else {
+			System.out.println("1: Leer");
+		}
+		if (held.item[2] != null) {
+			System.out.println("2: " + held.item[2].name + ": " + held.item[2].anzahl);
+		} else {
+			System.out.println("2: Leer");
+		}
+		if (held.item[3] != null) {
+			System.out.println("3: " + held.item[3].name + ": " + held.item[3].anzahl);
+		} else {
+			System.out.println("3: Leer");
+		}
+		
+		int befehl = s.nextInt(); // Item auswählen
+		if (held.item[befehl] != null) {
+			return itemEinsatz(befehl);
+		}
+		System.out.println("Kein Item!");
+		return false;
+	}
 
+	private boolean itemEinsatz(int index) {
+		Item item = null;
+
+		// Der übergebene Index(1-3) wird als Item gesetzt, die Anzahl der übrigen Items
+		// um einen verringert und wenn keine mehr übrig sind das Item gelöscht
+		if (index >= 1 && index <= 3) {
+			item = held.item[index];
+			
+			if(item.typ.toLowerCase().equals("power")&&!spezialangriffEingesetzt) {
+				System.out.println("Dein Spezialangriff ist noch verfügbar!");
+				return false;
+			}
+			
+			held.item[index].anzahl--;
+			if (held.item[index].anzahl == 0) {
+				held.item[index] = null;
+			}
+			
+		}
+
+
+		// Das gesetzte Item bestimmt hier die Wirkung
+
+		//Als Stun Item
+		if (item.typ.toLowerCase().equals("stun")) {
+			System.out.println(held.name+" benutzt "+item.name+" um den Gegner zu betäuben!");
+			if (gegner.starkOderSchwach(item.kategorie).equals("stark")) {
+				gegnerStun = gegnerStun + 2;
+				System.out.println("Es ist sehr effektiv und betäubt den Gegner für 2 Runden!");
+			} else if (gegner.starkOderSchwach(item.kategorie).equals("schwach")) {
+				gegnerStun = 0;
+				System.out.println("Doch es macht "+gegner.name+" nichts aus!");
+			}else {
+				gegnerStun++;
+				System.out.println("Der Gegner ist für eine Runde betäubt!");
+			}
+			
+			return true;
+		}
+		
+		//Als Heal Item
+		if (item.typ.toLowerCase().equals("heal")) {
+			System.out.println(held.name+" isst "+item.name+" um sich zu heilen!");
+			if (gegner.starkOderSchwach(item.kategorie).equals("stark")) {
+				held.leben=held.leben+15;
+				gegnerStun++;
+				System.out.println("Und heilt sich damit um 15 Punkte!");
+				System.out.println(gegner.name+" wird schlecht als er das sieht! Er ist für eine Runde betäubt!");
+			} else if (gegner.starkOderSchwach(item.kategorie).equals("schwach")) {
+				gegnerStun = 0;
+				System.out.println("Doch es macht "+gegner.name+" nichts aus!");
+			}else {
+				held.leben=held.leben+15;
+				System.out.println("Und heilt sich damit um 15 Punkte!");
+			}
+			return true;
+		}
+		
+		//Als Poweritem!
+		if (item.typ.toLowerCase().equals("power")) {
+			System.out.println(held.name+" nutzt "+item.name+" um seinen Spezialangriff zu erholen!");
+			if (gegner.starkOderSchwach(item.kategorie).equals("stark")) {
+				spezialangriffEingesetzt=false;
+				gegnerStun++;
+				System.out.println("Der Gegner ist von seinem plötzlichen Kraftanstieg wie gelähmt!");
+			} else if (gegner.starkOderSchwach(item.kategorie).equals("schwach")) {
+				spezialangriffVorbereitetCOM=true;
+				gegnerStun=0;
+				System.out.println("Doch der Gegner durchschaut dies und kontert mit seinem eigenen Spezialangriff!");
+			}else {
+				spezialangriffEingesetzt=false;
+			}
+			return true;
+		}
+
+		return false;
 	}
 
 	// ****************************************************************
@@ -291,11 +448,11 @@ public class Kampf {
 		System.out.println(gegner.name + " greift mit seiner Spezialtechnik an!");
 
 		schaden = 10; // Grundschaden
-		if (istEffektiv(gegner.waffe, held.armor)) {// Wenn Effektiv verdoppeln
+		if (held.starkOderSchwach(gegner.getWaffeCat()).equals("stark")) {// Wenn Effektiv verdoppeln
 			System.out.println("Und es ist sehr effektiv!");
 			schaden = schaden * 2;
 		}
-		if (istIneffektiv(gegner.waffe, held.armor)) {// Wenn Ineffektiv halbieren
+		if (gegner.starkOderSchwach(gegner.getWaffeCat()).equals("stark")) {// Wenn Ineffektiv halbieren
 			System.out.println("Aber es ist nicht sehr effektiv!");
 			schaden = schaden / 2;
 		}
@@ -306,9 +463,14 @@ public class Kampf {
 			held.def = false;
 			schaden = schaden / 2;
 		}
+		
+		if(held.getArmorName().equals("Heldenkleidung")) {
+			System.out.println("Die Kleidung des legendären Helden schützt seinen Träger!");
+			schaden=schaden/2;
+		}
 
 		held.leben = held.leben - schaden;// Schaden zufügen
-		spezialangriffVorbereitetCOM=false;
+		spezialangriffVorbereitetCOM = false;
 		checkWin();// Hat Schaden den Sieg gebracht?
 	}
 }

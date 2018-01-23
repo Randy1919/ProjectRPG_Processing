@@ -113,25 +113,57 @@ public class BossManager {
 															// werde)
 					template.name = sa[1];
 				}
-				if (sa[0].toLowerCase().equals("alter")) { // Alter
-					template.trivia[0] = sa[1];
-				}
 				if (sa[0].toLowerCase().equals("waffe")) { // Waffe
-					template.waffe = items.getWeaponByName(sa[1]);
+					template.setWaffe(items.getWeaponByName(sa[1]));
 				}
 				if (sa[0].toLowerCase().equals("rüstung")) { // Rüstung
-					template.armor = items.getArmorByName(sa[1]);
+					template.setArmor(items.getArmorByName(sa[1]));
 				}
-				if (sa[0].toLowerCase().equals("sport")) { // Trivia1
+				
+				
+				if (sa[0].toLowerCase().equals("alter")) { 
+					template.trivia[0] = sa[1];
+				}
+				if (sa[0].toLowerCase().equals("geburtsort")) { 
+					template.trivia[1] = sa[1];
+				}
+				if (sa[0].toLowerCase().equals("verkehrsmittel")) {
 					template.trivia[2] = sa[1];
+				}
+				if (sa[0].toLowerCase().equals("videospiel")) { 
+					template.trivia[3] = sa[1];
+				}
+				if (sa[0].toLowerCase().equals("konsole")) { 
+					template.trivia[4] = sa[1];
+				}
+				if (sa[0].toLowerCase().equals("hobby")) { 
+					template.trivia[5] = sa[1];
+				}
+				if (sa[0].toLowerCase().equals("sport")) { 
+					template.trivia[6] = sa[1];
+				}
+				if (sa[0].toLowerCase().equals("lieblingsfarbe")) { 
+					template.trivia[7] = sa[1];
+				}
+				if (sa[0].toLowerCase().equals("lieblingspizza")) {
+					template.trivia[8] = sa[1];
+				}
+				if (sa[0].toLowerCase().equals("hasspizza")) { 
+					template.trivia[9] = sa[1];
+				}
+				if (sa[0].toLowerCase().equals("lieblingstemperatur")) { 
+					template.trivia[10] = sa[1];
+				}
+				if (sa[0].toLowerCase().equals("hasstemperatur")) {
+					template.trivia[11] = sa[1];
 				}
 
 				// Wird keine Waffe oder Rüstung gefunden, setze Debugequip
-				if (template.waffe == null) {
-					template.waffe = items.getDebugWeapon();
+				if (template.getWaffe() == null) {
+					template.setWaffe(items.getDebugWeapon());
 				}
-				if (template.armor == null) {
-					template.armor = items.getDebugArmor();
+				if (template.getArmor() == null) {
+					template.setArmor(items.getDebugArmor());
 				}
 
 				// Wird ein Attribut nicht gefunden gilt der Standard von Boss.
@@ -157,8 +189,8 @@ public class BossManager {
 	//Debug boss wird generiert, um eine leere Liste zu verhindern
 	private void createDebugBoss() {
 		Boss template = new Boss("Entwickler");
-		template.waffe = items.getDebugWeapon();
-		template.armor = items.getDebugArmor();
+		template.setWaffe(items.getDebugWeapon());
+		template.setArmor(items.getDebugArmor());
 		bo.add(template);
 		template = null;
 	}

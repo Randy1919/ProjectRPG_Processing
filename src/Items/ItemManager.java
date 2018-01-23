@@ -218,7 +218,7 @@ public class ItemManager {
 			
 			//Fertiges Template wird zum einsortieren in die Liste übergeben
 			la.add(template);
-			System.out.println(template.name + " zu Rüstung hinzugefügt" );
+			System.out.println(template.name + " zu Rüstungen hinzugefügt" );
 			
 			//Dann wird das Template geleert
 			template=null;
@@ -247,6 +247,7 @@ public class ItemManager {
 			String myLine = null;
 			while ((myLine = bufRead.readLine()) != null) {
 				String[] sa = myLine.split("="); // Split beim =, da Syntax "Variable=Value"
+				if(sa.length==2) {
 				if (sa[0].toLowerCase().equals("name")) { //Name(Falls angegeben kann hier der Dateiname überschrieben werde)
 					template.name = sa[1];
 				}
@@ -254,11 +255,16 @@ public class ItemManager {
 					template.kategorie = sa[1];
 				}
 				
-				if (sa[0].toLowerCase().equals("typ")) { //Schwäche
-					template.typ = sa[1];
+				if (sa[0].toLowerCase().equals("typ")) {//Schwäche
+					if(sa[1].toLowerCase().equals("power")||sa[1].toLowerCase().equals("stun")||sa[1].toLowerCase().equals("heal")) {
+						template.typ = sa[1];
+					}else {
+					template=null;
+					return;
+					}
 				}
 				
-				if (sa[0].toLowerCase().equals("stärke")) { //Stärke
+				if (sa[0].toLowerCase().equals("stärke")) {//Stärke
 					template.starkGegen = sa[1];
 				}
 				if (sa[0].toLowerCase().equals("schwäche")) { //Schwäche
@@ -267,8 +273,12 @@ public class ItemManager {
 				if (sa[0].toLowerCase().equals("beschreibung")) { //Beschreibung
 					template.beschreibung = sa[1];
 				}
-					template.slot = 2;
+				if (sa[0].toLowerCase().equals("anzahl")) { //Anzahl
+					template.anzahl = Integer.parseInt(sa[1]);
+				}
 				
+					template.slot = 2;
+				}
 				//Wird ein Attribut nicht gefunden gilt der Standard von Item. 
 			}
 			
@@ -305,9 +315,33 @@ public class ItemManager {
 		template.starkGegen = "";
 		template.schwachGegen = "";
 		template.beschreibung = "";
-		template.slot = 0;
+		template.slot = 1;
 		la.add(template);
 		template=null;
+		
+		
+		//Kleines Easter-Egg wenn Held.txt im Hauptverzeichnis existiert
+		File f = new File("Held.txt");
+		if(f.exists()) {
+			template = new Item("Master-Schwert");
+			template.kategorie = "Legendär";
+			template.starkGegen = "Alles";
+			template.schwachGegen = "Nichts";
+			template.beschreibung = "Das legendäre Master-Schwert, Zerstörer des Bösen. Mit dieser Klinge in der Hand bist du unaufhaltsam.";
+			template.slot = 0;
+			lw.add(template);
+			System.out.println(template.name + " zu Waffen hinzugefügt" );
+			template=null;
+			template = new Item("Heldenkleidung");
+			template.kategorie = "Legendär";
+			template.starkGegen = "Alles";
+			template.schwachGegen = "Nichts";
+			template.beschreibung = "Eine grüne Kleidung mit Mütze, wie sie ein gewisser Held seit Jahrzehnten trägt. Schützt den Träger selbst vor heftigsten Angriffen";
+			template.slot = 1;
+			la.add(template);
+			System.out.println(template.name + " zu Rüstungen hinzugefügt" );
+			template=null;			
+		}
 }
 
 }

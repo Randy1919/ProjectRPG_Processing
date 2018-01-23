@@ -1,0 +1,78 @@
+Man kann jederzeit eigene Items hinzufügen. Um dies zu tun muss man lediglich folgende Schritte beachten:
+
+1. Man erstellt eine .txt Datei in dem entsprechenden Ordner(Waffen für eine Waffe, Panzerung für eine Rüstung, Consumables für Hilfsitems die man in den Kampf mitnehmen kann). Das Spiel liest diese Ordner entsprechend aus.
+
+
+
+2. In die Textdatei können dann die Informationen hinterlegt werden. Diese schreibt man einfach in dem folgenden Muster:
+
+Name=Musteritem
+Beschreibung=Ein Musteritem
+
+Bitte beachten sie das nach dem = kein Leerzeichen stehen sollte! Außerdem muss jedes Attribut in einer eigenen Zeile stehen. Groß- und Kleinschreibung wird vom Spiel nur zur Darstellung beachtet, für die Effekte wird diese ignoriert,
+
+name=musteritem
+
+funktioniert also auch, wird im Spiel aber nicht so schön dargestellt.
+
+Eine Liste der verfügbaren Attribute finden sie unten.
+
+
+
+3. Das wars schon! Beim nächsten Spielstart sollte das Item auftauchen!
+
+
+
+------------------------------------------------------------
+
+Vefügbare Attribute hängen davon ab welche Art Item hinzugefügt wird. Die Meisten sind nicht zwingend erforderlich, werden aber den Spielfluss beeinflussen falls leergelassen. Wenn mehr oder andere Attribute angegeben werden werden diese ignoriert.
+
+
+Die verfügbaren Attribute sind:
+
+
+
+Für Waffen:
+
+Name=Der Name der im Spiel angezeigt wird. Falls nicht angegeben wird das Item nach dem Dateinamen(minus .txt) benannt
+
+Kategorie=Die Kategorie des Items. Wichtig für Stärken und Schwächen. Falls nicht angegeben, wird eine Dummykategorie angenommen
+
+Stärke=Gegen welche KATEGORIE von Items ist dieses Item effektiv? Falls nicht angegeben, gilt die Dummykategorie.
+
+Schwäche=Gegen welche KATEGORIE von Items ist dieses Item schwach? Falls nicht angegeben, gilt die Dummykategorie.
+
+Beschreibung=Eine kurze Beschreibung. Gilt nur der Anzeige und hat keine Einfluss auf den Spielverlauf. Wird keine Beschreibung angegeben bleibt das Feld leer.
+
+
+
+Für Rüstungen:
+
+Name=Der Name der im Spiel angezeigt wird. Falls nicht angegeben wird das Item nach dem Dateinamen(minus .txt) benannt
+
+Kategorie=Die Kategorie des Items. Wichtig für Stärken und Schwächen. Falls nicht angegeben, wird eine Dummykategorie angenommen
+
+Stärke=Gegen welche KATEGORIE von Items ist dieses Item effektiv? Falls nicht angegeben, gilt die Dummykategorie.
+
+Schwäche=Gegen welche KATEGORIE von Items ist dieses Item schwach? Falls nicht angegeben, gilt die Dummykategorie.
+
+Beschreibung=Eine kurze Beschreibung. Gilt nur der Anzeige und hat keine Einfluss auf den Spielverlauf. Wird keine Beschreibung angegeben bleibt das Feld leer.
+
+
+
+Für Consumables:
+
+Name=Der Name der im Spiel angezeigt wird. Falls nicht angegeben wird das Item nach dem Dateinamen(minus .txt) benannt
+
+Typ=Die Art des Items. Verfügbare Arten sind "Heal" für ein Heilungsitem, "Stun" für ein Wurfitem das den Gegner lähmt und "Power" das dem Spieler erlaubt einen weiteren Spezialangriff auszuführen. Dieses Attribut ist NOTWENDIG. Falls dieses Attribut fehlt oder nicht einem der genannten Typen angehört wird das Item verworfen und nicht in das Spiel aufgenommen.
+
+Kategorie=Die Kategorie des Items. Wichtig für Stärken und Schwächen. Falls nicht angegeben, wird eine Dummykategorie angenommen
+
+Stärke=Gegen welche KATEGORIE von Items ist dieses Item effektiv? Falls nicht angegeben, gilt die Dummykategorie.
+
+Schwäche=Gegen welche KATEGORIE von Items ist dieses Item schwach? Falls nicht angegeben, gilt die Dummykategorie.
+
+Anzahl=Wie oft der Spieler dieses Item einsetzen kann bevor das Item leer ist. Wenn das Attribut fehlt oder falsch angegeben wird gilt der Standard von 3.
+
+Beschreibung=Eine kurze Beschreibung. Gilt nur der Anzeige und hat keine Einfluss auf den Spielverlauf. Wird keine Beschreibung angegeben bleibt das Feld leer.
+

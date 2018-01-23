@@ -1,0 +1,61 @@
+Man kann jederzeit einen eigenen Boss hinzufügen. Um dies zu tun muss man lediglich folgende Schritte beachten:
+
+1. Man erstellt eine .txt Datei in dem entsprechenden Ordner.
+
+
+
+2. In die Textdatei können dann die Informationen hinterlegt werden. Diese schreibt man einfach in dem folgenden Muster:
+
+Name=Musterboss
+Beschreibung=Ein Musterboss
+
+Bitte beachten sie das nach dem = kein Leerzeichen stehen sollte! Außerdem muss jedes Attribut in einer eigenen Zeile stehen. Groß- und Kleinschreibung wird vom Spiel nur zur Darstellung beachtet, für die Effekte wird diese ignoriert,
+
+name=musterboss
+
+funktioniert also auch, wird im Spiel aber nicht so schön dargestellt.
+
+Eine Liste der verfügbaren Attribute finden sie unten.
+
+
+
+3. Das wars schon! Beim nächsten Spielstart sollte das Item auftauchen!
+
+
+
+------------------------------------------------------------
+
+Die meisten verfügbaren Attribute sind nicht zwingend erforderlich, werden aber den Spielfluss beeinflussen falls leergelassen. Wenn mehr oder andere Attribute angegeben werden werden diese ignoriert.
+
+
+Die verfügbaren Attribute sind:
+
+Name=Der Name des Bosses. Falls weggelassen wird der Dateiname(minus.txt) genutzt.
+
+Waffe=Name der ausgerüsteten Waffe. Wird beim weglassen zu einem Debugitem.
+
+Rüstung=Name der ausgerüsteten Rüstung. Wird beim weglassen zu einem Debugitem.
+
+Alter=Alter des Bosses. Für Spielmechaniken irrelevant.
+
+Geburtsort=Der Geburtsort des Bosses. Für Spielmechaniken irrelevant.
+
+Verkehrsmittel=Verkehrsmittel der Wahl. Für Spielmechaniken irrelevant.
+
+Videospiel=Lieblingsvideospielreihe des Bosses. Für Spielmechaniken irrelevant.
+
+Konsole=Lieblingskonsole des Bosses. Für Spielmechaniken irrelevant.
+
+Hobby=Hobby des Bosses. Repräsentiert eine Stärke des Bosses, falls entsprechende Items im Spiel sind.
+
+Sport=Ausgeübte Sportart des Bosses. Repräsentiert eine Stärke des Bosses, falls entsprechende Items im Spiel sind.
+
+Lieblingsfarbe=Lieblingsfarbe des Bosses. Repräsentiert eine Schwäche des Bosses, falls entsprechende Items im Spiel sind.
+
+Lieblingspizza=Lieblingspizza. Repräsentiert eine Stärke des Bosses, falls entsprechende Items im Spiel sind.
+
+Hasspizza=Pizza die der Boss ekelhaft findet. Repräsentiert eine Schwäche des Bosses, falls entsprechende Items im Spiel sind.
+
+Lieblingstemperatur=Mag der Boss eher Kalt oder Heiß? Repräsentiert eine Stärke des Bosses, falls entsprechende Items im Spiel sind.
+ 
+Hasstemperatur=Hasst der Boss eher Kalt oder Heiß? Repräsentiert eine Schwäche des Bosses, falls entsprechende Items im Spiel sind.
