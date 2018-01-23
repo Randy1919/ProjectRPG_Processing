@@ -1,6 +1,7 @@
 package Kampf;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Scanner;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -10,8 +11,10 @@ import Actors.BossManager;
 import Actors.Spieler;
 import Items.Item;
 import Items.ItemManager;
+import Labyrinth.Labyrinth;
+import processing.core.PApplet;
 
-public class Kampf {
+public class Kampf extends PApplet{
 
 	// To-Do: Grafik
 	// To-Do: Gegner KI
@@ -32,8 +35,10 @@ public class Kampf {
 			hero.setArmor(im.getArmorByName("Heldenkleidung"));			
 		}
 
-		Kampf k = new Kampf(hero, bo);
-		k.start();
+//		k.start();
+		String[] argu = {"--location=0,0", "Kampf.Kampf"};
+		Kampf k = new Kampf(hero,bo);
+		PApplet.runSketch(argu,k);
 	}
 
 	BossManager bm;
@@ -52,12 +57,29 @@ public class Kampf {
 	int gegnerStun;
 
 	// ****************************************************************
+	// *** Grafik ***
+	// ****************************************************************
+	
+	public void settings() {
+		size(500,500);
+	}
+
+	public void setup() {
+
+	}
+
+	public void draw() {
+		background(0);
+
+	}
+	
+	// ****************************************************************
 	// *** Konstruktor ***
 	// ****************************************************************
 	public Kampf(Spieler s, BossManager b) {
 		held = s;
 		bm = b;
-		gegner = bm.getCurrentBoss();
+		gegner = bm.getCurrentBoss();		
 	}
 
 	// ****************************************************************
