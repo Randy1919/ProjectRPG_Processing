@@ -15,7 +15,7 @@ public class Boss extends Actor{
 
 	
 	//Konstruktor
-	Boss(String n) {
+	public Boss(String n) {
 		super(n);
 
 		trivia = new String[12];
@@ -60,7 +60,7 @@ public class Boss extends Actor{
 	//Zufällige Trivia wird freigeschaltet und eine passende Meldung wird zurückgegeben
 	public String unlockRandomTrivia() {
 		// Zufallszahl zwischen Null und wie viele Trivias es gibt
-		int zufall = 0 + (int) (Math.random() * triviaUnlocked.length);
+		int zufall = 0 + (int) (Math.random() * triviaUnlocked.length-1);
 		int durchgang = 0;
 
 		// Solange Ende nicht gegeben
@@ -73,7 +73,7 @@ public class Boss extends Actor{
 				if (zufall > 0) {
 					zufall--;
 				} else {
-					zufall = triviaUnlocked.length;
+					zufall = triviaUnlocked.length-1;
 				}
 			} else {
 				//Wenn nicht schon freigeschaltet, freischalten und Ende setzen
