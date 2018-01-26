@@ -1,7 +1,6 @@
 package Kampf;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Scanner;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -11,8 +10,8 @@ import Actors.BossManager;
 import Actors.Spieler;
 import Items.Item;
 import Items.ItemManager;
-import Labyrinth.Labyrinth;
 import processing.core.PApplet;
+import processing.core.PFont;
 
 public class Kampf extends PApplet{
 
@@ -35,12 +34,15 @@ public class Kampf extends PApplet{
 			hero.setArmor(im.getArmorByName("Heldenkleidung"));			
 		}
 
-//		k.start();
+
 		String[] argu = {"--location=0,0", "Kampf.Kampf"};
 		Kampf k = new Kampf(hero,bo);
 		PApplet.runSketch(argu,k);
-	}
+		
+		k.startKampf();
 
+	}
+	PFont f;
 	BossManager bm;
 	Scanner s;
 
@@ -55,22 +57,69 @@ public class Kampf extends PApplet{
 	boolean spezialangriffVorbereitetCOM;
 	int gegnerSchild;
 	int gegnerStun;
+	String bossname ;
+	String spielername ;
 
 	// ****************************************************************
 	// *** Grafik ***
 	// ****************************************************************
 	
 	public void settings() {
-		size(500,500);
+		size(1000,1000);
 	}
 
 	public void setup() {
-
+		background(0);
+		noLoop();
+		f = createFont("Arial", 18, true);
+		textFont(f, 40);
 	}
 
 	public void draw() {
 		background(0);
-
+		fill(230, 138, 0);
+		
+		//
+		// Umrandungen
+		//
+		
+		//Lebensbalken
+		rect(10, 10, 485, 150);
+		rect(505, 10, 485, 150);
+		
+		//Hauptfenster
+		rect(10, 170, 980, 550);
+		
+		//Ergebnisse und Menü
+		rect(10, 730, 485, 260);
+		rect(505,730, 485, 260);
+		
+		fill(0, 0, 0);
+		
+		//
+		// Innenflächen
+		//
+		
+		//Lebensbalken
+		rect(20, 20, 465, 130);
+		rect(515, 20, 465, 130);
+		
+		//Hauptfenster
+		rect(20, 180, 960, 530);
+		
+		//Ergebnisse und Menü
+		rect(20, 740, 465, 240);
+		rect(515,740, 465, 240);
+		
+		//
+		// Text
+		//		
+		fill(255, 255, 255);
+		
+		text(spielername+": ", 50, 100);
+		text((int)held.leben+"",355, 100);
+		text(bossname+": ", 555, 100);
+		text((int)gegner.leben+"", 855, 100);
 	}
 	
 	// ****************************************************************
@@ -79,7 +128,10 @@ public class Kampf extends PApplet{
 	public Kampf(Spieler s, BossManager b) {
 		held = s;
 		bm = b;
-		gegner = bm.getCurrentBoss();		
+		gegner = bm.getCurrentBoss();	
+		
+		spielername =held.name.split("\\s+")[0];
+		bossname = gegner.name.split("\\s+")[0];
 	}
 
 	// ****************************************************************
@@ -116,7 +168,7 @@ public class Kampf extends PApplet{
 	// ****************************************************************
 	// *** Ablauf ***
 	// ****************************************************************
-	public void start() {
+	public void startKampf() {
 		System.out.println(held.name + " vs " + gegner.name);
 		System.out.println(held.getWaffeName() + " vs " + gegner.getWaffeName());
 		held.leben = 100;
@@ -132,13 +184,13 @@ public class Kampf extends PApplet{
 		s = new Scanner(System.in);
 		while (true) {
 			turn();
+			redraw();
 		}
 	}
 
 	// Eine Runde
 	private void turn() {
 		boolean legitTurn = false;
-
 		if (heldStun==0) {
 			while (!legitTurn) {// Ist Runde gültig? Wird durch Turn bestimmt
 				legitTurn = playerTurn(); // Spieler ist dran.
@@ -233,6 +285,7 @@ public class Kampf extends PApplet{
 			gegnerSpezialangriff();
 			return true;
 		} else {
+
 			return true;
 		}
 	}
