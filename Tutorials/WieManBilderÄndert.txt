@@ -1,0 +1,10 @@
+Die Bilder des Spiels sind relativ leicht zu ändern.
+
+
+Um das Hintergrundbild für den Kampf zu ändern, tauschen sie einfach die Datei "Background.jpg" im Ordner "Images" aus. Das Bild sollte eine Auflösung von 961 x 531 Pixeln haben.
+
+
+Um das Spielerbild im Kampf auszutauschen tauschen sie einfach die Datei "SpielerKampf.png" im Ordner "Images" aus. Das Bild sollte eine Auflösung von etwa 200 x 340 Pixeln haben,an nicht benötigten Stellen durchsichtig sein und nach links oder neutral ausgerichtet sein.
+
+
+Um das Gegnerbild im Kampf auszutauschen tauschen sie einfach die .png Datei im Ordner "Bosse" aus, die nach dem Boss beannt ist dessen Bild sie austauschen wollen. Das Bild sollte eine Auflösung von etwa 200 x 340 Pixeln haben, an nicht benötigten Stellen durchsichtig sein und nach rechts oder neutral ausgerichtet sein.

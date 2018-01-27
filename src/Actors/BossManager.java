@@ -84,7 +84,7 @@ public class BossManager {
 		File verzeichnis = new File("Bosse"); // Verzeichnis wird aufgerufen
 		File[] files = verzeichnis.listFiles(); // Dateien werden gelistet
 		for (File file : files) {// Alle Dateien Werden gelesen
-			if (file.isFile()) {
+			if (file.isFile()&&file.getName().endsWith(".txt")) {
 				parseBoss(file);// und geparsed
 			}
 		}
