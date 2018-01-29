@@ -8,6 +8,7 @@ public class Item {
 	public String schwachGegen ="";
 	public int slot = 99;
 	public int anzahl=3;
+	public int schaden=5;
 	public String beschreibung = "";
 	
 	public Item(String n) {

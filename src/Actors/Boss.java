@@ -35,6 +35,24 @@ public class Boss extends Actor{
 		}
 	}
 	
+	//Gibt "schwach" zurück wenn Item gegen den Gegner schwach ist, und "stark" wenn stark. Sonst "normal"
+	public String starkOderSchwach(String s) {
+		
+		for(int i=0;i<schwaechen.length;i++) {
+			if(s.toLowerCase().equals(schwaechen[i].toLowerCase())) {
+				return "stark";
+			}
+		}
+		
+		for(int i=0;i<schwaechen.length;i++) {
+			if(s.toLowerCase().equals(staerken[i].toLowerCase())) {
+				return "schwach";
+			}
+		}
+		
+		return "normal";
+	}
+	
 	//Parsed Schwächen aus Trivia
 	//0=Rüstungsschwäche,1=Hasstemperatur,2=Hasspizza,3=Lieblingsfarbe
 	

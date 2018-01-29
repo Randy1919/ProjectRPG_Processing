@@ -153,6 +153,9 @@ public class ItemManager {
 				if (sa[0].toLowerCase().equals("stärke")) { //Stärke
 					template.starkGegen = sa[1];
 				}
+				if (sa[0].toLowerCase().equals("schaden")) { //Stärke
+					template.schaden = Integer.parseInt(sa[1]);
+				}
 				if (sa[0].toLowerCase().equals("schwäche")) { //Schwäche
 					template.schwachGegen = sa[1];
 				}
@@ -304,6 +307,7 @@ public class ItemManager {
 	private void CreateDebugEquip() {
 		Item template = new Item("Unbewaffnet");
 		template.kategorie = "Debug";
+		template.schaden=1;
 		template.starkGegen = "";
 		template.schwachGegen = "";
 		template.beschreibung = "";
@@ -325,6 +329,7 @@ public class ItemManager {
 		if(f.exists()) {
 			template = new Item("Master-Schwert");
 			template.kategorie = "Legendär";
+			template.schaden=15;
 			template.starkGegen = "Alles";
 			template.schwachGegen = "Nichts";
 			template.beschreibung = "Das legendäre Master-Schwert, Zerstörer des Bösen. Mit dieser Klinge in der Hand bist du unaufhaltsam.";

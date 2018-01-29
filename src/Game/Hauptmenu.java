@@ -64,6 +64,10 @@ public class Hauptmenu extends PApplet
 			
 		setUp = true;
 	}
+
+	ItemManager im = new ItemManager();
+	BossManager bo = new BossManager(im);
+	Spieler hero = new Spieler("Spieler");
 	
 	public void chooseBoss(int nr)
 	{
