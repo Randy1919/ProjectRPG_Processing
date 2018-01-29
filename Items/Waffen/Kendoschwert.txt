@@ -1,4 +1,5 @@
 Kategorie=Kendo
+Schaden=5
 Stärke=Boxen
 Schwäche=Kendo
 Beschreibung=Ein einfaches Kendoschwert. 

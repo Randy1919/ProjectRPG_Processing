@@ -1,10 +1,10 @@
-Die Bilder des Spiels sind relativ leicht zu ändern.
+Die Bilder des Spiels sind relativ leicht zu ï¿½ndern.
 
 
-Um das Hintergrundbild für den Kampf zu ändern, tauschen sie einfach die Datei "Background.jpg" im Ordner "Images" aus. Das Bild sollte eine Auflösung von 961 x 531 Pixeln haben.
+Um das Hintergrundbild fï¿½r den Kampf zu ï¿½ndern, tauschen sie einfach die Datei "Background.jpg" im Ordner "Images/backgrounds" aus. Das Bild sollte eine Auflï¿½sung von 961 x 531 Pixeln haben.
 
 
-Um das Spielerbild im Kampf auszutauschen tauschen sie einfach die Datei "SpielerKampf.png" im Ordner "Images" aus. Das Bild sollte eine Auflösung von etwa 200 x 340 Pixeln haben,an nicht benötigten Stellen durchsichtig sein und nach links oder neutral ausgerichtet sein.
+Um das Spielerbild im Kampf auszutauschen tauschen sie einfach die Datei "SpielerKampf.png" im Ordner "Images/player" aus. Das Bild sollte eine Auflï¿½sung von etwa 200 x 340 Pixeln haben,an nicht benï¿½tigten Stellen durchsichtig sein und nach links oder neutral ausgerichtet sein. Selbiges gilt fÃ¼r das Bild der Spezialattacke mit der Datei "Spielerspezial.jpg". Dieses sollte eine AuflÃ¶sung von 961 x 531. 
 
 
-Um das Gegnerbild im Kampf auszutauschen tauschen sie einfach die .png Datei im Ordner "Bosse" aus, die nach dem Boss beannt ist dessen Bild sie austauschen wollen. Das Bild sollte eine Auflösung von etwa 200 x 340 Pixeln haben, an nicht benötigten Stellen durchsichtig sein und nach rechts oder neutral ausgerichtet sein.
+Um das Gegnerbild im Kampf auszutauschen tauschen sie einfach die .png Datei im Ordner "Bosse" aus, die nach dem Boss benannt ist dessen Bild sie austauschen wollen. Das Bild sollte eine Auflï¿½sung von etwa 200 x 340 Pixeln haben, an nicht benï¿½tigten Stellen durchsichtig sein und nach rechts oder neutral ausgerichtet sein.Selbiges gilt fÃ¼r das Bild der Spezialattacke mit der Datei mit dem Bossnamen +"_spezial.jpg". Dieses sollte eine AuflÃ¶sung von 961 x 531.
