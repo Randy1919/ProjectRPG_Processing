@@ -21,13 +21,16 @@ public class Hauptmenu extends PApplet
 	BossManager bossManager;
 	Spieler spieler;
 	
-	int activeBoss = 0;
-	
+	PImage imgPlayer;
 	PImage[] bossImgs;
-	
-	int drawMode = 0;
+	String[] infoStrings;
 	
 	Boolean setUp = false;
+	int drawMode = 0;
+	int activeBoss = 0;
+	
+	boolean[] infosFound;	
+	
 	
 	public static void main(String[] args) 
 	{		
@@ -53,7 +56,16 @@ public class Hauptmenu extends PApplet
 			spieler.setArmor(itemManager.getArmorByName("Heldenkleidung"));			
 		}
 		
+		if (new File("Images/player/spielerkampf.png").isFile()) 
+		{
+			imgPlayer = loadImage("Images/player/spielerkampf.png");
+		}
+		
+		//infoStrings = new String[7];
+		infoStrings =  new String[] {"Name", "Age", "Age", "Age", "Age", "Age", "Age", "Age", "Age", "Age"};
+		infosFound = new boolean[7];
 		bossImgs = new PImage[bossManager.bosse.length];	
+		
 		for(int i = 0; i < bossManager.bosse.length; i++)
 		{
 			if(new File("Bosse/"+bossManager.bosse[i].name+".png").isFile()) 
@@ -71,8 +83,17 @@ public class Hauptmenu extends PApplet
 	
 	public void chooseBoss(int nr)
 	{
-		drawMode = 1;
-		activeBoss = nr;
+		if(nr != 0)
+		{
+			infosFound = new boolean[7];
+			drawMode = 1;
+			activeBoss = nr;
+		}	
+		else
+		{
+			drawMode = 0;
+		}
+		
 	}
 	
 	public boolean hovering(int posX, int posY, int width, int height)
@@ -123,6 +144,7 @@ public class Hauptmenu extends PApplet
 			
 			fill(255, 255, 255);
 			text("Choose a Boss", 375, 340);
+			text("~Einführung in die Medieninformatik", 175, 870);
 			
 			//BossBoxen	
 			int boxDistance = 20;
@@ -181,52 +203,102 @@ public class Hauptmenu extends PApplet
 		}
 		else if(drawMode == 1) //Boss Overview Menu
 		{
+			//header
 			fill(230, 138, 0);
-			rect(10, 10, 485, 150);
+			rect(10, 10, 820, 150);
 			fill(0, 0, 0);
-			rect(20, 20, 465, 130);		
+			rect(20, 20, 800, 130);		
 			
-			fill(230, 138, 0);
-			rect(505, 10, 485, 150);
-			fill(0, 0, 0);
-			rect(515, 20, 465, 130);
+			//boss
+			float factor = (bossImgs[activeBoss].width * 1f) / bossImgs[activeBoss].height;					
+			image(bossImgs[activeBoss], (225 - (137 / 2)) + ((137 - (factor * 137)) / 2), 82 - (137 / 2), 137 * factor, 137);
 			
 			fill(255, 255, 255);
-			text("Spieler:", 50, 100);
-			text(spieler.name, 200, 100);
-			text("Boss:", 555, 100);
-			text(bossManager.bosse[activeBoss].name, 700, 100);
-
+			text("Boss:", 55, 100);
+			text(bossManager.bosse[activeBoss].name, 300, 100);
+			//boss
+			//header
+			
+			//back
+			fill(230, 138, 0);	
+			if(hovering(840, 10, 150, 150))
+			{
+				fill(137, 137, 137);
+				if(mousePressed)
+				{
+					fill(244,244,244);
+					chooseBoss(0);
+				}
+			}
+			rect(840, 10, 150, 150);
+			fill(0, 0, 0);
+			rect(850, 20, 130, 130);
+			
+			fill(255, 255, 255);
+			text("Back", 870, 100);
+			//back
+			
 			// Hauptfenster
 			fill(230, 138, 0);
-			rect(10, 170, 980, 550);
+			rect(10, 170, 650, 820);
 			fill(0, 0, 0);
-			rect(20, 180, 960, 530);
-
-			// Ergebnisse und Menü
-			rect(10, 730, 485, 260);
-			rect(505, 730, 485, 260);
-
-			
-
-			//
-			// Innenflächen
-			//
-
-			// Lebensbalken
-			
-			
-
+			rect(20, 180, 630, 800);
 			// Hauptfenster
 			
+			// Spielerfenster
+			fill(230, 138, 0);
+			rect(670, 170, 320, 405);
+			fill(0, 0, 0);
+			rect(680, 180, 300, 385);
+			
+			fill(255, 255, 255);
+			text("Spieler:", 700, 490);
+			text(spieler.name, 700, 540);
+			
+			//float factor1 = (imgPlayer.width * 1f) / imgPlayer.height;					
+			//image(imgPlayer, (830 - (337 / 2)) + ((337 - (factor1 * 337)) / 2), 337 - (337 / 2), 337 * factor1, 337);
+			image(bossImgs[activeBoss], (830 - (277 / 2)) + ((277 - (factor * 277)) / 2), 317 - (277 / 2), 277 * factor, 277);
+			// Spielerfenster
+			
+			// Befehlenster
+			fill(230, 138, 0);
+			rect(670, 585, 320, 405);
+			fill(0, 0, 0);
+			rect(680, 595, 300, 385);
+			// Befehlfenster
+			
+			//rects
+			fill(137, 137, 137);
+			rect(690, 605, 280, 50);
+			rect(690, 665, 280, 50);
+			rect(690, 725, 280, 50);
+			rect(690, 785, 280, 50);
+			rect(690, 845, 280, 50);
+			rect(690, 905, 280, 50);
+			//rects
+			
+			
+			
+			
+			
 
-			// Ergebnisse und Menü
-			rect(20, 740, 465, 240);
-			rect(515, 740, 465, 240);
+			
+			
+			
+			//float factor = (bossImgs[activeBoss].height * 1f) / bossImgs[activeBoss].width;
+			//image(bossImgs[activeBoss], 155, 17, 137, 137 * factor);
+
 			
 			
 			fill(255, 255, 255);
-			text("You have chosen Boss " + bossManager.bosse[activeBoss].name, 150, 400);
+			//text("You have chosen Boss " + bossManager.bosse[activeBoss].name, 150, 400);
+			text("Infos:", 55, 250);
+			
+			for(int i = 0; i < infoStrings.length; i++)
+			{
+				text(infoStrings[i] + ": ", 100, 310 + (60 * i));
+				text("" + infosFound[0], 277, 310 + (60 * i));
+			}
 		}
 	}	
 }
