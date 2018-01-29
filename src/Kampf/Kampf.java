@@ -1,7 +1,6 @@
 package Kampf;
 
 import java.io.File;
-import java.util.Scanner;
 import java.util.concurrent.ThreadLocalRandom;
 
 import Actors.Actor;
@@ -16,7 +15,8 @@ import processing.core.PImage;
 
 public class Kampf extends PApplet {
 
-	// To-Do: Gegner KI
+	// To-Do: Spezialangriff Gegner noch kaputt
+	// To-Do: Effektivität anzeigen
 
 	public static void main(String[] args) {
 		ItemManager im = new ItemManager();
@@ -46,6 +46,7 @@ public class Kampf extends PApplet {
 	boolean wait;
 	boolean itempressed;
 	boolean spezialangriffaktiv = false;
+	boolean gegnerspezialangriffaktiv = false;
 
 	PImage imgbackground; // Declare a variable of type PImage
 	PImage imgplayer; // Declare a variable of type PImage
@@ -66,11 +67,12 @@ public class Kampf extends PApplet {
 	Actor acted; // Der Passive
 	String action;// Das genutze Aktion(oder Item)
 	String avoid;// Wird für drawDamage benötigt
-	int schaden;// Schaden
-	int damagestep;// Indicator für den Draw. 0=Normal, 1= Actor, 2 = action, 3= Acted, 4 = Schaden
+	double schaden;// Schaden
+	int damagestep;// Indicator für den Draw. 0=Normal, 1= Actor, 2 = action, 3= Acted, 4 =
+					// Schaden, 5 = Rundenwechsel
 	int formerLeben;
-	boolean lifechanged=false;
-	boolean end=false;
+	boolean lifechanged = false;
+	boolean end = false;
 
 	// Manager
 	BossManager bm;
@@ -85,8 +87,10 @@ public class Kampf extends PApplet {
 	// Boss
 	Boss gegner;
 	boolean spezialangriffVorbereitetCOM;
+	boolean bossspezialUsed;
 	int gegnerSchild;
 	int gegnerStun;
+	boolean bossturn;
 
 	// ****************************************************************
 	// *** Grafik ***
@@ -104,6 +108,8 @@ public class Kampf extends PApplet {
 		wait = false;
 		itempressed = false;
 
+		bossspezialUsed = false;
+
 		held.leben = 100;
 		heldSchild = 0;
 		gegner.leben = 100;
@@ -113,7 +119,8 @@ public class Kampf extends PApplet {
 		gegnerStun = 0;
 		gegner.parseCats();
 		held.parseCats();
-		end=false;
+		end = false;
+		playerturn = true;
 
 		if (new File("Images/player/spielerkampf.png").isFile()) {
 			imgplayer = loadImage("Images/player/spielerkampf.png");
@@ -158,93 +165,90 @@ public class Kampf extends PApplet {
 
 	public void draw() {
 		if (!wait) {
-			if(checkWin()==0) {
-			if (damagestep == 0) {
-				drawStep0();
-			} else if (damagestep == 1) {
-				drawStep1();
-			} else if (damagestep == 2) {
-				drawStep2();
-			} else if (damagestep == 3) {
-				drawStep3();
-			} else if (damagestep == 4) {
-				drawStep4();
-			}
-			}else if(checkWin()==1){
+			if (checkWin() == 0) {
+				if (damagestep == 0) {
+					drawStep0();
+				} else if (damagestep == 1) {
+					drawStep1();
+				} else if (damagestep == 2) {
+					drawStep2();
+				} else if (damagestep == 3) {
+					drawStep3();
+				} else if (damagestep == 4) {
+					drawStep4();
+				} else if (damagestep == 5) {
+					drawStep5();
+				}
+			} else if (checkWin() == 1) {
 				drawWin();
-				wait=true;
-				end=true;
-			}else {
+				wait = true;
+				end = true;
+			} else {
 				drawLose();
-				wait=true;
-				end=true;
+				wait = true;
+				end = true;
 			}
 		} else {
-			if(end) {
+			if (end) {
 				delay(3000);
 				System.exit(0);
-			}else {
-			delay(500);
-			wait = false;
+			} else {
+				delay(500);
+				wait = false;
 			}
 		}
 	}
 
 	public void drawStep0() {
 		background(0);
-		playerturn = true;
 		drawBackground();
 		drawBackgroundPicture();
 		drawPlayer();
 		drawBoss();
 		drawLeben();
+		if (bossturn) {
+			gegnerTurn();
+		}
 		if (!itempressed) {
 			drawTurnButtons();
 		} else {
 			drawItemButtons();
 		}
-		if(heldStun>0) {
-			actor = held;
-			acted = held;
-			action = "Gelähmt";
-			avoid = "stun";
-			schaden = 0;
-			damagestep = 1;			
-		}
-		if(gegnerStun>0) {
-			actor = gegner;
-			acted = gegner;
-			action = "Gelähmt";
-			avoid = "stun";
-			schaden = 0;
-			damagestep = 1;			
+		if (playerturn) {
+			if (heldStun > 0) {
+				actor = held;
+				acted = held;
+				action = "Gelähmt";
+				avoid = "stun";
+				schaden = 0;
+				damagestep = 1;
+			}
 		}
 	}
 
 	public void drawStep1() {
 		background(0);
-		playerturn = true;
 		drawBackground();
 		drawBackgroundPicture();
 		if (actor.equals(held)) {
-			if(heldStun>0) {
-				drawPlayer();	
-			}else {
-				drawAttackPlayer();			
+			if (heldStun > 0) {
+				drawPlayer();
+			} else {
+				drawAttackPlayer();
 			}
 			drawBoss();
 		} else {
 			drawPlayer();
-			if(gegnerStun>0) {
-				drawBoss();		
-			}else {
-				drawAttackBoss();			
+			if (gegnerStun > 0) {
+				drawBoss();
+			} else {
+				drawAttackBoss();
 			}
-			
+
 		}
-		if(lifechanged) {
+		if (lifechanged) {
 			drawFormerLeben();
-		}else {
+		} else {
 			drawLeben();
 		}
 
@@ -264,6 +268,9 @@ public class Kampf extends PApplet {
 		if (spezialangriffaktiv) {
 			drawSpezial();
 		}
+		if (gegnerspezialangriffaktiv) {
+			drawGegnerSpezial();
+		}
 		drawWeapon(action);
 		if (action.equals("Master-Schwert") && actor.equals(held)) {
 			drawEasterEggPlayer();
@@ -277,12 +284,12 @@ public class Kampf extends PApplet {
 					if (imgshieldplayer != null) {
 						image(imgshieldplayer, 160, 330, 200, 340);
 					}
-				} else if(action.equals("Gelähmt")){
+				} else if (action.equals("Gelähmt")) {
 					heldStun--;
-				}else {
+				} else {
 					if (imgheal != null) {
 						image(imgheal, 130, 350, 200, 340);
-					}					
+					}
 				}
 			} else {
 				if (!avoid.equals("healsteal")) {
@@ -303,12 +310,12 @@ public class Kampf extends PApplet {
 					if (imgshieldgegner != null) {
 						image(imgshieldgegner, 600, 330, 200, 340);
 					}
-				} else if(action.equals("Gelähmt")){
-					gegnerStun--;					
-				}else {
+				} else if (action.equals("Gelähmt")) {
+					gegnerStun--;
+				} else {
 					if (imgheal != null) {
 						image(imgheal, 690, 350, 200, 340);
-					}					
+					}
 				}
 			} else {
 				if (imgslashgegner != null) {
@@ -317,8 +324,8 @@ public class Kampf extends PApplet {
 			}
 		}
 		wait = true;
-		if (action.equals("Verteidigt")||action.equals("Gelähmt")) {
-			damagestep = 0;
+		if (action.equals("Verteidigt") || action.equals("Gelähmt")) {
+			damagestep = 5;
 		} else {
 			damagestep = 3;
 		}
@@ -326,7 +333,6 @@ public class Kampf extends PApplet {
 
 	public void drawStep3() {
 		background(0);
-		playerturn = true;
 		drawBackground();
 		drawBackgroundPicture();
 		if (actor.equals(held)) {
@@ -336,9 +342,9 @@ public class Kampf extends PApplet {
 			drawPlayer();
 			drawAttackBoss();
 		}
-		if(lifechanged) {
+		if (lifechanged) {
 			drawFormerLeben();
-		}else {
+		} else {
 			drawLeben();
 		}
 		if (!itempressed) {
@@ -346,23 +352,30 @@ public class Kampf extends PApplet {
 		} else {
 			drawItemButtons();
 		}
-		drawAttacker(actor);	
+		drawAttacker(actor);
 		drawWeapon(action);
 		if (spezialangriffaktiv) {
 			drawSpezial();
-		}		
+		}
+		if (gegnerspezialangriffaktiv) {
+			drawGegnerSpezial();
+		}
 		drawAttacked(acted);
 
 		if (actor.equals(held)) {
 			if (acted.equals(held)) {
-					if (imgheal != null) {
-						image(imgheal, 130, 350, 200, 340);
-					}
+				if (imgheal != null) {
+					image(imgheal, 70, 350, 200, 340);
+				}
 			} else {
 				if (!avoid.equals("healsteal")) {
 					if (!action.equals("Spezialangriff")) {
-						if (imghit1 != null) {
-							image(imghit1, 690, 350, 200, 340);
+						if (!avoid.equals("dodge")) {
+							if (imghit1 != null) {
+								image(imghit1, 710, 350, 200, 340);
+							}
+						} else {
+							image(imgshieldgegner, 650, 330, 200, 340);
 						}
 					}
 				} else {
@@ -373,24 +386,27 @@ public class Kampf extends PApplet {
 			}
 		} else {
 			if (acted.equals(gegner)) {
-					if (imgheal != null) {
-						image(imgheal, 690, 350, 200, 340);
-					}
-				
+				if (imgheal != null) {
+					image(imgheal, 690, 350, 200, 340);
+				}
+
 			} else {
-				if (imghit1 != null) {
-					image(imghit1, 150, 350, 200, 340);
+				if (!avoid.equals("dodge")) {
+					if (imghit1 != null) {
+						image(imghit1, 70, 350, 200, 340);
+					}
+				} else {
+					image(imgshieldplayer, 110, 330, 200, 340);
 				}
 			}
 		}
-		
+
 		wait = true;
 		damagestep = 4;
 	}
 
 	public void drawStep4() {
 		background(0);
-		playerturn = true;
 		drawBackground();
 		drawBackgroundPicture();
 		if (actor.equals(held)) {
@@ -400,10 +416,9 @@ public class Kampf extends PApplet {
 			drawPlayer();
 			drawAttackBoss();
 		}
-		if(lifechanged) {
+		if (lifechanged) {
 			drawFormerLeben();
-			lifechanged=false;
-		}else {
+		} else {
 			drawLeben();
 		}
 		if (!itempressed) {
@@ -411,12 +426,12 @@ public class Kampf extends PApplet {
 		} else {
 			drawItemButtons();
 		}
-		drawAttacker(actor);	
+		drawAttacker(actor);
 		drawWeapon(action);
 		if (spezialangriffaktiv) {
 			drawSpezial();
 			spezialangriffaktiv = false;
-		}		
+		}
 		drawAttacked(acted);
 
 		if (actor.equals(held)) {
@@ -425,8 +440,12 @@ public class Kampf extends PApplet {
 			} else {
 				if (!avoid.equals("healsteal")) {
 					if (!action.equals("Spezialangriff")) {
-						if (imghit2 != null) {
-							image(imghit2, 690, 350, 200, 340);
+						if (!avoid.equals("dodge")) {
+							if (imghit2 != null) {
+								image(imghit2, 710, 350, 200, 340);
+							}
+						} else {
+							image(imgshieldgegner, 650, 330, 200, 340);
 						}
 					}
 				}
@@ -434,16 +453,19 @@ public class Kampf extends PApplet {
 		} else {
 			if (acted.equals(gegner)) {
 
-				
 			} else {
-				if (imghit2 != null) {
-					image(imghit2, 150, 350, 200, 340);
+				if (!avoid.equals("dodge")) {
+					if (imghit2 != null) {
+						image(imghit2, 70, 350, 200, 340);
+					}
+				} else {
+					image(imgshieldplayer, 110, 330, 200, 340);
 				}
 			}
 		}
 		drawDamage(schaden, avoid);
 		wait = true;
-		damagestep = 0;
+		damagestep = 5;
 
 		if (action.equals("Heldenkleidung") && actor.equals(held)) {
 			drawEasterEggPlayer();
@@ -451,6 +473,19 @@ public class Kampf extends PApplet {
 		if (action.equals("Heldenkleidung") && actor.equals(gegner)) {
 			drawEasterEggBoss();
 		}
+	}
+
+	public void drawStep5() {
+		if (bossturn) {
+			playerturn = true;
+			bossturn = false;
+		} else {
+			bossturn = true;
+		}
+		if (lifechanged) {
+			lifechanged = false;
+		}
+		damagestep = 0;
 	}
 
 	public void drawBackground() {
@@ -502,6 +537,12 @@ public class Kampf extends PApplet {
 		}
 	}
 
+	public void drawGegnerSpezial() {
+		if (imgbossspezial != null) {
+			image(imgbossspezial, 20, 180, 961, 531);
+		}
+	}
+
 	public void drawPlayer() {
 		if (imgplayer != null) {
 			image(imgplayer, 80, 350, 200, 340);
@@ -550,7 +591,7 @@ public class Kampf extends PApplet {
 		text(gegner.name.split("\\s+")[0] + ": ", 555, 100);
 		text((int) gegner.leben + "", 855, 100);
 	}
-	
+
 	public void drawFormerLeben() {
 		//
 		// Text
@@ -558,37 +599,37 @@ public class Kampf extends PApplet {
 		fill(255, 255, 255);
 
 		text(held.name.split("\\s+")[0] + ": ", 50, 100);
-		if(acted.equals(held)) {
-			text((int) formerLeben + "", 355, 100);			
-		}else {
-			text((int) held.leben + "", 355, 100);			
+		if (acted.equals(held)) {
+			text((int) formerLeben + "", 355, 100);
+		} else {
+			text((int) held.leben + "", 355, 100);
 		}
 
 		text(gegner.name.split("\\s+")[0] + ": ", 555, 100);
-		if(acted.equals(gegner)) {
-			text((int) formerLeben + "", 855, 100);		
-		}else {
-			text((int) gegner.leben + "", 855, 100);		
+		if (acted.equals(gegner)) {
+			text((int) formerLeben + "", 855, 100);
+		} else {
+			text((int) gegner.leben + "", 855, 100);
 		}
 	}
 
 	public void drawWin() {
-		fill(0, 255, 0,100);
-		rect(0, 0,1000, 1000);				
-		fill(255, 255, 255,255);
-		textFont(f, 95);		
+		fill(0, 255, 0, 100);
+		rect(0, 0, 1000, 1000);
+		fill(255, 255, 255, 255);
+		textFont(f, 95);
 		text("Du hast gewonnen!", 100, 350);
 	}
-	
+
 	public void drawLose() {
-		fill(255, 0, 0,100);
-		rect(0, 0,1000, 1000);	
-		tint(255, 255);  // Display at half opacity
-		fill(255, 255, 255,255);
-		textFont(f, 95);		
+		fill(255, 0, 0, 100);
+		rect(0, 0, 1000, 1000);
+		tint(255, 255); // Display at half opacity
+		fill(255, 255, 255, 255);
+		textFont(f, 95);
 		text("Du hast verloren!", 150, 350);
 	}
-	
+
 	// Button Spalten(X) Positionen
 	float bts1 = 525;
 	float bts2 = 726;
@@ -753,7 +794,7 @@ public class Kampf extends PApplet {
 		text(defender.name.split("\\s+")[0], 50, 900);
 	}
 
-	public void drawDamage(int damage, String avoid) {
+	public void drawDamage(double damage, String avoid) {
 		wait = true;
 		textFont(f, 30);
 		if (avoid.equals("")) {
@@ -867,43 +908,82 @@ public class Kampf extends PApplet {
 		}
 	}
 
-	// Eine Runde
-	private void turn() {
-		boolean legitTurn = false;
-		if (heldStun == 0) {
-
-		} else {
-			System.out.println("");
-			System.out.println(held.name + " ist benommen und kann sich nicht bewegen!");
-			System.out.println("");
-			heldStun--;
-		}
-
-		if (gegnerStun == 0) {
-			legitTurn = false;
-			while (!legitTurn) {// Ist Runde gültig? Wird durch Turn bestimmt
-				legitTurn = gegnerTurn(); // Spieler ist dran
-			}
-		} else {
-			System.out.println("");
-			System.out.println(gegner.name + " ist benommen und kann sich nicht bewegen!");
-			System.out.println("");
-			gegnerStun--;
-		}
-	}
-
 	// Eine Gegner Runde
-	private boolean gegnerTurn() {
+	private void gegnerTurn() {
+
 		gegner.def = false; // Verteidigung läuft mit neuer Runde ab
-		if (spezialangriffVorbereitetCOM) {
-			gegnerSpezialangriff();
-			return true;
+
+		if (gegnerStun > 0) {
+			actor = gegner;
+			acted = gegner;
+			action = "Gelähmt";
+			avoid = "stun";
+			schaden = 0;
+			spezialangriffVorbereitetCOM = false;
+			damagestep = 1;
 		} else {
 
-			return true;
-		}
-	}
+			if (spezialangriffVorbereitetCOM) {
+				gegnerSpezialangriff();
+			} else {
+				int zufall = ThreadLocalRandom.current().nextInt(0, 100 + 1);
+				if (zufall <= 65) {
+					angriff(gegner, held);
+				}
+				if (bossspezialUsed) {
+					if (zufall >= 66 && zufall >= 70) {
+						gegnerSpezialangriffVorbereitung();
+					}
+					if (zufall >= 71 && zufall >= 85) {
+						verteidigung(gegner);
+					}
+				} else {
+					if (zufall >= 66 && zufall >= 80) {
 
+						gegnerSpezialangriffVorbereitung();
+
+					}
+					if (zufall >= 81 && zufall >= 85) {
+						verteidigung(gegner);
+					}
+				}
+				if (gegner.leben >= 40) {
+					if (zufall >= 86 && zufall >= 90) {
+						if (gegner.healItem > 0) {
+							gegnerItemHeal();
+						} else {
+							angriff(gegner, held);
+						}
+					}
+					if (zufall >= 91 && zufall >= 100) {
+
+						if (gegner.stunItem > 0) {
+							gegnerItemStun();
+						} else {
+							angriff(gegner, held);
+						}
+					}
+				} else {
+					if (zufall >= 86 && zufall >= 95) {
+						if (gegner.stunItem > 0) {
+							gegnerItemStun();
+						} else {
+							angriff(gegner, held);
+						}
+					}
+					if (zufall >= 96 && zufall >= 100) {
+						if (gegner.healItem > 0) {
+							gegnerItemHeal();
+						} else {
+							angriff(gegner, held);
+						}
+						gegnerItemStun();
+					}
+				}
+			}
+		}
+
+	}
 	// Angriff
 	// ****************************************************************
 	// *** Aktionen ***
@@ -928,8 +1008,8 @@ public class Kampf extends PApplet {
 			damage = 0;
 		} else {// Sonst Berechnung
 			if (ThreadLocalRandom.current().nextInt(0, 100 + 1) >= 1) {// Wenn Angriff nicht zufällig daneben geht
-					damage = angreifer.getWaffe().schaden; // Grundschaden
-				
+				damage = angreifer.getWaffe().schaden; // Grundschaden
+
 				if (verteidiger.starkOderSchwach(angreifer.getWaffeCat()).equals("stark")) {// Wenn Effektiv verdoppeln
 					damage = damage * 2;
 				}
@@ -945,9 +1025,9 @@ public class Kampf extends PApplet {
 				damage = 0;
 			}
 		}
-		schaden = (int) damage;
-		formerLeben=(int) verteidiger.leben;
-		lifechanged=true;
+		schaden = damage;
+		formerLeben = (int) verteidiger.leben;
+		lifechanged = true;
 		verteidiger.leben = verteidiger.leben - damage;// Schaden zufügen
 	}
 
@@ -966,7 +1046,7 @@ public class Kampf extends PApplet {
 
 	// Aufgeben
 	private void fliehen() {
-		held.leben=0;
+		held.leben = 0;
 		checkWin();
 	}
 
@@ -975,15 +1055,15 @@ public class Kampf extends PApplet {
 		// Wenn Gegner Leben 0 dann gewonnen!
 		if (gegner.leben <= 0) {
 			gegner.leben = 0;
-			playerturn=false;
+			playerturn = false;
 			onPlayerWin();
 			return 1;
 		}
-		
+
 		// Wenn Spieler Leben 0 dann verloren!
 		if (held.leben <= 0) {
 			held.leben = 0;
-			playerturn=false;
+			playerturn = false;
 			return 2;
 		}
 		return 0;
@@ -1008,9 +1088,9 @@ public class Kampf extends PApplet {
 			avoid = "dodge";
 			damage = 0;
 		} else {// Sonst Berechnung
-			
-				damage = angreifer.getWaffe().schaden*2; // Grundschaden
-			
+
+			damage = angreifer.getWaffe().schaden * 2; // Grundschaden
+
 			if (verteidiger.starkOderSchwach(angreifer.getWaffeCat()).equals("stark")) {// Wenn Effektiv verdoppeln
 				damage = damage + 5;
 			}
@@ -1027,9 +1107,9 @@ public class Kampf extends PApplet {
 			}
 		}
 
-		schaden = (int) damage;
-		formerLeben=(int) verteidiger.leben;
-		lifechanged=true;
+		schaden = damage;
+		formerLeben = (int) verteidiger.leben;
+		lifechanged = true;
 		verteidiger.leben = verteidiger.leben - damage;// Schaden zufügen
 		spezialangriffEingesetzt = true; // Spezialangriff verwendet
 	}
@@ -1092,23 +1172,23 @@ public class Kampf extends PApplet {
 			damagestep = 1;
 
 			if (gegner.starkOderSchwach(item.kategorie).equals("stark")) {
-				formerLeben=(int) held.leben;
+				formerLeben = (int) held.leben;
 				held.leben = held.leben + 15;
-				lifechanged=true;
+				lifechanged = true;
 				gegnerStun++;
 				avoid = "stunheal";
 
 			} else if (gegner.starkOderSchwach(item.kategorie).equals("schwach")) {
-				formerLeben=(int) gegner.leben;
+				formerLeben = (int) gegner.leben;
 				gegner.leben = gegner.leben + 15;
-				lifechanged=true;
+				lifechanged = true;
 				acted = gegner;
 				avoid = "healsteal";
 
 			} else {
-				formerLeben=(int) held.leben;
+				formerLeben = (int) held.leben;
 				held.leben = held.leben + 15;
-				lifechanged=true;
+				lifechanged = true;
 				avoid = "heal";
 			}
 		}
@@ -1131,15 +1211,13 @@ public class Kampf extends PApplet {
 	// Der Spezialangriff des Spielers
 	private void gegnerSpezialangriffVorbereitung() {
 		spezialangriffVorbereitetCOM = true;
-		System.out.println("");
-		System.out.println(gegner.name + " fängt an seinen Spezialangriff vorzubereiten");
 	}
 
 	// Der Spezialangriff des Spielers
 	private void gegnerSpezialangriff() {
 		double schaden;
 
-		schaden = gegner.getWaffe().schaden*2; // Grundschaden
+		schaden = gegner.getWaffe().schaden * 2; // Grundschaden
 		if (held.starkOderSchwach(gegner.getWaffeCat()).equals("stark")) {// Wenn Effektiv verdoppeln
 			schaden = schaden * 2;
 		}
@@ -1155,9 +1233,35 @@ public class Kampf extends PApplet {
 		if (held.getArmorName().equals("Heldenkleidung")) {
 			schaden = schaden / 2;
 		}
-		formerLeben=(int) held.leben;
-		lifechanged=true;
+		formerLeben = (int) held.leben;
+		lifechanged = true;
 		held.leben = held.leben - schaden;// Schaden zufügen
 		spezialangriffVorbereitetCOM = false;
+		damagestep = 1;
+		bossspezialUsed = true;
+	}
+
+	private void gegnerItemStun() {
+		actor = gegner;
+		acted = held;
+		action = "Lähmt";
+		avoid = "stun";
+		schaden = 0;
+		heldStun++;
+		gegner.stunItem--;
+		damagestep = 1;
+	}
+
+	private void gegnerItemHeal() {
+		actor = gegner;
+		acted = gegner;
+		action = "Heilt";
+		avoid = "heal";
+		schaden = 15;
+		gegner.healItem--;
+		lifechanged = true;
+		formerLeben = (int) gegner.leben;
+		gegner.leben = gegner.leben + schaden;
+		damagestep = 1;
 	}
 }

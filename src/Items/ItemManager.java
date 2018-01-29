@@ -166,6 +166,11 @@ public class ItemManager {
 				
 				//Wird ein Attribut nicht gefunden gilt der Standard von Item. 
 			}
+			if(template.name.endsWith(".txt")) {
+				String[] name = f.getName().split(".txt");
+				String name1 = name[0];
+				template.name=name1;
+			}
 			
 			//Fertiges Template wird zum einsortieren in die Liste übergeben
 			lw.add(template);

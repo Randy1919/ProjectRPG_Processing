@@ -12,6 +12,9 @@ public class Boss extends Actor{
 	boolean[] triviaUnlocked;
 	private String[] schwaechen;
 	private String[] staerken;
+	
+	public int stunItem =3;
+	public int healItem=3;
 
 	
 	//Konstruktor
