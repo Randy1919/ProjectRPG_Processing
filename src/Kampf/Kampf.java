@@ -15,9 +15,11 @@ import processing.core.PImage;
 
 public class Kampf extends PApplet {
 
-	// To-Do: Spezialangriff Gegner noch kaputt
-	// To-Do: Effektivität anzeigen
-
+	
+/* Einkommentieren wenn das Modul allein aufgerufen werden soll. 
+ * Löschen wenn das Aufrufen über das Hauptmenü klappt.
+  
+ 
 	public static void main(String[] args) {
 		ItemManager im = new ItemManager();
 		BossManager bo = new BossManager(im);
@@ -37,7 +39,8 @@ public class Kampf extends PApplet {
 		String[] argu = { "--location=200,200", "Kampf.Kampf" };
 		Kampf k = new Kampf(hero, bo);
 		PApplet.runSketch(argu, k);
-	}
+	
+	*/
 
 	// Grafik
 
@@ -67,10 +70,11 @@ public class Kampf extends PApplet {
 	Actor acted; // Der Passive
 	String action;// Das genutze Aktion(oder Item)
 	String avoid;// Wird für drawDamage benötigt
+	String effektiv="";// Wird für drawDamage benötigt
 	double schaden;// Schaden
 	int damagestep;// Indicator für den Draw. 0=Normal, 1= Actor, 2 = action, 3= Acted, 4 =
 					// Schaden, 5 = Rundenwechsel
-	int formerLeben;
+	double formerLeben;
 	boolean lifechanged = false;
 	boolean end = false;
 
@@ -87,7 +91,7 @@ public class Kampf extends PApplet {
 	// Boss
 	Boss gegner;
 	boolean spezialangriffVorbereitetCOM;
-	boolean bossspezialUsed;
+	int bossspezialUsed;
 	int gegnerSchild;
 	int gegnerStun;
 	boolean bossturn;
@@ -108,7 +112,7 @@ public class Kampf extends PApplet {
 		wait = false;
 		itempressed = false;
 
-		bossspezialUsed = false;
+		bossspezialUsed = 0;
 
 		held.leben = 100;
 		heldSchild = 0;
@@ -128,11 +132,17 @@ public class Kampf extends PApplet {
 		if (new File("Images/player/spielerspezial.jpg").isFile()) {
 			imgplayerspezial = loadImage("Images/player/spielerspezial.jpg");
 		}
+		if (new File("Images/player/spielerspezial.png").isFile()) {
+			imgplayerspezial = loadImage("Images/player/spielerspezial.png");
+		}
 		if (new File("Bosse/" + gegner.name + ".png").isFile()) {
 			imgboss = loadImage("Bosse/" + gegner.name + ".png");
 		}
 		if (new File("Bosse/" + gegner.name + "_spezial.jpg").isFile()) {
 			imgbossspezial = loadImage("Bosse/" + gegner.name + "_spezial.jpg");
+		}
+		if (new File("Bosse/" + gegner.name + "_spezial.png").isFile()) {
+			imgbossspezial = loadImage("Bosse/" + gegner.name + "_spezial.png");
 		}
 		if (new File("Images/backgrounds/background.jpg").isFile()) {
 			imgbackground = loadImage("Images/backgrounds/background.jpg");
@@ -312,19 +322,23 @@ public class Kampf extends PApplet {
 					}
 				} else if (action.equals("Gelähmt")) {
 					gegnerStun--;
+				} else if (action.equals("Vorbereitung")) {
+
 				} else {
 					if (imgheal != null) {
 						image(imgheal, 690, 350, 200, 340);
 					}
 				}
 			} else {
+				if (!action.equals("Spezialangriff")) {
 				if (imgslashgegner != null) {
 					image(imgslashgegner, 630, 350, 200, 340);
+				}
 				}
 			}
 		}
 		wait = true;
-		if (action.equals("Verteidigt") || action.equals("Gelähmt")) {
+		if (action.equals("Verteidigt") || action.equals("Gelähmt") || action.equals("Vorbereitung")) {
 			damagestep = 5;
 		} else {
 			damagestep = 3;
@@ -354,12 +368,6 @@ public class Kampf extends PApplet {
 		}
 		drawAttacker(actor);
 		drawWeapon(action);
-		if (spezialangriffaktiv) {
-			drawSpezial();
-		}
-		if (gegnerspezialangriffaktiv) {
-			drawGegnerSpezial();
-		}
 		drawAttacked(acted);
 
 		if (actor.equals(held)) {
@@ -369,15 +377,13 @@ public class Kampf extends PApplet {
 				}
 			} else {
 				if (!avoid.equals("healsteal")) {
-					if (!action.equals("Spezialangriff")) {
-						if (!avoid.equals("dodge")) {
+						if (!avoid.equals("dodge")&&!avoid.equals("gegnerspezialbreak")) {
 							if (imghit1 != null) {
 								image(imghit1, 710, 350, 200, 340);
 							}
 						} else {
 							image(imgshieldgegner, 650, 330, 200, 340);
 						}
-					}
 				} else {
 					if (imgheal != null) {
 						image(imgheal, 690, 350, 200, 340);
@@ -391,7 +397,7 @@ public class Kampf extends PApplet {
 				}
 
 			} else {
-				if (!avoid.equals("dodge")) {
+				if (!avoid.equals("dodge")&&!avoid.equals("gegnerspezialbreak")) {
 					if (imghit1 != null) {
 						image(imghit1, 70, 350, 200, 340);
 					}
@@ -429,8 +435,10 @@ public class Kampf extends PApplet {
 		drawAttacker(actor);
 		drawWeapon(action);
 		if (spezialangriffaktiv) {
-			drawSpezial();
 			spezialangriffaktiv = false;
+		}
+		if (gegnerspezialangriffaktiv) {
+			gegnerspezialangriffaktiv = false;
 		}
 		drawAttacked(acted);
 
@@ -439,7 +447,6 @@ public class Kampf extends PApplet {
 
 			} else {
 				if (!avoid.equals("healsteal")) {
-					if (!action.equals("Spezialangriff")) {
 						if (!avoid.equals("dodge")) {
 							if (imghit2 != null) {
 								image(imghit2, 710, 350, 200, 340);
@@ -447,7 +454,6 @@ public class Kampf extends PApplet {
 						} else {
 							image(imgshieldgegner, 650, 330, 200, 340);
 						}
-					}
 				}
 			}
 		} else {
@@ -485,6 +491,7 @@ public class Kampf extends PApplet {
 		if (lifechanged) {
 			lifechanged = false;
 		}
+		effektiv="";
 		damagestep = 0;
 	}
 
@@ -587,9 +594,9 @@ public class Kampf extends PApplet {
 		fill(255, 255, 255);
 
 		text(held.name.split("\\s+")[0] + ": ", 50, 100);
-		text((int) held.leben + "", 355, 100);
+		text(held.leben + "", 355, 100);
 		text(gegner.name.split("\\s+")[0] + ": ", 555, 100);
-		text((int) gegner.leben + "", 855, 100);
+		text(gegner.leben + "", 855, 100);
 	}
 
 	public void drawFormerLeben() {
@@ -600,16 +607,16 @@ public class Kampf extends PApplet {
 
 		text(held.name.split("\\s+")[0] + ": ", 50, 100);
 		if (acted.equals(held)) {
-			text((int) formerLeben + "", 355, 100);
+			text(formerLeben + "", 355, 100);
 		} else {
-			text((int) held.leben + "", 355, 100);
+			text(held.leben + "", 355, 100);
 		}
 
 		text(gegner.name.split("\\s+")[0] + ": ", 555, 100);
 		if (acted.equals(gegner)) {
-			text((int) formerLeben + "", 855, 100);
+			text( formerLeben + "", 855, 100);
 		} else {
-			text((int) gegner.leben + "", 855, 100);
+			text( gegner.leben + "", 855, 100);
 		}
 	}
 
@@ -779,13 +786,13 @@ public class Kampf extends PApplet {
 	public void drawWeapon(Item usedItem) {
 		wait = true;
 		textFont(f, 30);
-		text(usedItem.name, 50, 850);
+		text(usedItem.name+" "+acted.starkOderSchwach(usedItem.kategorie), 50, 850);
 	}
 
 	public void drawWeapon(String usedItem) {
 		wait = true;
 		textFont(f, 30);
-		text(usedItem, 50, 850);
+		text(usedItem+effektiv, 50, 850);
 	}
 
 	public void drawAttacked(Actor defender) {
@@ -802,6 +809,9 @@ public class Kampf extends PApplet {
 		}
 		if (avoid.equals("spezialcounter")) {
 			text(damage + " Schaden, Spez. gekontert", 50, 950);
+		}
+		if (avoid.equals("gegnerspezialbreak")) {
+			text(damage + " Schaden, Durchbrochen", 50, 950);
 		}
 		if (avoid.equals("dodge")) {
 			text("Abgewehrt", 50, 950);
@@ -927,35 +937,30 @@ public class Kampf extends PApplet {
 				gegnerSpezialangriff();
 			} else {
 				int zufall = ThreadLocalRandom.current().nextInt(0, 100 + 1);
-				if (zufall <= 65) {
+				if (zufall <= 60) {
 					angriff(gegner, held);
 				}
-				if (bossspezialUsed) {
-					if (zufall >= 66 && zufall >= 70) {
+
+					if (zufall >= 61 && zufall <= 70) {
+						if(bossspezialUsed<3) {
 						gegnerSpezialangriffVorbereitung();
+						}else {
+							angriff(gegner, held);						
+						}
 					}
-					if (zufall >= 71 && zufall >= 85) {
+					if (zufall >= 71 && zufall <= 80) {
 						verteidigung(gegner);
 					}
-				} else {
-					if (zufall >= 66 && zufall >= 80) {
 
-						gegnerSpezialangriffVorbereitung();
-
-					}
-					if (zufall >= 81 && zufall >= 85) {
-						verteidigung(gegner);
-					}
-				}
 				if (gegner.leben >= 40) {
-					if (zufall >= 86 && zufall >= 90) {
+					if (zufall >= 81 && zufall <= 85) {
 						if (gegner.healItem > 0) {
 							gegnerItemHeal();
 						} else {
 							angriff(gegner, held);
 						}
 					}
-					if (zufall >= 91 && zufall >= 100) {
+					if (zufall >= 86 && zufall <= 100) {
 
 						if (gegner.stunItem > 0) {
 							gegnerItemStun();
@@ -964,27 +969,25 @@ public class Kampf extends PApplet {
 						}
 					}
 				} else {
-					if (zufall >= 86 && zufall >= 95) {
+					if (zufall >= 81 && zufall <= 85) {
 						if (gegner.stunItem > 0) {
 							gegnerItemStun();
 						} else {
 							angriff(gegner, held);
 						}
 					}
-					if (zufall >= 96 && zufall >= 100) {
+					if (zufall >= 86 && zufall <= 100) {
 						if (gegner.healItem > 0) {
 							gegnerItemHeal();
 						} else {
 							angriff(gegner, held);
 						}
-						gegnerItemStun();
 					}
 				}
 			}
 		}
 
 	}
-	// Angriff
 	// ****************************************************************
 	// *** Aktionen ***
 	// ****************************************************************
@@ -1012,13 +1015,16 @@ public class Kampf extends PApplet {
 
 				if (verteidiger.starkOderSchwach(angreifer.getWaffeCat()).equals("stark")) {// Wenn Effektiv verdoppeln
 					damage = damage * 2;
+					effektiv = ": Effektiv";
 				}
 				if (verteidiger.starkOderSchwach(angreifer.getWaffeCat()).equals("schwach")) {// Wenn Ineffektiv
 																								// halbieren
 					damage = damage / 2;
+					effektiv = ": Ineffektiv";
 				}
 				if (verteidiger.getArmorName().equals("Heldenkleidung")) {
 					damage = damage / 2;
+					effektiv = ": Geschützt";
 				}
 			} else {// Wenn der Angriff zufällig daneben geht
 				avoid = "miss";
@@ -1026,7 +1032,7 @@ public class Kampf extends PApplet {
 			}
 		}
 		schaden = damage;
-		formerLeben = (int) verteidiger.leben;
+		formerLeben = verteidiger.leben;
 		lifechanged = true;
 		verteidiger.leben = verteidiger.leben - damage;// Schaden zufügen
 	}
@@ -1093,9 +1099,11 @@ public class Kampf extends PApplet {
 
 			if (verteidiger.starkOderSchwach(angreifer.getWaffeCat()).equals("stark")) {// Wenn Effektiv verdoppeln
 				damage = damage + 5;
+				effektiv = ": Effektiv";
 			}
 			if (verteidiger.starkOderSchwach(angreifer.getWaffeCat()).equals("schwach")) {// Wenn Ineffektiv halbieren
 				damage = damage - 5;
+				effektiv = ": Ineffektiv";
 			}
 			if (verteidiger.getArmorName().equals("Heldenkleidung")) {
 				damage = damage / 2;
@@ -1103,12 +1111,13 @@ public class Kampf extends PApplet {
 			if (spezialangriffVorbereitetCOM) {// Wenn Gegner seinen Spezialangriff vorbereitet
 				avoid = "spezialcounter";
 				spezialangriffVorbereitetCOM = false; // Spezialangriff unterbrechen
+				gegnerStun++;
 				damage = damage + 5;
 			}
 		}
 
 		schaden = damage;
-		formerLeben = (int) verteidiger.leben;
+		formerLeben = verteidiger.leben;
 		lifechanged = true;
 		verteidiger.leben = verteidiger.leben - damage;// Schaden zufügen
 		spezialangriffEingesetzt = true; // Spezialangriff verwendet
@@ -1153,10 +1162,12 @@ public class Kampf extends PApplet {
 			if (gegner.starkOderSchwach(item.kategorie).equals("stark")) {
 				gegnerStun = gegnerStun + 2;
 				avoid = "stuncrit";
+				effektiv = ": Effektiv";
 
 			} else if (gegner.starkOderSchwach(item.kategorie).equals("schwach")) {
 				gegnerStun = 0;
 				avoid = "stunno";
+				effektiv = ": Ineffektiv";
 
 			} else {
 				gegnerStun++;
@@ -1172,21 +1183,23 @@ public class Kampf extends PApplet {
 			damagestep = 1;
 
 			if (gegner.starkOderSchwach(item.kategorie).equals("stark")) {
-				formerLeben = (int) held.leben;
+				formerLeben = held.leben;
 				held.leben = held.leben + 15;
 				lifechanged = true;
 				gegnerStun++;
 				avoid = "stunheal";
+				effektiv = ": Effektiv";
 
 			} else if (gegner.starkOderSchwach(item.kategorie).equals("schwach")) {
-				formerLeben = (int) gegner.leben;
+				formerLeben =  gegner.leben;
 				gegner.leben = gegner.leben + 15;
 				lifechanged = true;
 				acted = gegner;
 				avoid = "healsteal";
+				effektiv = ": Ineffektiv";
 
 			} else {
-				formerLeben = (int) held.leben;
+				formerLeben =  held.leben;
 				held.leben = held.leben + 15;
 				lifechanged = true;
 				avoid = "heal";
@@ -1211,34 +1224,53 @@ public class Kampf extends PApplet {
 	// Der Spezialangriff des Spielers
 	private void gegnerSpezialangriffVorbereitung() {
 		spezialangriffVorbereitetCOM = true;
+		actor = gegner;
+		acted = gegner;
+		action = "Vorbereitung";
+		avoid = "vor";
+		schaden = 0;
+		damagestep = 1;
 	}
 
 	// Der Spezialangriff des Spielers
 	private void gegnerSpezialangriff() {
-		double schaden;
+		double damage;
+		actor = gegner;
+		acted = held;
+		action = "Spezialangriff";
+		avoid = "gegnerspezial";
 
-		schaden = gegner.getWaffe().schaden * 2; // Grundschaden
+		damage = gegner.getWaffe().schaden * 2; // Grundschaden
 		if (held.starkOderSchwach(gegner.getWaffeCat()).equals("stark")) {// Wenn Effektiv verdoppeln
-			schaden = schaden * 2;
+			damage = damage * 2;
+			effektiv = ": Effektiv";
 		}
-		if (gegner.starkOderSchwach(gegner.getWaffeCat()).equals("stark")) {// Wenn Ineffektiv halbieren
-			schaden = schaden / 2;
+		if (gegner.starkOderSchwach(gegner.getWaffeCat()).equals("schwach")) {// Wenn Ineffektiv halbieren
+			damage = damage / 2;
+			effektiv = ": Ineffektiv";
 		}
 
 		if (held.def) {// Wenn Gegner verteidigt halber Schaden
 			held.def = false;
-			schaden = schaden / 2;
+			damage = damage / 2;
+			avoid = "gegnerspezialbreak";
 		}
 
 		if (held.getArmorName().equals("Heldenkleidung")) {
-			schaden = schaden / 2;
+			damage = damage / 2;
+			effektiv = ": Geschützt";
 		}
-		formerLeben = (int) held.leben;
-		lifechanged = true;
-		held.leben = held.leben - schaden;// Schaden zufügen
-		spezialangriffVorbereitetCOM = false;
+
+		schaden = damage;
 		damagestep = 1;
-		bossspezialUsed = true;
+		
+		formerLeben =  held.leben;
+		lifechanged = true;
+		held.leben = held.leben - damage;// Schaden zufügen
+		spezialangriffVorbereitetCOM = false;
+		gegnerspezialangriffaktiv=true;
+		damagestep = 1;
+		bossspezialUsed++;
 	}
 
 	private void gegnerItemStun() {
@@ -1260,7 +1292,7 @@ public class Kampf extends PApplet {
 		schaden = 15;
 		gegner.healItem--;
 		lifechanged = true;
-		formerLeben = (int) gegner.leben;
+		formerLeben =  gegner.leben;
 		gegner.leben = gegner.leben + schaden;
 		damagestep = 1;
 	}

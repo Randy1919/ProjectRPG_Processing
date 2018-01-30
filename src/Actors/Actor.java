@@ -1,5 +1,7 @@
 package Actors;
 
+import java.util.Locale;
+
 import Items.Item;
 
 public class Actor {
@@ -128,7 +130,7 @@ public class Actor {
 			}
 		}
 		
-		return "Nichts";
+		return "";
 	}
 
 }
