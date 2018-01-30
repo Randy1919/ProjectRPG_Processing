@@ -484,8 +484,10 @@ public class Kampf extends PApplet {
 	public void drawStep5() {
 		if (bossturn) {
 			playerturn = true;
+			held.def=false;
 			bossturn = false;
 		} else {
+			gegner.def=false;
 			bossturn = true;
 		}
 		if (lifechanged) {
@@ -920,8 +922,6 @@ public class Kampf extends PApplet {
 
 	// Eine Gegner Runde
 	private void gegnerTurn() {
-
-		gegner.def = false; // Verteidigung läuft mit neuer Runde ab
 
 		if (gegnerStun > 0) {
 			actor = gegner;
