@@ -59,6 +59,20 @@ public class BossManager {
 			}
 		}
 	}
+	
+	//Zählt den momentanen Boss um einen hoch. Wird das Array gesprengt setzt es auf den DebugBoss
+	public void setBossByInt(int index) {
+		currentBoss = index;
+	}
+	
+	//Setzt Boss auf den angegebenen. Sonst Debugboss.
+	public void setBossByName(String s) {
+		for (int i = 0; i < bosse.length; i++) {
+			if (bosse[i].name.toLowerCase().equals(s.toLowerCase())) {
+				currentBoss = i;
+			}
+		}
+	}
 
 	//Gibt den momentanen Boss zurück
 	public Boss getCurrentBoss() {

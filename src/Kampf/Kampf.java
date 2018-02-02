@@ -39,9 +39,472 @@ public class Kampf extends PApplet {
 		String[] argu = { "--location=200,200", "Kampf.Kampf" };
 		Kampf k = new Kampf(hero, bo);
 		PApplet.runSketch(argu, k);
-	
+		}
 	*/
 
+	// Manager
+	BossManager bm;
+
+	// Spieler
+	Spieler held;
+	boolean spezialangriffEingesetzt;
+	int heldSchild;
+	int heldStun;
+	boolean playerturn;
+
+	// Boss
+	Boss gegner;
+	boolean spezialangriffVorbereitetCOM;
+	int bossspezialUsed;
+	int gegnerSchild;
+	int gegnerStun;
+	boolean bossturn;
+
+
+	// ****************************************************************
+	// *** Konstruktor ***
+	// ****************************************************************
+	public Kampf(Spieler s, BossManager b) {
+		held = s;
+		bm = b;
+		gegner = bm.getCurrentBoss();
+	}
+
+	// ****************************************************************
+	// *** Ablauf ***
+	// ****************************************************************
+
+	//Button Betätigung
+	public void mousePressed() {
+		// Item Eingaben
+		if (playerturn) {
+			if (itempressed) {
+				if (overButton(item1)) {
+					if (held.item[1] != null) {
+						itemEinsatz(1);
+					}
+					itempressed = false;
+				}
+				if (overButton(item2)) {
+					if (held.item[2] != null) {
+						itemEinsatz(2);
+					}
+					itempressed = false;
+				}
+				if (overButton(item3)) {
+					if (held.item[3] != null) {
+						itemEinsatz(3);
+					}
+					itempressed = false;
+				}
+				if (overButton(itemback)) {
+					itempressed = false;
+				}
+				// Kampfmenü
+			} else {
+				if (overButton(btang)) {
+					angriff(held, gegner);
+				}
+				if (overButton(btspez)) {
+					if (!spezialangriffEingesetzt) {
+						spezialangriff(held, gegner);
+						spezialangriffaktiv = true;
+					}
+				}
+				if (overButton(btdef)) {
+					verteidigung(held);
+				}
+				if (overButton(bti)) {
+					itempressed = true;
+				}
+				if (overButton(btflee)) {
+					fliehen();
+				}
+			}
+		}
+	}
+
+	// Prüft ob jemand gewonnen hat
+	private int checkWin() {
+		// Wenn Gegner Leben 0 dann gewonnen!
+		if (gegner.leben <= 0) {
+			gegner.leben = 0;
+			playerturn = false;
+			onPlayerWin();
+			return 1;
+		}
+
+		// Wenn Spieler Leben 0 dann verloren!
+		if (held.leben <= 0) {
+			held.leben = 0;
+			playerturn = false;
+			return 2;
+		}
+		return 0;
+	}
+
+	//Wenn Spieler gewinnt
+	private void onPlayerWin() {
+		held.siege++;
+		bm.setNextBoss();
+	}
+
+	// ****************************************************************
+	// *** Allgemeine Aktionen ***
+	// ****************************************************************
+
+	// Ein Angriff
+	private void angriff(Actor angreifer, Actor verteidiger) {
+		actor = angreifer;
+		acted = verteidiger;
+		action = angreifer.getWaffeName();
+		damagestep = 1;
+		avoid = "";
+
+		double damage;
+		if (verteidiger.def) {// Wenn Gegner verteidigt kein Schaden
+			avoid = "dodge";
+			verteidiger.def = false;
+			damage = 0;
+		} else {// Sonst Berechnung
+			if (ThreadLocalRandom.current().nextInt(0, 100 + 1) >= 1) {// Wenn Angriff nicht zufällig daneben geht
+				damage = angreifer.getWaffe().schaden; // Grundschaden
+
+				if (verteidiger.starkOderSchwach(angreifer.getWaffeCat()).equals("stark")) {// Wenn Effektiv verdoppeln
+					damage = damage * 2;
+					effektiv = ": Effektiv";
+				}
+				if (verteidiger.starkOderSchwach(angreifer.getWaffeCat()).equals("schwach")) {// Wenn Ineffektiv
+																								// halbieren
+					damage = damage / 2;
+					effektiv = ": Ineffektiv";
+				}
+				if (verteidiger.getArmorName().equals("Heldenkleidung")) {
+					damage = damage / 2;
+					effektiv = ": Geschützt";
+				}
+			} else {// Wenn der Angriff zufällig daneben geht
+				avoid = "miss";
+				damage = 0;
+			}
+		}
+		schaden = damage;
+		formerLeben = verteidiger.leben;
+		lifechanged = true;
+		verteidiger.leben = verteidiger.leben - damage;// Schaden zufügen
+	}
+
+	// Verteidigen
+	private void verteidigung(Actor verteidiger) {
+		verteidiger.def = true;// Verteidigung wird gesetzt
+
+		actor = verteidiger;
+		acted = verteidiger;
+		action = "Verteidigt";
+		avoid = "block";
+		schaden = 0;
+		damagestep = 1;
+
+	}
+
+	// Aufgeben
+	private void fliehen() {
+		held.leben = 0;
+		checkWin();
+	}
+
+	// ****************************************************************
+	// *** Spieler Aktionen ***
+	// ****************************************************************
+
+	// Der Spezialangriff des Spielers
+	private void spezialangriff(Actor angreifer, Actor verteidiger) {
+		double damage;
+
+		actor = angreifer;
+		acted = verteidiger;
+		damagestep = 1;
+		action = "Spezialangriff";
+		avoid = "";
+
+		if (verteidiger.def) {// Wenn Gegner verteidigt kein Schaden
+			avoid = "dodge";
+			damage = 0;
+		} else {// Sonst Berechnung
+
+			damage = angreifer.getWaffe().schaden * 2; // Grundschaden
+
+			if (verteidiger.starkOderSchwach(angreifer.getWaffeCat()).equals("stark")) {// Wenn Effektiv verdoppeln
+				damage = damage + 5;
+				effektiv = ": Effektiv";
+			}
+			if (verteidiger.starkOderSchwach(angreifer.getWaffeCat()).equals("schwach")) {// Wenn Ineffektiv halbieren
+				damage = damage - 5;
+				effektiv = ": Ineffektiv";
+			}
+			if (verteidiger.getArmorName().equals("Heldenkleidung")) {
+				damage = damage / 2;
+			}
+			if (spezialangriffVorbereitetCOM) {// Wenn Gegner seinen Spezialangriff vorbereitet
+				avoid = "spezialcounter";
+				spezialangriffVorbereitetCOM = false; // Spezialangriff unterbrechen
+				gegnerStun++;
+				damage = damage + 5;
+			}
+		}
+
+		schaden = damage;
+		formerLeben = verteidiger.leben;
+		lifechanged = true;
+		verteidiger.leben = verteidiger.leben - damage;// Schaden zufügen
+		spezialangriffEingesetzt = true; // Spezialangriff verwendet
+	}
+
+	// Item einsetzen
+	private void itemEinsatz(int index) {
+		Item item = null;
+		actor = held;
+
+		// Der übergebene Index(1-3) wird als Item gesetzt, die Anzahl der übrigen Items
+		// um einen verringert und wenn keine mehr übrig sind das Item gelöscht
+		if (index >= 1 && index <= 3) {
+			item = held.item[index];
+
+			// Powerball und noch Spezialangriff übrig
+			if (item.typ.toLowerCase().equals("power") && !spezialangriffEingesetzt) {
+				acted = held;
+				action = item.name;
+				avoid = "powerfail";
+				schaden = 0;
+				damagestep = 1;
+				return;
+			}
+
+			held.item[index].anzahl--;
+			if (held.item[index].anzahl == 0) {
+				held.item[index] = null;
+			}
+
+		}
+
+		action = item.name;
+
+		// Das gesetzte Item bestimmt hier die Wirkung
+
+		// Als Stun Item
+		if (item.typ.toLowerCase().equals("stun")) {
+			acted = gegner;
+			schaden = 0;
+			damagestep = 1;
+			if (gegner.starkOderSchwach(item.kategorie).equals("stark")) {
+				gegnerStun = gegnerStun + 2;
+				avoid = "stuncrit";
+				effektiv = ": Effektiv";
+
+			} else if (gegner.starkOderSchwach(item.kategorie).equals("schwach")) {
+				gegnerStun = 0;
+				avoid = "stunno";
+				effektiv = ": Ineffektiv";
+
+			} else {
+				gegnerStun++;
+				avoid = "stunyes";
+			}
+		}
+
+		// Als Heal Item
+		if (item.typ.toLowerCase().equals("heal")) {
+
+			acted = held;
+			schaden = 15;
+			damagestep = 1;
+
+			if (gegner.starkOderSchwach(item.kategorie).equals("stark")) {
+				formerLeben = held.leben;
+				held.leben = held.leben + 15;
+				lifechanged = true;
+				gegnerStun++;
+				avoid = "stunheal";
+				effektiv = ": Effektiv";
+
+			} else if (gegner.starkOderSchwach(item.kategorie).equals("schwach")) {
+				formerLeben =  gegner.leben;
+				gegner.leben = gegner.leben + 15;
+				lifechanged = true;
+				acted = gegner;
+				avoid = "healsteal";
+				effektiv = ": Ineffektiv";
+
+			} else {
+				formerLeben =  held.leben;
+				held.leben = held.leben + 15;
+				lifechanged = true;
+				avoid = "heal";
+			}
+		}
+
+		// Als Poweritem!
+		if (item.typ.toLowerCase().equals("power")) {
+			acted = held;
+			avoid = "power";
+			schaden = 0;
+			damagestep = 1;
+
+			spezialangriffEingesetzt = false;
+		}
+	}
+
+	// ****************************************************************
+	// *** Gegner Aktionen ***
+	// ****************************************************************
+	// Eine Gegner Runde
+	private void gegnerTurn() {
+
+		if (gegnerStun > 0) {
+			actor = gegner;
+			acted = gegner;
+			action = "Gelähmt";
+			avoid = "stun";
+			schaden = 0;
+			spezialangriffVorbereitetCOM = false;
+			damagestep = 1;
+		} else {
+
+			if (spezialangriffVorbereitetCOM) {
+				gegnerSpezialangriff();
+			} else {
+				int zufall = ThreadLocalRandom.current().nextInt(0, 100 + 1);
+				if (zufall <= 60) {
+					angriff(gegner, held);
+				}
+
+					if (zufall >= 61 && zufall <= 70) {
+						if(bossspezialUsed<3) {
+						gegnerSpezialangriffVorbereitung();
+						}else {
+							angriff(gegner, held);						
+						}
+					}
+					if (zufall >= 71 && zufall <= 80) {
+						verteidigung(gegner);
+					}
+
+				if (gegner.leben >= 40) {
+					if (zufall >= 81 && zufall <= 85) {
+						if (gegner.healItem > 0) {
+							gegnerItemHeal();
+						} else {
+							angriff(gegner, held);
+						}
+					}
+					if (zufall >= 86 && zufall <= 100) {
+
+						if (gegner.stunItem > 0) {
+							gegnerItemStun();
+						} else {
+							angriff(gegner, held);
+						}
+					}
+				} else {
+					if (zufall >= 81 && zufall <= 85) {
+						if (gegner.stunItem > 0) {
+							gegnerItemStun();
+						} else {
+							angriff(gegner, held);
+						}
+					}
+					if (zufall >= 86 && zufall <= 100) {
+						if (gegner.healItem > 0) {
+							gegnerItemHeal();
+						} else {
+							angriff(gegner, held);
+						}
+					}
+				}
+			}
+		}
+
+	}
+	
+	// Der Spezialangriff des Spielers
+	private void gegnerSpezialangriffVorbereitung() {
+		spezialangriffVorbereitetCOM = true;
+		actor = gegner;
+		acted = gegner;
+		action = "Vorbereitung";
+		avoid = "vor";
+		schaden = 0;
+		damagestep = 1;
+	}
+
+	// Der Spezialangriff des Spielers
+	private void gegnerSpezialangriff() {
+		double damage;
+		actor = gegner;
+		acted = held;
+		action = "Spezialangriff";
+		avoid = "gegnerspezial";
+
+		damage = gegner.getWaffe().schaden * 2; // Grundschaden
+		if (held.starkOderSchwach(gegner.getWaffeCat()).equals("stark")) {// Wenn Effektiv verdoppeln
+			damage = damage * 2;
+			effektiv = ": Effektiv";
+		}
+		if (gegner.starkOderSchwach(gegner.getWaffeCat()).equals("schwach")) {// Wenn Ineffektiv halbieren
+			damage = damage / 2;
+			effektiv = ": Ineffektiv";
+		}
+
+		if (held.def) {// Wenn Gegner verteidigt halber Schaden
+			held.def = false;
+			damage = damage / 2;
+			avoid = "gegnerspezialbreak";
+		}
+
+		if (held.getArmorName().equals("Heldenkleidung")) {
+			damage = damage / 2;
+			effektiv = ": Geschützt";
+		}
+
+		schaden = damage;
+		damagestep = 1;
+		
+		formerLeben =  held.leben;
+		lifechanged = true;
+		held.leben = held.leben - damage;// Schaden zufügen
+		spezialangriffVorbereitetCOM = false;
+		gegnerspezialangriffaktiv=true;
+		damagestep = 1;
+		bossspezialUsed++;
+	}
+
+	private void gegnerItemStun() {
+		actor = gegner;
+		acted = held;
+		action = "Lähmt";
+		avoid = "stun";
+		schaden = 0;
+		heldStun++;
+		gegner.stunItem--;
+		damagestep = 1;
+	}
+
+	private void gegnerItemHeal() {
+		actor = gegner;
+		acted = gegner;
+		action = "Heilt";
+		avoid = "heal";
+		schaden = 15;
+		gegner.healItem--;
+		lifechanged = true;
+		formerLeben =  gegner.leben;
+		gegner.leben = gegner.leben + schaden;
+		damagestep = 1;
+	}
+	
+	// ****************************************************************
+	// *** Grafik ***
+	// ****************************************************************
 	// Grafik
 
 	PFont f;
@@ -77,28 +540,34 @@ public class Kampf extends PApplet {
 	double formerLeben;
 	boolean lifechanged = false;
 	boolean end = false;
+	
+	// Button Spalten(X) Positionen
+	float bts1 = 525;
+	float bts2 = 726;
 
-	// Manager
-	BossManager bm;
+	// Button Reihen(Y) Positionen
+	float btr1 = 760;
+	float btr2 = 830;
+	float btr3 = 900;
 
-	// Spieler
-	Spieler held;
-	boolean spezialangriffEingesetzt;
-	int heldSchild;
-	int heldStun;
-	boolean playerturn;
+	// Button Weite
+	float btmw = 200;
+	// Button Höhe
+	float bth = 50;
 
-	// Boss
-	Boss gegner;
-	boolean spezialangriffVorbereitetCOM;
-	int bossspezialUsed;
-	int gegnerSchild;
-	int gegnerStun;
-	boolean bossturn;
+	// Item Buttons
+	Button item1 = new Button(bts1, btr1, btmw, bth);
+	Button item2 = new Button(bts1, btr2, btmw, bth);
+	Button item3 = new Button(bts1, btr3, btmw, bth);
+	Button itemback = new Button(bts2, btr2, btmw, bth);
 
-	// ****************************************************************
-	// *** Grafik ***
-	// ****************************************************************
+	// Menü Buttons
+	Button btang = new Button(bts1, btr1, btmw, bth);
+	Button btspez = new Button(bts2, btr1, btmw, bth);
+	Button btdef = new Button(bts1, btr2, btmw, bth);
+	Button bti = new Button(bts2, btr2, btmw, bth);
+	Button btflee = new Button(bts1, btr3, btmw, bth);
+	Button item6 = new Button(bts2, btr3, btmw, bth);
 
 	public void settings() {
 		size(1000, 1000);
@@ -201,7 +670,8 @@ public class Kampf extends PApplet {
 		} else {
 			if (end) {
 				delay(3000);
-				System.exit(0);
+				noLoop();
+				surface.setVisible(false);
 			} else {
 				delay(500);
 				wait = false;
@@ -639,34 +1109,6 @@ public class Kampf extends PApplet {
 		text("Du hast verloren!", 150, 350);
 	}
 
-	// Button Spalten(X) Positionen
-	float bts1 = 525;
-	float bts2 = 726;
-
-	// Button Reihen(Y) Positionen
-	float btr1 = 760;
-	float btr2 = 830;
-	float btr3 = 900;
-
-	// Button Weite
-	float btmw = 200;
-	// Button Höhe
-	float bth = 50;
-
-	// Item Buttons
-	Button item1 = new Button(bts1, btr1, btmw, bth);
-	Button item2 = new Button(bts1, btr2, btmw, bth);
-	Button item3 = new Button(bts1, btr3, btmw, bth);
-	Button itemback = new Button(bts2, btr2, btmw, bth);
-
-	// Menü Buttons
-	Button btang = new Button(bts1, btr1, btmw, bth);
-	Button btspez = new Button(bts2, btr1, btmw, bth);
-	Button btdef = new Button(bts1, btr2, btmw, bth);
-	Button bti = new Button(bts2, btr2, btmw, bth);
-	Button btflee = new Button(bts1, btr3, btmw, bth);
-	Button item6 = new Button(bts2, btr3, btmw, bth);
-
 	public void drawTurnButtons() {
 		textFont(f, 30);
 
@@ -850,450 +1292,4 @@ public class Kampf extends PApplet {
 		}
 	}
 
-	// ****************************************************************
-	// *** Konstruktor ***
-	// ****************************************************************
-	public Kampf(Spieler s, BossManager b) {
-		held = s;
-		bm = b;
-		gegner = bm.getCurrentBoss();
-	}
-
-	// ****************************************************************
-	// *** Hilfsmethoden ***
-	// ****************************************************************
-	private void onPlayerWin() {
-		held.siege++;
-		bm.setNextBoss();
-	}
-
-	// ****************************************************************
-	// *** Ablauf ***
-	// ****************************************************************
-
-	public void mousePressed() {
-		// Item Eingaben
-		if (playerturn) {
-			if (itempressed) {
-				if (overButton(item1)) {
-					if (held.item[1] != null) {
-						itemEinsatz(1);
-					}
-					itempressed = false;
-				}
-				if (overButton(item2)) {
-					if (held.item[2] != null) {
-						itemEinsatz(2);
-					}
-					itempressed = false;
-				}
-				if (overButton(item3)) {
-					if (held.item[3] != null) {
-						itemEinsatz(3);
-					}
-					itempressed = false;
-				}
-				if (overButton(itemback)) {
-					itempressed = false;
-				}
-				// Kampfmenü
-			} else {
-				if (overButton(btang)) {
-					angriff(held, gegner);
-				}
-				if (overButton(btspez)) {
-					if (!spezialangriffEingesetzt) {
-						spezialangriff(held, gegner);
-						spezialangriffaktiv = true;
-					}
-				}
-				if (overButton(btdef)) {
-					verteidigung(held);
-				}
-				if (overButton(bti)) {
-					itempressed = true;
-				}
-				if (overButton(btflee)) {
-					fliehen();
-				}
-			}
-		}
-	}
-
-	// Eine Gegner Runde
-	private void gegnerTurn() {
-
-		if (gegnerStun > 0) {
-			actor = gegner;
-			acted = gegner;
-			action = "Gelähmt";
-			avoid = "stun";
-			schaden = 0;
-			spezialangriffVorbereitetCOM = false;
-			damagestep = 1;
-		} else {
-
-			if (spezialangriffVorbereitetCOM) {
-				gegnerSpezialangriff();
-			} else {
-				int zufall = ThreadLocalRandom.current().nextInt(0, 100 + 1);
-				if (zufall <= 60) {
-					angriff(gegner, held);
-				}
-
-					if (zufall >= 61 && zufall <= 70) {
-						if(bossspezialUsed<3) {
-						gegnerSpezialangriffVorbereitung();
-						}else {
-							angriff(gegner, held);						
-						}
-					}
-					if (zufall >= 71 && zufall <= 80) {
-						verteidigung(gegner);
-					}
-
-				if (gegner.leben >= 40) {
-					if (zufall >= 81 && zufall <= 85) {
-						if (gegner.healItem > 0) {
-							gegnerItemHeal();
-						} else {
-							angriff(gegner, held);
-						}
-					}
-					if (zufall >= 86 && zufall <= 100) {
-
-						if (gegner.stunItem > 0) {
-							gegnerItemStun();
-						} else {
-							angriff(gegner, held);
-						}
-					}
-				} else {
-					if (zufall >= 81 && zufall <= 85) {
-						if (gegner.stunItem > 0) {
-							gegnerItemStun();
-						} else {
-							angriff(gegner, held);
-						}
-					}
-					if (zufall >= 86 && zufall <= 100) {
-						if (gegner.healItem > 0) {
-							gegnerItemHeal();
-						} else {
-							angriff(gegner, held);
-						}
-					}
-				}
-			}
-		}
-
-	}
-	// ****************************************************************
-	// *** Aktionen ***
-	// ****************************************************************
-
-	// ****************************************************************
-	// *** Allgemein ***
-	// ****************************************************************
-
-	// Ein Angriff
-	private void angriff(Actor angreifer, Actor verteidiger) {
-		actor = angreifer;
-		acted = verteidiger;
-		action = angreifer.getWaffeName();
-		damagestep = 1;
-		avoid = "";
-
-		double damage;
-		if (verteidiger.def) {// Wenn Gegner verteidigt kein Schaden
-			avoid = "dodge";
-			verteidiger.def = false;
-			damage = 0;
-		} else {// Sonst Berechnung
-			if (ThreadLocalRandom.current().nextInt(0, 100 + 1) >= 1) {// Wenn Angriff nicht zufällig daneben geht
-				damage = angreifer.getWaffe().schaden; // Grundschaden
-
-				if (verteidiger.starkOderSchwach(angreifer.getWaffeCat()).equals("stark")) {// Wenn Effektiv verdoppeln
-					damage = damage * 2;
-					effektiv = ": Effektiv";
-				}
-				if (verteidiger.starkOderSchwach(angreifer.getWaffeCat()).equals("schwach")) {// Wenn Ineffektiv
-																								// halbieren
-					damage = damage / 2;
-					effektiv = ": Ineffektiv";
-				}
-				if (verteidiger.getArmorName().equals("Heldenkleidung")) {
-					damage = damage / 2;
-					effektiv = ": Geschützt";
-				}
-			} else {// Wenn der Angriff zufällig daneben geht
-				avoid = "miss";
-				damage = 0;
-			}
-		}
-		schaden = damage;
-		formerLeben = verteidiger.leben;
-		lifechanged = true;
-		verteidiger.leben = verteidiger.leben - damage;// Schaden zufügen
-	}
-
-	// Verteidigen
-	private void verteidigung(Actor verteidiger) {
-		verteidiger.def = true;// Verteidigung wird gesetzt
-
-		actor = verteidiger;
-		acted = verteidiger;
-		action = "Verteidigt";
-		avoid = "block";
-		schaden = 0;
-		damagestep = 1;
-
-	}
-
-	// Aufgeben
-	private void fliehen() {
-		held.leben = 0;
-		checkWin();
-	}
-
-	// Prüft ob jemand gewonnen hat
-	private int checkWin() {
-		// Wenn Gegner Leben 0 dann gewonnen!
-		if (gegner.leben <= 0) {
-			gegner.leben = 0;
-			playerturn = false;
-			onPlayerWin();
-			return 1;
-		}
-
-		// Wenn Spieler Leben 0 dann verloren!
-		if (held.leben <= 0) {
-			held.leben = 0;
-			playerturn = false;
-			return 2;
-		}
-		return 0;
-	}
-
-	// Spielerspezialangriff
-	// ****************************************************************
-	// *** Spieler Aktionen ***
-	// ****************************************************************
-
-	// Der Spezialangriff des Spielers
-	private void spezialangriff(Actor angreifer, Actor verteidiger) {
-		double damage;
-
-		actor = angreifer;
-		acted = verteidiger;
-		damagestep = 1;
-		action = "Spezialangriff";
-		avoid = "";
-
-		if (verteidiger.def) {// Wenn Gegner verteidigt kein Schaden
-			avoid = "dodge";
-			damage = 0;
-		} else {// Sonst Berechnung
-
-			damage = angreifer.getWaffe().schaden * 2; // Grundschaden
-
-			if (verteidiger.starkOderSchwach(angreifer.getWaffeCat()).equals("stark")) {// Wenn Effektiv verdoppeln
-				damage = damage + 5;
-				effektiv = ": Effektiv";
-			}
-			if (verteidiger.starkOderSchwach(angreifer.getWaffeCat()).equals("schwach")) {// Wenn Ineffektiv halbieren
-				damage = damage - 5;
-				effektiv = ": Ineffektiv";
-			}
-			if (verteidiger.getArmorName().equals("Heldenkleidung")) {
-				damage = damage / 2;
-			}
-			if (spezialangriffVorbereitetCOM) {// Wenn Gegner seinen Spezialangriff vorbereitet
-				avoid = "spezialcounter";
-				spezialangriffVorbereitetCOM = false; // Spezialangriff unterbrechen
-				gegnerStun++;
-				damage = damage + 5;
-			}
-		}
-
-		schaden = damage;
-		formerLeben = verteidiger.leben;
-		lifechanged = true;
-		verteidiger.leben = verteidiger.leben - damage;// Schaden zufügen
-		spezialangriffEingesetzt = true; // Spezialangriff verwendet
-	}
-
-	// Item einsetzen
-	private void itemEinsatz(int index) {
-		Item item = null;
-		actor = held;
-
-		// Der übergebene Index(1-3) wird als Item gesetzt, die Anzahl der übrigen Items
-		// um einen verringert und wenn keine mehr übrig sind das Item gelöscht
-		if (index >= 1 && index <= 3) {
-			item = held.item[index];
-
-			// Powerball und noch Spezialangriff übrig
-			if (item.typ.toLowerCase().equals("power") && !spezialangriffEingesetzt) {
-				acted = held;
-				action = item.name;
-				avoid = "powerfail";
-				schaden = 0;
-				damagestep = 1;
-				return;
-			}
-
-			held.item[index].anzahl--;
-			if (held.item[index].anzahl == 0) {
-				held.item[index] = null;
-			}
-
-		}
-
-		action = item.name;
-
-		// Das gesetzte Item bestimmt hier die Wirkung
-
-		// Als Stun Item
-		if (item.typ.toLowerCase().equals("stun")) {
-			acted = gegner;
-			schaden = 0;
-			damagestep = 1;
-			if (gegner.starkOderSchwach(item.kategorie).equals("stark")) {
-				gegnerStun = gegnerStun + 2;
-				avoid = "stuncrit";
-				effektiv = ": Effektiv";
-
-			} else if (gegner.starkOderSchwach(item.kategorie).equals("schwach")) {
-				gegnerStun = 0;
-				avoid = "stunno";
-				effektiv = ": Ineffektiv";
-
-			} else {
-				gegnerStun++;
-				avoid = "stunyes";
-			}
-		}
-
-		// Als Heal Item
-		if (item.typ.toLowerCase().equals("heal")) {
-
-			acted = held;
-			schaden = 15;
-			damagestep = 1;
-
-			if (gegner.starkOderSchwach(item.kategorie).equals("stark")) {
-				formerLeben = held.leben;
-				held.leben = held.leben + 15;
-				lifechanged = true;
-				gegnerStun++;
-				avoid = "stunheal";
-				effektiv = ": Effektiv";
-
-			} else if (gegner.starkOderSchwach(item.kategorie).equals("schwach")) {
-				formerLeben =  gegner.leben;
-				gegner.leben = gegner.leben + 15;
-				lifechanged = true;
-				acted = gegner;
-				avoid = "healsteal";
-				effektiv = ": Ineffektiv";
-
-			} else {
-				formerLeben =  held.leben;
-				held.leben = held.leben + 15;
-				lifechanged = true;
-				avoid = "heal";
-			}
-		}
-
-		// Als Poweritem!
-		if (item.typ.toLowerCase().equals("power")) {
-			acted = held;
-			avoid = "power";
-			schaden = 0;
-			damagestep = 1;
-
-			spezialangriffEingesetzt = false;
-		}
-	}
-
-	// ****************************************************************
-	// *** Gegner Aktionen ***
-	// ****************************************************************
-
-	// Der Spezialangriff des Spielers
-	private void gegnerSpezialangriffVorbereitung() {
-		spezialangriffVorbereitetCOM = true;
-		actor = gegner;
-		acted = gegner;
-		action = "Vorbereitung";
-		avoid = "vor";
-		schaden = 0;
-		damagestep = 1;
-	}
-
-	// Der Spezialangriff des Spielers
-	private void gegnerSpezialangriff() {
-		double damage;
-		actor = gegner;
-		acted = held;
-		action = "Spezialangriff";
-		avoid = "gegnerspezial";
-
-		damage = gegner.getWaffe().schaden * 2; // Grundschaden
-		if (held.starkOderSchwach(gegner.getWaffeCat()).equals("stark")) {// Wenn Effektiv verdoppeln
-			damage = damage * 2;
-			effektiv = ": Effektiv";
-		}
-		if (gegner.starkOderSchwach(gegner.getWaffeCat()).equals("schwach")) {// Wenn Ineffektiv halbieren
-			damage = damage / 2;
-			effektiv = ": Ineffektiv";
-		}
-
-		if (held.def) {// Wenn Gegner verteidigt halber Schaden
-			held.def = false;
-			damage = damage / 2;
-			avoid = "gegnerspezialbreak";
-		}
-
-		if (held.getArmorName().equals("Heldenkleidung")) {
-			damage = damage / 2;
-			effektiv = ": Geschützt";
-		}
-
-		schaden = damage;
-		damagestep = 1;
-		
-		formerLeben =  held.leben;
-		lifechanged = true;
-		held.leben = held.leben - damage;// Schaden zufügen
-		spezialangriffVorbereitetCOM = false;
-		gegnerspezialangriffaktiv=true;
-		damagestep = 1;
-		bossspezialUsed++;
-	}
-
-	private void gegnerItemStun() {
-		actor = gegner;
-		acted = held;
-		action = "Lähmt";
-		avoid = "stun";
-		schaden = 0;
-		heldStun++;
-		gegner.stunItem--;
-		damagestep = 1;
-	}
-
-	private void gegnerItemHeal() {
-		actor = gegner;
-		acted = gegner;
-		action = "Heilt";
-		avoid = "heal";
-		schaden = 15;
-		gegner.healItem--;
-		lifechanged = true;
-		formerLeben =  gegner.leben;
-		gegner.leben = gegner.leben + schaden;
-		damagestep = 1;
-	}
 }
