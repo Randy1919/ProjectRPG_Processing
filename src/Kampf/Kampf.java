@@ -18,7 +18,7 @@ public class Kampf extends PApplet {
 	
 /* Einkommentieren wenn das Modul allein aufgerufen werden soll. 
  * Löschen wenn das Aufrufen über das Hauptmenü klappt.
-  
+ */
  
 	public static void main(String[] args) {
 		ItemManager im = new ItemManager();
@@ -40,7 +40,7 @@ public class Kampf extends PApplet {
 		Kampf k = new Kampf(hero, bo);
 		PApplet.runSketch(argu, k);
 		}
-	*/
+
 
 	// Manager
 	BossManager bm;
@@ -59,6 +59,8 @@ public class Kampf extends PApplet {
 	int gegnerSchild;
 	int gegnerStun;
 	boolean bossturn;
+	
+
 
 
 	// ****************************************************************
@@ -540,6 +542,7 @@ public class Kampf extends PApplet {
 	double formerLeben;
 	boolean lifechanged = false;
 	boolean end = false;
+	boolean gegnerspezialaktiv=false;
 	
 	// Button Spalten(X) Positionen
 	float bts1 = 525;
@@ -672,9 +675,13 @@ public class Kampf extends PApplet {
 				delay(3000);
 				noLoop();
 				surface.setVisible(false);
-			} else {
+			} else if(!gegnerspezialaktiv){
 				delay(500);
 				wait = false;
+			}else {
+				delay(1500);
+				wait = false;
+				gegnerspezialaktiv=false;
 			}
 		}
 	}
@@ -762,7 +769,7 @@ public class Kampf extends PApplet {
 			if (acted.equals(held)) {
 				if (action.equals("Verteidigt")) {
 					if (imgshieldplayer != null) {
-						image(imgshieldplayer, 160, 330, 200, 340);
+						image(imgshieldplayer, 250, 330, 200, 340);
 					}
 				} else if (action.equals("Gelähmt")) {
 					heldStun--;
@@ -775,7 +782,7 @@ public class Kampf extends PApplet {
 				if (!avoid.equals("healsteal")) {
 					if (!action.equals("Spezialangriff")) {
 						if (imgslashplayer != null) {
-							image(imgslashplayer, 130, 350, 200, 340);
+							image(imgslashplayer, 230, 350, 200, 340);
 						}
 					}
 				} else {
@@ -869,10 +876,10 @@ public class Kampf extends PApplet {
 			} else {
 				if (!avoid.equals("dodge")&&!avoid.equals("gegnerspezialbreak")) {
 					if (imghit1 != null) {
-						image(imghit1, 70, 350, 200, 340);
+						image(imghit1, 150, 350, 200, 340);
 					}
 				} else {
-					image(imgshieldplayer, 110, 330, 200, 340);
+					image(imgshieldplayer, 190, 330, 200, 340);
 				}
 			}
 		}
@@ -932,10 +939,10 @@ public class Kampf extends PApplet {
 			} else {
 				if (!avoid.equals("dodge")) {
 					if (imghit2 != null) {
-						image(imghit2, 70, 350, 200, 340);
+						image(imghit2, 150, 350, 200, 340);
 					}
 				} else {
-					image(imgshieldplayer, 110, 330, 200, 340);
+					image(imgshieldplayer, 190, 330, 200, 340);
 				}
 			}
 		}
@@ -1019,18 +1026,19 @@ public class Kampf extends PApplet {
 	public void drawGegnerSpezial() {
 		if (imgbossspezial != null) {
 			image(imgbossspezial, 20, 180, 961, 531);
+			gegnerspezialaktiv=true;
 		}
 	}
 
 	public void drawPlayer() {
 		if (imgplayer != null) {
-			image(imgplayer, 80, 350, 200, 340);
+			image(imgplayer, 80, 400);
 		}
 	}
 
 	public void drawAttackPlayer() {
 		if (imgplayer != null) {
-			image(imgplayer, 130, 350, 200, 340);
+			image(imgplayer, 130, 400);
 		}
 	}
 
@@ -1048,13 +1056,13 @@ public class Kampf extends PApplet {
 
 	public void drawBoss() {
 		if (imgboss != null) {
-			image(imgboss, 720, 350, 200, 340);
+			image(imgboss, 720, 350);
 		}
 	}
 
 	public void drawAttackBoss() {
 		if (imgboss != null) {
-			image(imgboss, 670, 350, 200, 340);
+			image(imgboss, 670, 350);
 		}
 	}
 
