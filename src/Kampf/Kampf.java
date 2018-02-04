@@ -1146,7 +1146,7 @@ public class Kampf {
 			hauptmenu.fill(255, 255, 255);
 		}
 		hauptmenu.text("Fliehen", btflee.positionX + 10, btflee.positionY + 40);
-
+/*
 		// Button 6
 		if (overButton(item6)) {
 			hauptmenu.fill(150, 150, 150);
@@ -1154,6 +1154,7 @@ public class Kampf {
 			hauptmenu.fill(255, 255, 255);
 		}
 		hauptmenu.text("6", item6.positionX + 10, item6.positionY + 40);
+		*/
 	}
 
 	public void drawItemButtons() {
