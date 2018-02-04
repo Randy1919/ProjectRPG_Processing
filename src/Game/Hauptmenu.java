@@ -88,6 +88,7 @@ public class Hauptmenu extends PApplet
 	
 	public void startFight()
 	{
+		bossManager.setBossByInt(activeBoss);
 		currentKampf = new Kampf(spieler, bossManager, this);
 		drawMode = 3;
 	}
