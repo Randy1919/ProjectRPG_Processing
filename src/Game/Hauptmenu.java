@@ -154,16 +154,19 @@ public class Hauptmenu extends PApplet
 			{
 				//BossBox0
 				int posX = boxWidth + boxDistance;
-				
-				int iCheck = i; 
-				if(bossManager.bosse.length % 2 != 0) {iCheck++;}
-				if(iCheck % 2 == 0)
+						
+				if(i % 2 == 0)
 				{
-					posX *= iCheck / 2;
+					posX *= i / 2;
 				}
 				else
 				{
-					posX *= -iCheck / 2;
+					posX *= -i / 2;
+				}
+				
+				if(bossManager.bosse.length % 2 != 0) 
+				{
+					posX -= (boxWidth + boxDistance)/2;
 				}
 				
 				//box	
