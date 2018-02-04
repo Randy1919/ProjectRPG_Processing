@@ -617,7 +617,7 @@ public class Kampf {
 		}
 	}
 
-	public void draw() {
+	public boolean draw() {
 		if (!wait) {
 			if (checkWin() == 0) {
 				if (damagestep == 0) {
@@ -646,7 +646,7 @@ public class Kampf {
 			if (end) {
 				hauptmenu.delay(3000);
 				hauptmenu.noLoop();
-				//Hauptmenu sichbar machen
+				return true;
 			} else if(!gegnerspezialaktiv){
 				hauptmenu.delay(500);
 				wait = false;
@@ -656,6 +656,7 @@ public class Kampf {
 				gegnerspezialaktiv=false;
 			}
 		}
+		return false;
 	}
 
 	public void drawStep0() {
