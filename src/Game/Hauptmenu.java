@@ -94,6 +94,7 @@ public class Hauptmenu extends PApplet
 	
 	public void endFight()
 	{
+		textFont(createFont("Arial", 18, true), 40);
 		currentKampf = null;
 		drawMode = 1;
 	}
