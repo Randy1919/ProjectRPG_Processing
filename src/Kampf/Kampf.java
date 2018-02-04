@@ -1008,13 +1008,17 @@ public class Kampf {
 
 	public void drawPlayer() {
 		if (imgplayer != null) {
-			hauptmenu.image(imgplayer, 80, 400);
+			float width = 271f;
+			float factor = imgplayer.height/(imgplayer.width * 1f) ;
+			hauptmenu.image(imgplayer, 80, 400,width, width*factor);
 		}
 	}
 
 	public void drawAttackPlayer() {
 		if (imgplayer != null) {
-			hauptmenu.image(imgplayer, 130, 400);
+			float width = 271f;
+			float factor = imgplayer.height/(imgplayer.width * 1f) ;	
+			hauptmenu.image(imgplayer, 130, 400,width, width*factor);
 		}
 	}
 
@@ -1032,13 +1036,17 @@ public class Kampf {
 
 	public void drawBoss() {
 		if (imgboss != null) {
-			hauptmenu.image(imgboss, 720, 350);
+			float width = 200f;
+			float factor =  imgboss.height/(imgboss.width * 1f);
+			hauptmenu.image(imgboss, 720, 350,width, width*factor);
 		}
 	}
 
 	public void drawAttackBoss() {
 		if (imgboss != null) {
-			hauptmenu.image(imgboss, 670, 350);
+			float width = 200f;
+			float factor =  imgboss.height/(imgboss.width * 1f);	
+			hauptmenu.image(imgboss, 670, 350,width, width*factor);
 		}
 	}
 

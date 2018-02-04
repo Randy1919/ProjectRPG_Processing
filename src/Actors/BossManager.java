@@ -11,7 +11,7 @@ import Items.ItemManager;
 public class BossManager {
 
 	public Boss[] bosse;
-	private int currentBoss;
+	public int currentBoss;
 	private LinkedList<Boss> bo = new LinkedList<Boss>();
 	private ItemManager items;
 
