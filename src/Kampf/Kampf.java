@@ -42,6 +42,7 @@ public class Kampf {
 		bm = b;
 		hauptmenu =p;
 		gegner = bm.getCurrentBoss();
+		setup();
 	}
 
 	// ****************************************************************
