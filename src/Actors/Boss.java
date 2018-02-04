@@ -9,7 +9,7 @@ public class Boss extends Actor{
 	// 9 = Hassessen, 10 = Lieblingstemperatur, 11 = Meistgehasste Temperatur
 	public String[] triviaCategory = {"Alter","Geburtsort","Verkehrsmittel","Videospielreihe","Konsole","Hobby","Sport","Lieblingsfarbe","Lieblingspizza","Hasspizza","Lieblingstemperatur","Hasstemperatur"};	
 	public String[] trivia;
-	public boolean[] triviaUnlocked;
+	public boolean[] triviaUnlocked; 
 	private String[] schwaechen;
 	private String[] staerken;
 	

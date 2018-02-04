@@ -649,7 +649,6 @@ public class Kampf {
 		} else {
 			if (end) {
 				hauptmenu.delay(3000);
-				hauptmenu.noLoop();
 				return true;
 			} else if(!gegnerspezialaktiv){
 				hauptmenu.delay(500);
