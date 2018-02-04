@@ -565,6 +565,7 @@ public class Kampf {
 		spezialangriffEingesetzt = false;
 		heldStun = 0;
 		gegnerStun = 0;
+		held.parseCats();
 		gegner.parseCats();
 		end = false;
 		playerturn = true;
