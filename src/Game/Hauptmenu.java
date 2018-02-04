@@ -28,7 +28,7 @@ public class Hauptmenu extends PApplet
 	int drawMode = 0;
 	int activeBoss = 0;
 	
-	KampfTest currentKampf;
+	Kampf currentKampf;
 	
 	
 	public static void main(String[] args) 
@@ -84,26 +84,18 @@ public class Hauptmenu extends PApplet
 		{
 			drawMode = 0;
 		}
-		
 	}
 	
 	public void startFight()
 	{
-		currentKampf = new KampfTest();
+		currentKampf = new Kampf(spieler, bossManager, this);
 		drawMode = 3;
 	}
 	
 	public void endFight()
 	{
 		currentKampf = null;
-	}
-	
-	public void drawFight()
-	{
-		if(currentKampf != null)
-		{
-			currentKampf.drawKampf(this);
-		}
+		drawMode = 1;
 	}
 	
 	public boolean hovering(int posX, int posY, int width, int height)
@@ -114,6 +106,14 @@ public class Hauptmenu extends PApplet
 		}
 		return false;
 	}	
+	
+	public void mousePressed()
+	{
+		if(currentKampf != null)
+		{
+			currentKampf.mousePressed();
+		}
+	}
 	
 	public void settings() 
 	{
@@ -136,11 +136,12 @@ public class Hauptmenu extends PApplet
 		}
 		//Konstruktor
 		
-		background(0);
+		//background(0);
 		
 		//drawMode = 0;
 		if(drawMode == 0) //Choose Boss Menu
 		{	
+			background(0);
 			//Header
 			fill(230, 138, 0);
 			rect(257, 10, 485, 150);
@@ -216,6 +217,7 @@ public class Hauptmenu extends PApplet
 		}
 		else if(drawMode == 1) //Boss Overview Menu
 		{
+			background(0);
 			//header
 			fill(230, 138, 0);
 			rect(10, 10, 820, 150);
@@ -326,12 +328,17 @@ public class Hauptmenu extends PApplet
 		{
 			drawMode = 3;
 		}
-		else if(drawMode == 3) //Kampf
+		else if(drawMode == 3 && currentKampf != null) //Kampf
 		{
-			drawFight();
+			//currentKampf.draw();
+			if(currentKampf.draw())
+			{
+				endFight();
+			}	
 		}
 		else
 		{
+			background(0);
 			//back
 			fill(230, 138, 0);	
 			if(hovering(840, 10, 150, 150))

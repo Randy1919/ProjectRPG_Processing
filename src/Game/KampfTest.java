@@ -17,10 +17,21 @@ import processing.core.PImage;
 
 public class KampfTest 
 {
-	public void drawKampf(PApplet app)
+	public boolean drawKampf(Hauptmenu app)
 	{
 		//Header
+		boolean done = false;
+		
 		app.fill(230, 138, 0);
+		if(app.hovering(257, 10, 485, 150)) 
+		{
+			app.fill(137, 137, 137);
+			if(app.mousePressed)
+			{
+				done = true;
+				app.fill(244,244,244);
+			}
+		}		
 		app.rect(257, 10, 485, 150);
 		
 		app.fill(0,0,0);
@@ -29,6 +40,8 @@ public class KampfTest
 		app.fill(255, 255, 255);
 		app.text("Fate | Processing RPG", 300, 100);
 		//Header
+		
+		return done;
 	}
 	
 }
