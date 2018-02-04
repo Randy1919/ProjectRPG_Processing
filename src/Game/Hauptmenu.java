@@ -284,26 +284,27 @@ public class Hauptmenu extends PApplet
 			rect(680, 595, 300, 385);
 			
 			//buttons
-			//button0
-			fill(230, 138, 0);		
-			if(hovering(690, 605, 280, 50))
-			{	
-				fill(137, 137, 137);
-				if(mousePressed)
-				{
-					fill(244,244,244);
-					startFight();
+			for (int i = 0; i < 6; i++)
+			{
+				int posY = 60 * i;
+				float fill = 1f;
+				if(hovering(690, 605 + posY, 280, 50))
+				{	
+					fill = 0.537f;
+					if(mousePressed)
+					{
+						fill = 0.957f;
+						startFight();
+					}
 				}
+				fill(255 * fill, 255 * fill, 255 * fill);
+				rect(690, 605 + posY, 280, 50);
+				fill(0, 0, 0);
+				rect(695, 610 + posY, 270, 40);
+				fill(255 * fill, 255 * fill, 255 * fill);			
+				text("Start fight", 700, 645 + posY);
 			}
-			rect(690, 605, 280, 50);
-			//button0
-			
-			fill(230, 138, 0);	
-			rect(690, 665, 280, 50);
-			rect(690, 725, 280, 50);
-			rect(690, 785, 280, 50);
-			rect(690, 845, 280, 50);
-			rect(690, 905, 280, 50);
+
 			//buttons
 			// Befehlfenster		
 			
