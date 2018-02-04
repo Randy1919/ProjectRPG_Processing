@@ -13,37 +13,11 @@ import processing.core.PApplet;
 import processing.core.PFont;
 import processing.core.PImage;
 
-public class Kampf extends PApplet {
-
-	
-/* Einkommentieren wenn das Modul allein aufgerufen werden soll. 
- * Löschen wenn das Aufrufen über das Hauptmenü klappt.
- */
- 
-	public static void main(String[] args) {
-		ItemManager im = new ItemManager();
-		BossManager bo = new BossManager(im);
-		Spieler hero = new Spieler("Stella");
-		hero.setWaffe(im.getWeaponByName("Kendoschwert"));
-		hero.setArmor(im.getArmorByName("Kendorüstung"));
-		hero.item[1] = im.getItemByName("Powerkugel");
-		hero.item[2] = im.getItemByName("Schneeball");
-		hero.item[3] = im.getItemByName("Pizza Hawaii");
-
-		File f = new File("Held.txt");
-		if (f.exists()) {
-			hero.setWaffe(im.getWeaponByName("Master-Schwert"));
-			hero.setArmor(im.getArmorByName("Heldenkleidung"));
-		}
-
-		String[] argu = { "--location=200,200", "Kampf.Kampf" };
-		Kampf k = new Kampf(hero, bo);
-		PApplet.runSketch(argu, k);
-		}
-
+public class Kampf {
 
 	// Manager
 	BossManager bm;
+	PApplet hauptmenu;
 
 	// Spieler
 	Spieler held;
@@ -59,16 +33,14 @@ public class Kampf extends PApplet {
 	int gegnerSchild;
 	int gegnerStun;
 	boolean bossturn;
-	
-
-
 
 	// ****************************************************************
 	// *** Konstruktor ***
 	// ****************************************************************
-	public Kampf(Spieler s, BossManager b) {
+	public Kampf(Spieler s, BossManager b, PApplet p) {
 		held = s;
 		bm = b;
+		hauptmenu =p;
 		gegner = bm.getCurrentBoss();
 	}
 
@@ -156,7 +128,7 @@ public class Kampf extends PApplet {
 	// ****************************************************************
 
 	// Ein Angriff
-	private void angriff(Actor angreifer, Actor verteidiger) {
+	public void angriff(Actor angreifer, Actor verteidiger) {
 		actor = angreifer;
 		acted = verteidiger;
 		action = angreifer.getWaffeName();
@@ -509,78 +481,78 @@ public class Kampf extends PApplet {
 	// ****************************************************************
 	// Grafik
 
-	PFont f;
+	public PFont f;
 
-	boolean wait;
-	boolean itempressed;
-	boolean spezialangriffaktiv = false;
-	boolean gegnerspezialangriffaktiv = false;
+	public boolean wait;
+	public boolean itempressed;
+	public boolean spezialangriffaktiv = false;
+	public boolean gegnerspezialangriffaktiv = false;
 
-	PImage imgbackground; // Declare a variable of type PImage
-	PImage imgplayer; // Declare a variable of type PImage
-	PImage imgplayerspezial; // Declare a variable of type PImage
-	PImage imgboss; // Declare a variable of type PImage
-	PImage imgbossspezial; // Declare a variable of type PImage
-	PImage imgegg; // Declare a variable of type PImage
+	public PImage imgbackground; // Declare a variable of type PImage
+	public PImage imgplayer; // Declare a variable of type PImage
+	public PImage imgplayerspezial; // Declare a variable of type PImage
+	public PImage imgboss; // Declare a variable of type PImage
+	public PImage imgbossspezial; // Declare a variable of type PImage
+	public PImage imgegg; // Declare a variable of type PImage
 
-	PImage imgslashplayer; // Declare a variable of type PImage
-	PImage imgslashgegner; // Declare a variable of type PImage
-	PImage imghit1; // Declare a variable of type PImage
-	PImage imghit2; // Declare a variable of type PImage
-	PImage imgheal; // Declare a variable of type PImage
-	PImage imgshieldplayer; // Declare a variable of type PImage
-	PImage imgshieldgegner; // Declare a variable of type PImage
+	public PImage imgslashplayer; // Declare a variable of type PImage
+	public PImage imgslashgegner; // Declare a variable of type PImage
+	public PImage imghit1; // Declare a variable of type PImage
+	public PImage imghit2; // Declare a variable of type PImage
+	public PImage imgheal; // Declare a variable of type PImage
+	public PImage imgshieldplayer; // Declare a variable of type PImage
+	public PImage imgshieldgegner; // Declare a variable of type PImage
 
-	Actor actor; // Der Aktive
-	Actor acted; // Der Passive
-	String action;// Das genutze Aktion(oder Item)
-	String avoid;// Wird für drawDamage benötigt
-	String effektiv="";// Wird für drawDamage benötigt
-	double schaden;// Schaden
-	int damagestep;// Indicator für den Draw. 0=Normal, 1= Actor, 2 = action, 3= Acted, 4 =
+	public Actor actor; // Der Aktive
+	public Actor acted; // Der Passive
+	public String action;// Das genutze Aktion(oder Item)
+	public String avoid;// Wird für drawDamage benötigt
+	public String effektiv="";// Wird für drawDamage benötigt
+	public double schaden;// Schaden
+	public int damagestep;// Indicator für den Draw. 0=Normal, 1= Actor, 2 = action, 3= Acted, 4 =
 					// Schaden, 5 = Rundenwechsel
-	double formerLeben;
-	boolean lifechanged = false;
-	boolean end = false;
-	boolean gegnerspezialaktiv=false;
+	public double formerLeben;
+	public boolean lifechanged = false;
+	public boolean end = false;
+	public boolean gegnerspezialaktiv=false;
 	
 	// Button Spalten(X) Positionen
-	float bts1 = 525;
-	float bts2 = 726;
+	public float bts1 = 525;
+	public float bts2 = 726;
 
 	// Button Reihen(Y) Positionen
-	float btr1 = 760;
-	float btr2 = 830;
-	float btr3 = 900;
+	public float btr1 = 760;
+	public float btr2 = 830;
+	public float btr3 = 900;
 
 	// Button Weite
-	float btmw = 200;
+	public float btmw = 200;
 	// Button Höhe
-	float bth = 50;
+	public float bth = 50;
 
 	// Item Buttons
-	Button item1 = new Button(bts1, btr1, btmw, bth);
-	Button item2 = new Button(bts1, btr2, btmw, bth);
-	Button item3 = new Button(bts1, btr3, btmw, bth);
-	Button itemback = new Button(bts2, btr2, btmw, bth);
+	public Button item1 = new Button(bts1, btr1, btmw, bth);
+	public Button item2 = new Button(bts1, btr2, btmw, bth);
+	public Button item3 = new Button(bts1, btr3, btmw, bth);
+	public Button itemback = new Button(bts2, btr2, btmw, bth);
 
 	// Menü Buttons
-	Button btang = new Button(bts1, btr1, btmw, bth);
-	Button btspez = new Button(bts2, btr1, btmw, bth);
-	Button btdef = new Button(bts1, btr2, btmw, bth);
-	Button bti = new Button(bts2, btr2, btmw, bth);
-	Button btflee = new Button(bts1, btr3, btmw, bth);
-	Button item6 = new Button(bts2, btr3, btmw, bth);
+	public Button btang = new Button(bts1, btr1, btmw, bth);
+	public Button btspez = new Button(bts2, btr1, btmw, bth);
+	public Button btdef = new Button(bts1, btr2, btmw, bth);
+	public Button bti = new Button(bts2, btr2, btmw, bth);
+	public Button btflee = new Button(bts1, btr3, btmw, bth);
+	public Button item6 = new Button(bts2, btr3, btmw, bth);
 
 	public void settings() {
-		size(1000, 1000);
+		hauptmenu.size(1000, 1000);
 	}
 
 	public void setup() {
-		background(0);
-		f = createFont("Arial", 18, true);
-		textFont(f, 40);
-		frameRate(30);
+		hauptmenu.background(0);
+		f = hauptmenu.createFont("Arial", 18, true);
+		hauptmenu.textFont(f, 40);
+		hauptmenu.frameRate(30);
 		wait = false;
 		itempressed = false;
 
@@ -594,54 +566,53 @@ public class Kampf extends PApplet {
 		heldStun = 0;
 		gegnerStun = 0;
 		gegner.parseCats();
-		held.parseCats();
 		end = false;
 		playerturn = true;
 
 		if (new File("Images/player/spielerkampf.png").isFile()) {
-			imgplayer = loadImage("Images/player/spielerkampf.png");
+			imgplayer = hauptmenu.loadImage("Images/player/spielerkampf.png");
 		}
 		if (new File("Images/player/spielerspezial.jpg").isFile()) {
-			imgplayerspezial = loadImage("Images/player/spielerspezial.jpg");
+			imgplayerspezial = hauptmenu.loadImage("Images/player/spielerspezial.jpg");
 		}
 		if (new File("Images/player/spielerspezial.png").isFile()) {
-			imgplayerspezial = loadImage("Images/player/spielerspezial.png");
+			imgplayerspezial = hauptmenu.loadImage("Images/player/spielerspezial.png");
 		}
 		if (new File("Bosse/" + gegner.name + ".png").isFile()) {
-			imgboss = loadImage("Bosse/" + gegner.name + ".png");
+			imgboss = hauptmenu.loadImage("Bosse/" + gegner.name + ".png");
 		}
 		if (new File("Bosse/" + gegner.name + "_spezial.jpg").isFile()) {
-			imgbossspezial = loadImage("Bosse/" + gegner.name + "_spezial.jpg");
+			imgbossspezial = hauptmenu.loadImage("Bosse/" + gegner.name + "_spezial.jpg");
 		}
 		if (new File("Bosse/" + gegner.name + "_spezial.png").isFile()) {
-			imgbossspezial = loadImage("Bosse/" + gegner.name + "_spezial.png");
+			imgbossspezial = hauptmenu.loadImage("Bosse/" + gegner.name + "_spezial.png");
 		}
 		if (new File("Images/backgrounds/background.jpg").isFile()) {
-			imgbackground = loadImage("Images/backgrounds/background.jpg");
+			imgbackground = hauptmenu.loadImage("Images/backgrounds/background.jpg");
 		}
 		if (new File("Images/player/easteregg.png").isFile()) {
-			imgegg = loadImage("Images/player/easteregg.png");
+			imgegg = hauptmenu.loadImage("Images/player/easteregg.png");
 		}
 		if (new File("Images/effects/slashboss.png").isFile()) {
-			imgslashgegner = loadImage("Images/effects/slashboss.png");
+			imgslashgegner = hauptmenu.loadImage("Images/effects/slashboss.png");
 		}
 		if (new File("Images/effects/slashplayer.png").isFile()) {
-			imgslashplayer = loadImage("Images/effects/slashplayer.png");
+			imgslashplayer = hauptmenu.loadImage("Images/effects/slashplayer.png");
 		}
 		if (new File("Images/effects/hit1.png").isFile()) {
-			imghit1 = loadImage("Images/effects/hit1.png");
+			imghit1 = hauptmenu.loadImage("Images/effects/hit1.png");
 		}
 		if (new File("Images/effects/hit2.png").isFile()) {
-			imghit2 = loadImage("Images/effects/hit2.png");
+			imghit2 = hauptmenu.loadImage("Images/effects/hit2.png");
 		}
 		if (new File("Images/effects/heal.png").isFile()) {
-			imgheal = loadImage("Images/effects/heal.png");
+			imgheal = hauptmenu.loadImage("Images/effects/heal.png");
 		}
 		if (new File("Images/effects/shieldgegner.png").isFile()) {
-			imgshieldgegner = loadImage("Images/effects/shieldgegner.png");
+			imgshieldgegner = hauptmenu.loadImage("Images/effects/shieldgegner.png");
 		}
 		if (new File("Images/effects/shieldplayer.png").isFile()) {
-			imgshieldplayer = loadImage("Images/effects/shieldplayer.png");
+			imgshieldplayer = hauptmenu.loadImage("Images/effects/shieldplayer.png");
 		}
 	}
 
@@ -672,14 +643,14 @@ public class Kampf extends PApplet {
 			}
 		} else {
 			if (end) {
-				delay(3000);
-				noLoop();
-				surface.setVisible(false);
+				hauptmenu.delay(3000);
+				hauptmenu.noLoop();
+				//Hauptmenu sichbar machen
 			} else if(!gegnerspezialaktiv){
-				delay(500);
+				hauptmenu.delay(500);
 				wait = false;
 			}else {
-				delay(1500);
+				hauptmenu.delay(1500);
 				wait = false;
 				gegnerspezialaktiv=false;
 			}
@@ -687,7 +658,7 @@ public class Kampf extends PApplet {
 	}
 
 	public void drawStep0() {
-		background(0);
+		hauptmenu.background(0);
 		drawBackground();
 		drawBackgroundPicture();
 		drawPlayer();
@@ -714,7 +685,7 @@ public class Kampf extends PApplet {
 	}
 
 	public void drawStep1() {
-		background(0);
+		hauptmenu.background(0);
 		drawBackground();
 		drawBackgroundPicture();
 		if (actor.equals(held)) {
@@ -769,25 +740,25 @@ public class Kampf extends PApplet {
 			if (acted.equals(held)) {
 				if (action.equals("Verteidigt")) {
 					if (imgshieldplayer != null) {
-						image(imgshieldplayer, 250, 330, 200, 340);
+						hauptmenu.image(imgshieldplayer, 250, 330, 200, 340);
 					}
 				} else if (action.equals("Gelähmt")) {
 					heldStun--;
 				} else {
 					if (imgheal != null) {
-						image(imgheal, 130, 350, 200, 340);
+						hauptmenu.image(imgheal, 130, 350, 200, 340);
 					}
 				}
 			} else {
 				if (!avoid.equals("healsteal")) {
 					if (!action.equals("Spezialangriff")) {
 						if (imgslashplayer != null) {
-							image(imgslashplayer, 230, 350, 200, 340);
+							hauptmenu.image(imgslashplayer, 230, 350, 200, 340);
 						}
 					}
 				} else {
 					if (imgheal != null) {
-						image(imgheal, 690, 350, 200, 340);
+						hauptmenu.image(imgheal, 690, 350, 200, 340);
 					}
 				}
 			}
@@ -795,7 +766,7 @@ public class Kampf extends PApplet {
 			if (acted.equals(gegner)) {
 				if (action.equals("Verteidigt")) {
 					if (imgshieldgegner != null) {
-						image(imgshieldgegner, 600, 330, 200, 340);
+						hauptmenu.image(imgshieldgegner, 600, 330, 200, 340);
 					}
 				} else if (action.equals("Gelähmt")) {
 					gegnerStun--;
@@ -803,13 +774,13 @@ public class Kampf extends PApplet {
 
 				} else {
 					if (imgheal != null) {
-						image(imgheal, 690, 350, 200, 340);
+						hauptmenu.image(imgheal, 690, 350, 200, 340);
 					}
 				}
 			} else {
 				if (!action.equals("Spezialangriff")) {
 				if (imgslashgegner != null) {
-					image(imgslashgegner, 630, 350, 200, 340);
+					hauptmenu.image(imgslashgegner, 630, 350, 200, 340);
 				}
 				}
 			}
@@ -823,7 +794,7 @@ public class Kampf extends PApplet {
 	}
 
 	public void drawStep3() {
-		background(0);
+		hauptmenu.background(0);
 		drawBackground();
 		drawBackgroundPicture();
 		if (actor.equals(held)) {
@@ -850,36 +821,36 @@ public class Kampf extends PApplet {
 		if (actor.equals(held)) {
 			if (acted.equals(held)) {
 				if (imgheal != null) {
-					image(imgheal, 70, 350, 200, 340);
+					hauptmenu.image(imgheal, 70, 350, 200, 340);
 				}
 			} else {
 				if (!avoid.equals("healsteal")) {
 						if (!avoid.equals("dodge")&&!avoid.equals("gegnerspezialbreak")) {
 							if (imghit1 != null) {
-								image(imghit1, 710, 350, 200, 340);
+								hauptmenu.image(imghit1, 710, 350, 200, 340);
 							}
 						} else {
-							image(imgshieldgegner, 650, 330, 200, 340);
+							hauptmenu.image(imgshieldgegner, 650, 330, 200, 340);
 						}
 				} else {
 					if (imgheal != null) {
-						image(imgheal, 690, 350, 200, 340);
+						hauptmenu.image(imgheal, 690, 350, 200, 340);
 					}
 				}
 			}
 		} else {
 			if (acted.equals(gegner)) {
 				if (imgheal != null) {
-					image(imgheal, 690, 350, 200, 340);
+					hauptmenu.image(imgheal, 690, 350, 200, 340);
 				}
 
 			} else {
 				if (!avoid.equals("dodge")&&!avoid.equals("gegnerspezialbreak")) {
 					if (imghit1 != null) {
-						image(imghit1, 150, 350, 200, 340);
+						hauptmenu.image(imghit1, 150, 350, 200, 340);
 					}
 				} else {
-					image(imgshieldplayer, 190, 330, 200, 340);
+					hauptmenu.image(imgshieldplayer, 190, 330, 200, 340);
 				}
 			}
 		}
@@ -889,7 +860,7 @@ public class Kampf extends PApplet {
 	}
 
 	public void drawStep4() {
-		background(0);
+		hauptmenu.background(0);
 		drawBackground();
 		drawBackgroundPicture();
 		if (actor.equals(held)) {
@@ -926,10 +897,10 @@ public class Kampf extends PApplet {
 				if (!avoid.equals("healsteal")) {
 						if (!avoid.equals("dodge")) {
 							if (imghit2 != null) {
-								image(imghit2, 710, 350, 200, 340);
+								hauptmenu.image(imghit2, 710, 350, 200, 340);
 							}
 						} else {
-							image(imgshieldgegner, 650, 330, 200, 340);
+							hauptmenu.image(imgshieldgegner, 650, 330, 200, 340);
 						}
 				}
 			}
@@ -939,10 +910,10 @@ public class Kampf extends PApplet {
 			} else {
 				if (!avoid.equals("dodge")) {
 					if (imghit2 != null) {
-						image(imghit2, 150, 350, 200, 340);
+						hauptmenu.image(imghit2, 150, 350, 200, 340);
 					}
 				} else {
-					image(imgshieldplayer, 190, 330, 200, 340);
+					hauptmenu.image(imgshieldplayer, 190, 330, 200, 340);
 				}
 			}
 		}
@@ -975,94 +946,94 @@ public class Kampf extends PApplet {
 	}
 
 	public void drawBackground() {
-		background(0);
-		textFont(f, 40);
-		fill(230, 138, 0);
+		hauptmenu.background(0);
+		hauptmenu.textFont(f, 40);
+		hauptmenu.fill(230, 138, 0);
 		//
 		// Umrandungen
 		//
 
 		// Lebensbalken
-		rect(10, 10, 485, 150);
-		rect(505, 10, 485, 150);
+		hauptmenu.rect(10, 10, 485, 150);
+		hauptmenu.rect(505, 10, 485, 150);
 
 		// Hauptfenster
-		rect(10, 170, 980, 550);
+		hauptmenu.rect(10, 170, 980, 550);
 
 		// Ergebnisse und Menü
-		rect(10, 730, 485, 260);
-		rect(505, 730, 485, 260);
+		hauptmenu.rect(10, 730, 485, 260);
+		hauptmenu.rect(505, 730, 485, 260);
 
-		fill(0, 0, 0);
+		hauptmenu.fill(0, 0, 0);
 
 		//
 		// Innenflächen
 		//
 
 		// Lebensbalken
-		rect(20, 20, 465, 130);
-		rect(515, 20, 465, 130);
+		hauptmenu.rect(20, 20, 465, 130);
+		hauptmenu.rect(515, 20, 465, 130);
 
 		// Hauptfenster
-		rect(20, 180, 960, 530);
+		hauptmenu.rect(20, 180, 960, 530);
 
 		// Ergebnisse und Menü
-		rect(20, 740, 465, 240);
-		rect(515, 740, 465, 240);
+		hauptmenu.rect(20, 740, 465, 240);
+		hauptmenu.rect(515, 740, 465, 240);
 	}
 
 	public void drawBackgroundPicture() {
 		if (imgbackground != null) {
-			image(imgbackground, 20, 180, 961, 531);
+			hauptmenu.image(imgbackground, 20, 180, 961, 531);
 		}
 	}
 
 	public void drawSpezial() {
 		if (imgplayerspezial != null) {
-			image(imgplayerspezial, 20, 180, 961, 531);
+			hauptmenu.image(imgplayerspezial, 20, 180, 961, 531);
 		}
 	}
 
 	public void drawGegnerSpezial() {
 		if (imgbossspezial != null) {
-			image(imgbossspezial, 20, 180, 961, 531);
+			hauptmenu.image(imgbossspezial, 20, 180, 961, 531);
 			gegnerspezialaktiv=true;
 		}
 	}
 
 	public void drawPlayer() {
 		if (imgplayer != null) {
-			image(imgplayer, 80, 400);
+			hauptmenu.image(imgplayer, 80, 400);
 		}
 	}
 
 	public void drawAttackPlayer() {
 		if (imgplayer != null) {
-			image(imgplayer, 130, 400);
+			hauptmenu.image(imgplayer, 130, 400);
 		}
 	}
 
 	public void drawEasterEggPlayer() {
 		if (imgegg != null) {
-			image(imgegg, 105, 185, 150, 150);
+			hauptmenu.image(imgegg, 105, 185, 150, 150);
 		}
 	}
 
 	public void drawEasterEggBoss() {
 		if (imgegg != null) {
-			image(imgegg, 745, 185, 150, 150);
+			hauptmenu.image(imgegg, 745, 185, 150, 150);
 		}
 	}
 
 	public void drawBoss() {
 		if (imgboss != null) {
-			image(imgboss, 720, 350);
+			hauptmenu.image(imgboss, 720, 350);
 		}
 	}
 
 	public void drawAttackBoss() {
 		if (imgboss != null) {
-			image(imgboss, 670, 350);
+			hauptmenu.image(imgboss, 670, 350);
 		}
 	}
 
@@ -1070,159 +1041,159 @@ public class Kampf extends PApplet {
 		//
 		// Text
 		//
-		textFont(f, 40);
-		fill(255, 255, 255);
+		hauptmenu.textFont(f, 40);
+		hauptmenu.fill(255, 255, 255);
 
-		text(held.name.split("\\s+")[0] + ": ", 50, 100);
-		text(held.leben + "", 355, 100);
-		text(gegner.name.split("\\s+")[0] + ": ", 555, 100);
-		text(gegner.leben + "", 855, 100);
+		hauptmenu.text(held.name.split("\\s+")[0] + ": ", 50, 100);
+		hauptmenu.text(held.leben + "", 355, 100);
+		hauptmenu.text(gegner.name.split("\\s+")[0] + ": ", 555, 100);
+		hauptmenu.text(gegner.leben + "", 855, 100);
 	}
 
 	public void drawFormerLeben() {
 		//
 		// Text
 		//
-		fill(255, 255, 255);
+		hauptmenu.fill(255, 255, 255);
 
-		text(held.name.split("\\s+")[0] + ": ", 50, 100);
+		hauptmenu.text(held.name.split("\\s+")[0] + ": ", 50, 100);
 		if (acted.equals(held)) {
-			text(formerLeben + "", 355, 100);
+			hauptmenu.text(formerLeben + "", 355, 100);
 		} else {
-			text(held.leben + "", 355, 100);
+			hauptmenu.text(held.leben + "", 355, 100);
 		}
 
-		text(gegner.name.split("\\s+")[0] + ": ", 555, 100);
+		hauptmenu.text(gegner.name.split("\\s+")[0] + ": ", 555, 100);
 		if (acted.equals(gegner)) {
-			text( formerLeben + "", 855, 100);
+			hauptmenu.text( formerLeben + "", 855, 100);
 		} else {
-			text( gegner.leben + "", 855, 100);
+			hauptmenu.text( gegner.leben + "", 855, 100);
 		}
 	}
 
 	public void drawWin() {
-		fill(0, 255, 0, 100);
-		rect(0, 0, 1000, 1000);
-		fill(255, 255, 255, 255);
-		textFont(f, 95);
-		text("Du hast gewonnen!", 100, 350);
+		hauptmenu.fill(0, 255, 0, 100);
+		hauptmenu.rect(0, 0, 1000, 1000);
+		hauptmenu.fill(255, 255, 255, 255);
+		hauptmenu.textFont(f, 95);
+		hauptmenu.text("Du hast gewonnen!", 100, 350);
 	}
 
 	public void drawLose() {
-		fill(255, 0, 0, 100);
-		rect(0, 0, 1000, 1000);
-		tint(255, 255); // Display at half opacity
-		fill(255, 255, 255, 255);
-		textFont(f, 95);
-		text("Du hast verloren!", 150, 350);
+		hauptmenu.fill(255, 0, 0, 100);
+		hauptmenu.rect(0, 0, 1000, 1000);
+		hauptmenu.tint(255, 255); // Display at half opacity
+		hauptmenu.fill(255, 255, 255, 255);
+		hauptmenu.textFont(f, 95);
+		hauptmenu.text("Du hast verloren!", 150, 350);
 	}
 
 	public void drawTurnButtons() {
-		textFont(f, 30);
+		hauptmenu.textFont(f, 30);
 
 		// Button 1 (Angriff)
 		if (overButton(btang)) {
-			fill(150, 150, 150);
+			hauptmenu.fill(150, 150, 150);
 		} else {
-			fill(255, 255, 255);
+			hauptmenu.fill(255, 255, 255);
 		}
-		text("Angriff", btang.positionX + 10, btang.positionY + 40);
+		hauptmenu.text("Angriff", btang.positionX + 10, btang.positionY + 40);
 
 		// Button 2 (Spezialangriff)
 		if (overButton(btspez)) {
-			fill(150, 150, 150);
+			hauptmenu.fill(150, 150, 150);
 		} else {
-			fill(255, 255, 255);
+			hauptmenu.fill(255, 255, 255);
 		}
 		if (spezialangriffEingesetzt) {
-			fill(255, 0, 0);
+			hauptmenu.fill(255, 0, 0);
 		}
-		text("Spezialangriff", btspez.positionX + 10, btspez.positionY + 40);
+		hauptmenu.text("Spezialangriff", btspez.positionX + 10, btspez.positionY + 40);
 
 		// Button 3 (Verteidigung)
 		if (overButton(btdef)) {
-			fill(150, 150, 150);
+			hauptmenu.fill(150, 150, 150);
 		} else {
-			fill(255, 255, 255);
+			hauptmenu.fill(255, 255, 255);
 		}
-		text("Verteidigen", btdef.positionX + 10, btdef.positionY + 40);
+		hauptmenu.text("Verteidigen", btdef.positionX + 10, btdef.positionY + 40);
 
 		// Button 4 (Items)
 		if (overButton(bti)) {
-			fill(150, 150, 150);
+			hauptmenu.fill(150, 150, 150);
 		} else {
-			fill(255, 255, 255);
+			hauptmenu.fill(255, 255, 255);
 		}
-		text("Items", bti.positionX + 10, bti.positionY + 40);
+		hauptmenu.text("Items", bti.positionX + 10, bti.positionY + 40);
 
 		// Button 5 (Fliehen)
 		if (overButton(btflee)) {
-			fill(150, 150, 150);
+			hauptmenu.	fill(150, 150, 150);
 		} else {
-			fill(255, 255, 255);
+			hauptmenu.fill(255, 255, 255);
 		}
-		text("Fliehen", btflee.positionX + 10, btflee.positionY + 40);
+		hauptmenu.text("Fliehen", btflee.positionX + 10, btflee.positionY + 40);
 
 		// Button 6
 		if (overButton(item6)) {
-			fill(150, 150, 150);
+			hauptmenu.fill(150, 150, 150);
 		} else {
-			fill(255, 255, 255);
+			hauptmenu.fill(255, 255, 255);
 		}
-		text("6", item6.positionX + 10, item6.positionY + 40);
+		hauptmenu.text("6", item6.positionX + 10, item6.positionY + 40);
 	}
 
 	public void drawItemButtons() {
-		textFont(f, 30);
+		hauptmenu.textFont(f, 30);
 
 		// Button 1
 		if (overButton(item1)) {
-			fill(150, 150, 150);
+			hauptmenu.fill(150, 150, 150);
 		} else {
-			fill(255, 255, 255);
+			hauptmenu.fill(255, 255, 255);
 		}
 		if (held.item[1] != null) {
-			text(held.item[1].name + ": " + held.item[1].anzahl, item1.positionX + 10, item1.positionY + 40);
+			hauptmenu.text(held.item[1].name + ": " + held.item[1].anzahl, item1.positionX + 10, item1.positionY + 40);
 		} else {
-			text("Leer", item1.positionX + 10, item1.positionY + 40);
+			hauptmenu.text("Leer", item1.positionX + 10, item1.positionY + 40);
 		}
 
 		// Button 2
 		if (overButton(item2)) {
-			fill(150, 150, 150);
+			hauptmenu.fill(150, 150, 150);
 		} else {
-			fill(255, 255, 255);
+			hauptmenu.fill(255, 255, 255);
 		}
 		if (held.item[2] != null) {
-			text(held.item[2].name + ": " + held.item[2].anzahl, item2.positionX + 10, item2.positionY + 40);
+			hauptmenu.text(held.item[2].name + ": " + held.item[2].anzahl, item2.positionX + 10, item2.positionY + 40);
 		} else {
-			text("Leer", item2.positionX + 10, item2.positionY + 40);
+			hauptmenu.text("Leer", item2.positionX + 10, item2.positionY + 40);
 		}
 
 		// Button 3
 		if (overButton(item3)) {
-			fill(150, 150, 150);
+			hauptmenu.fill(150, 150, 150);
 		} else {
-			fill(255, 255, 255);
+			hauptmenu.fill(255, 255, 255);
 		}
 		if (held.item[3] != null) {
-			text(held.item[3].name + ": " + held.item[3].anzahl, item3.positionX + 10, item3.positionY + 40);
+			hauptmenu.text(held.item[3].name + ": " + held.item[3].anzahl, item3.positionX + 10, item3.positionY + 40);
 		} else {
-			text("Leer", item3.positionX + 10, item3.positionY + 40);
+			hauptmenu.text("Leer", item3.positionX + 10, item3.positionY + 40);
 		}
 
 		// Button 4
 		if (overButton(itemback)) {
-			fill(150, 150, 150);
+			hauptmenu.fill(150, 150, 150);
 		} else {
-			fill(255, 255, 255);
+			hauptmenu.fill(255, 255, 255);
 		}
-		text("Zurück", itemback.positionX + 60, itemback.positionY + 40);
+		hauptmenu.text("Zurück", itemback.positionX + 60, itemback.positionY + 40);
 	}
 
 	boolean overButton(Button h) {
-		if (mouseX >= h.positionX && mouseX <= h.positionX + h.weite && mouseY >= h.positionY
-				&& mouseY <= h.positionY + h.hoehe) {
+		if (hauptmenu.mouseX >= h.positionX && hauptmenu.mouseX <= h.positionX + h.weite && hauptmenu.mouseY >= h.positionY
+				&& hauptmenu.mouseY <= h.positionY + h.hoehe) {
 			return true;
 		} else {
 			return false;
@@ -1231,72 +1202,72 @@ public class Kampf extends PApplet {
 
 	public void drawAttacker(Actor attacker) {
 		wait = true;
-		textFont(f, 30);
-		text(attacker.name.split("\\s+")[0], 50, 800);
+		hauptmenu.textFont(f, 30);
+		hauptmenu.text(attacker.name.split("\\s+")[0], 50, 800);
 	}
 
 	public void drawWeapon(Item usedItem) {
 		wait = true;
-		textFont(f, 30);
-		text(usedItem.name+" "+acted.starkOderSchwach(usedItem.kategorie), 50, 850);
+		hauptmenu.textFont(f, 30);
+		hauptmenu.text(usedItem.name+" "+acted.starkOderSchwach(usedItem.kategorie), 50, 850);
 	}
 
 	public void drawWeapon(String usedItem) {
 		wait = true;
-		textFont(f, 30);
-		text(usedItem+effektiv, 50, 850);
+		hauptmenu.textFont(f, 30);
+		hauptmenu.text(usedItem+effektiv, 50, 850);
 	}
 
 	public void drawAttacked(Actor defender) {
 		wait = true;
-		textFont(f, 30);
-		text(defender.name.split("\\s+")[0], 50, 900);
+		hauptmenu.textFont(f, 30);
+		hauptmenu.text(defender.name.split("\\s+")[0], 50, 900);
 	}
 
 	public void drawDamage(double damage, String avoid) {
 		wait = true;
-		textFont(f, 30);
+		hauptmenu.textFont(f, 30);
 		if (avoid.equals("")) {
-			text(damage + " Schaden", 50, 950);
+			hauptmenu.text(damage + " Schaden", 50, 950);
 		}
 		if (avoid.equals("spezialcounter")) {
-			text(damage + " Schaden, Spez. gekontert", 50, 950);
+			hauptmenu.text(damage + " Schaden, Spez. gekontert", 50, 950);
 		}
 		if (avoid.equals("gegnerspezialbreak")) {
-			text(damage + " Schaden, Durchbrochen", 50, 950);
+			hauptmenu.text(damage + " Schaden, Durchbrochen", 50, 950);
 		}
 		if (avoid.equals("dodge")) {
-			text("Abgewehrt", 50, 950);
+			hauptmenu.text("Abgewehrt", 50, 950);
 		}
 		if (avoid.equals("miss")) {
-			text("Verfehlt", 50, 950);
+			hauptmenu.text("Verfehlt", 50, 950);
 		}
 		if (avoid.equals("heal")) {
-			text(damage + " geheilt", 50, 950);
+			hauptmenu.text(damage + " geheilt", 50, 950);
 		}
 		if (avoid.equals("healsteal")) {
-			text(damage + " Gegner geheilt", 50, 950);
+			hauptmenu.text(damage + " Gegner geheilt", 50, 950);
 		}
 		if (avoid.equals("stunheal")) {
-			text(damage + " geheilt, Gegner gelähmt", 50, 950);
+			hauptmenu.text(damage + " geheilt, Gegner gelähmt", 50, 950);
 		}
 		if (avoid.equals("stunyes")) {
-			text("Gelähmt", 50, 950);
+			hauptmenu.text("Gelähmt", 50, 950);
 		}
 		if (avoid.equals("stuncrit")) {
-			text("Gelähmt für 2 Runden", 50, 950);
+			hauptmenu.text("Gelähmt für 2 Runden", 50, 950);
 		}
 		if (avoid.equals("stunno")) {
-			text("Wiederstanden", 50, 950);
+			hauptmenu.text("Wiederstanden", 50, 950);
 		}
 		if (avoid.equals("power")) {
-			text("Spezialangriff regeneriert", 50, 950);
+			hauptmenu.text("Spezialangriff regeneriert", 50, 950);
 		}
 		if (avoid.equals("powersteal")) {
-			text("Gekontert!", 50, 950);
+			hauptmenu.text("Gekontert!", 50, 950);
 		}
 		if (avoid.equals("powerfail")) {
-			text("Nicht nötig", 50, 950);
+			hauptmenu.text("Nicht nötig", 50, 950);
 		}
 	}
 
