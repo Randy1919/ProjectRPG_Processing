@@ -18,6 +18,8 @@ public class Kampf {
 	// Manager
 	BossManager bm;
 	PApplet hauptmenu;
+	
+	public Actor sieger;
 
 	// Spieler
 	Spieler held;
@@ -106,6 +108,7 @@ public class Kampf {
 			gegner.leben = 0;
 			playerturn = false;
 			onPlayerWin();
+			sieger=held;
 			return 1;
 		}
 
@@ -113,6 +116,7 @@ public class Kampf {
 		if (held.leben <= 0) {
 			held.leben = 0;
 			playerturn = false;
+			sieger=gegner;
 			return 2;
 		}
 		return 0;
@@ -121,7 +125,6 @@ public class Kampf {
 	//Wenn Spieler gewinnt
 	private void onPlayerWin() {
 		held.siege++;
-		bm.setNextBoss();
 	}
 
 	// ****************************************************************
