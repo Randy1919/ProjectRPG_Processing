@@ -23,13 +23,12 @@ public class Hauptmenu extends PApplet
 	
 	PImage imgPlayer;
 	PImage[] bossImgs;
-	String[] infoStrings;
 	
 	Boolean setUp = false;
 	int drawMode = 0;
 	int activeBoss = 0;
 	
-	boolean[] infosFound;	
+	KampfTest currentKampf;
 	
 	
 	public static void main(String[] args) 
@@ -61,9 +60,6 @@ public class Hauptmenu extends PApplet
 			imgPlayer = loadImage("Images/player/spielerkampf.png");
 		}
 		
-		//infoStrings = new String[7];
-		infoStrings =  new String[] {"Name", "Age", "Age", "Age", "Age", "Age", "Age", "Age", "Age", "Age"};
-		infosFound = new boolean[7];
 		bossImgs = new PImage[bossManager.bosse.length];	
 		
 		for(int i = 0; i < bossManager.bosse.length; i++)
@@ -76,16 +72,11 @@ public class Hauptmenu extends PApplet
 			
 		setUp = true;
 	}
-
-	ItemManager im = new ItemManager();
-	BossManager bo = new BossManager(im);
-	Spieler hero = new Spieler("Spieler");
 	
 	public void chooseBoss(int nr)
 	{
 		if(nr != 0)
 		{
-			infosFound = new boolean[7];
 			drawMode = 1;
 			activeBoss = nr;
 		}	
@@ -94,6 +85,25 @@ public class Hauptmenu extends PApplet
 			drawMode = 0;
 		}
 		
+	}
+	
+	public void startFight()
+	{
+		currentKampf = new KampfTest();
+		drawMode = 3;
+	}
+	
+	public void endFight()
+	{
+		currentKampf = null;
+	}
+	
+	public void drawFight()
+	{
+		if(currentKampf != null)
+		{
+			currentKampf.drawKampf(this);
+		}
 	}
 	
 	public boolean hovering(int posX, int posY, int width, int height)
@@ -212,14 +222,15 @@ public class Hauptmenu extends PApplet
 			fill(0, 0, 0);
 			rect(20, 20, 800, 130);		
 			
-			//boss
-			float factor = (bossImgs[activeBoss].width * 1f) / bossImgs[activeBoss].height;					
-			image(bossImgs[activeBoss], (225 - (137 / 2)) + ((137 - (factor * 137)) / 2), 82 - (137 / 2), 137 * factor, 137);
+			//hero
+			float factor1 = (imgPlayer.width * 1f) / imgPlayer.height;					
+			//image(imgPlayer, (830 - (337 / 2)) + ((337 - (factor1 * 337)) / 2), 337 - (337 / 2), 337 * factor1, 337);				
+			image(imgPlayer, (225 - (137 / 2)) + ((137 - (factor1 * 137)) / 2), 82 - (137 / 2), 137 * factor1, 137);
 			
 			fill(255, 255, 255);
-			text("Boss:", 55, 100);
-			text(bossManager.bosse[activeBoss].name, 300, 100);
-			//boss
+			text("Spieler:", 55, 100);
+			text(spieler.name, 300, 100);
+			//hero
 			//header
 			
 			//back
@@ -248,60 +259,97 @@ public class Hauptmenu extends PApplet
 			rect(20, 180, 630, 800);
 			// Hauptfenster
 			
-			// Spielerfenster
+			// Bossfenster
 			fill(230, 138, 0);
 			rect(670, 170, 320, 405);
 			fill(0, 0, 0);
 			rect(680, 180, 300, 385);
 			
 			fill(255, 255, 255);
-			text("Spieler:", 700, 490);
-			text(spieler.name, 700, 540);
+			text("Boss:", 700, 490);
+			text(bossManager.bosse[activeBoss].name, 700, 540);
 			
-			//float factor1 = (imgPlayer.width * 1f) / imgPlayer.height;					
-			//image(imgPlayer, (830 - (337 / 2)) + ((337 - (factor1 * 337)) / 2), 337 - (337 / 2), 337 * factor1, 337);
+			float factor = (bossImgs[activeBoss].width * 1f) / bossImgs[activeBoss].height;		
 			image(bossImgs[activeBoss], (830 - (277 / 2)) + ((277 - (factor * 277)) / 2), 317 - (277 / 2), 277 * factor, 277);
-			// Spielerfenster
+			// Bossfenster
 			
 			// Befehlenster
 			fill(230, 138, 0);
 			rect(670, 585, 320, 405);
 			fill(0, 0, 0);
 			rect(680, 595, 300, 385);
-			// Befehlfenster
 			
-			//rects
-			fill(137, 137, 137);
+			//buttons
+			//button0
+			fill(230, 138, 0);		
+			if(hovering(690, 605, 280, 50))
+			{	
+				fill(137, 137, 137);
+				if(mousePressed)
+				{
+					fill(244,244,244);
+					startFight();
+				}
+			}
 			rect(690, 605, 280, 50);
+			//button0
+			
+			fill(230, 138, 0);	
 			rect(690, 665, 280, 50);
 			rect(690, 725, 280, 50);
 			rect(690, 785, 280, 50);
 			rect(690, 845, 280, 50);
 			rect(690, 905, 280, 50);
-			//rects
+			//buttons
+			// Befehlfenster		
 			
-			
-			
-			
-			
-
-			
-			
-			
-			//float factor = (bossImgs[activeBoss].height * 1f) / bossImgs[activeBoss].width;
-			//image(bossImgs[activeBoss], 155, 17, 137, 137 * factor);
-
-			
-			
+			//infos
 			fill(255, 255, 255);
 			//text("You have chosen Boss " + bossManager.bosse[activeBoss].name, 150, 400);
-			text("Infos:", 55, 250);
+			text("Infos", 40, 235);
 			
-			for(int i = 0; i < infoStrings.length; i++)
+			for(int i = 0; i < bossManager.bosse[activeBoss].triviaCategory.length; i++)
 			{
-				text(infoStrings[i] + ": ", 100, 310 + (60 * i));
-				text("" + infosFound[0], 277, 310 + (60 * i));
+				text(bossManager.bosse[activeBoss].triviaCategory[i] + ": ", 80, 290 + (60 * i));
+				if(bossManager.bosse[activeBoss].triviaUnlocked[i])
+				{
+					text(bossManager.bosse[activeBoss].trivia[i], 450, 290 + (60 * i));
+				}
+				else
+				{
+					text("???", 450, 290 + (60 * i));
+				}		
 			}
+			//infos
+		}
+		else if(drawMode == 2)  //ChoseItems --wird imom übersprungen--
+		{
+			drawMode = 3;
+		}
+		else if(drawMode == 3) //Kampf
+		{
+			drawFight();
+		}
+		else
+		{
+			//back
+			fill(230, 138, 0);	
+			if(hovering(840, 10, 150, 150))
+			{
+				fill(137, 137, 137);
+				if(mousePressed)
+				{
+					fill(244,244,244);
+					chooseBoss(0);
+				}
+			}
+			rect(840, 10, 150, 150);
+			fill(0, 0, 0);
+			rect(850, 20, 130, 130);
+			
+			fill(255, 255, 255);
+			text("Back", 870, 100);
+			//back
 		}
 	}	
 }

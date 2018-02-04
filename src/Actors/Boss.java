@@ -7,9 +7,9 @@ public class Boss extends Actor{
 	// 3 = Lieblingsvideospielserie, 4 =Lieblingskonsole ,5 = Hobby,  
 	// 6 = Sport, 7 = Lieblingsfarbe, 8 = Lieblingsessen
 	// 9 = Hassessen, 10 = Lieblingstemperatur, 11 = Meistgehasste Temperatur
-	String[] triviaCategory = {"Alter","Geburtsort","Verkehrsmittel","Lieblingsvideospielreihe","Lieblingskonsole","Hobby","Sport","Lieblingsfarbe","Lieblingspizza","Hasspizza","Lieblingstemperatur","Hassemperatur"};	
-	String[] trivia;
-	boolean[] triviaUnlocked;
+	public String[] triviaCategory = {"Alter","Geburtsort","Verkehrsmittel","Videospielreihe","Konsole","Hobby","Sport","Lieblingsfarbe","Lieblingspizza","Hasspizza","Lieblingstemperatur","Hasstemperatur"};	
+	public String[] trivia;
+	public boolean[] triviaUnlocked;
 	private String[] schwaechen;
 	private String[] staerken;
 	
