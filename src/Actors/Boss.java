@@ -99,23 +99,23 @@ public class Boss extends Actor{
 			} else {
 				//Wenn nicht schon freigeschaltet, freischalten und Ende setzen
 				triviaUnlocked[zufall] = true;
-				String s = "Du hast folgendes über den Gegner herausgefunden: "+triviaCategory[zufall];
+				String s = "Freigeschaltet: "+triviaCategory[zufall];
 				
 				if(zufall==10) {
 					triviaUnlocked[11] = true;
-					s = "Du hast folgendes über den Gegner herausgefunden: "+triviaCategory[zufall]+", "+triviaCategory[11];
+					s = "Freigeschaltet: "+triviaCategory[zufall]+", "+triviaCategory[11];
 				}else
 				if(zufall==11) {
 					triviaUnlocked[10] = true;
-					s = "Du hast folgendes über den Gegner herausgefunden: "+triviaCategory[zufall]+", "+triviaCategory[10];
+					s = "Freigeschaltet: "+triviaCategory[zufall]+", "+triviaCategory[10];
 				}
 				if(zufall==8) {
 					triviaUnlocked[9] = true;
-					s = "Du hast folgendes über den Gegner herausgefunden: "+triviaCategory[zufall]+", "+triviaCategory[9];
+					s = "Freigeschaltet: "+triviaCategory[zufall]+", "+triviaCategory[9];
 				}
 				if(zufall==9) {
 					triviaUnlocked[8] = true;
-					s = "Du hast folgendes über den Gegner herausgefunden: "+triviaCategory[zufall]+", "+triviaCategory[8];
+					s = "Freigeschaltet: "+triviaCategory[zufall]+", "+triviaCategory[8];
 				}
 				
 				return s;
