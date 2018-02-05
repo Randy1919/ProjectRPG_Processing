@@ -105,7 +105,8 @@ public class Hauptmenu extends PApplet
 	
 	public void startLabyrinth()
 	{
-		
+		currentLabyrinth = new Labyrinth(this, bossManager);
+		drawMode = 4;
 	}
 	
 	public void startFight()
@@ -113,12 +114,17 @@ public class Hauptmenu extends PApplet
 		spieler.setWaffe(itemManager.waffen[activeWeapon]);
 		spieler.setArmor(itemManager.armors[activeArmor]);
 		
-		Item[] items = {null, itemManager.items[activeItems[0]],itemManager.items[activeItems[1]],itemManager.items[activeItems[2]]};
+		//Item[] items = {null, itemManager.items[activeItems[0]],itemManager.items[activeItems[1]],itemManager.items[activeItems[2]]};
+		Item[] items = new Item[4];
 		for(int i = 0; i < 3; i++)
 		{
-			if(activeItems[i] == -1)
+			if(activeItems[i] < 0)
 			{
 				items[i+1] = null;
+			}
+			else
+			{
+				items[i+1] = itemManager.items[activeItems[i]];
 			}
 		}
 		spieler.item = items;
@@ -157,20 +163,22 @@ public class Hauptmenu extends PApplet
 		
 		if(previous)
 		{
-			current--;
-			if(current < 0)
-			{
-				current = length - 1;
-			}
+			current--;	
 		}
 		else
 		{
 			current++;
-			if(current >= length)
-			{
-				current = 0;
-			}
 		}
+		
+		if(current < 0)
+		{
+			current = length - 1;
+		}
+		if(current >= length)
+		{
+			current = 0;
+		}
+		
 		switch(slot)
 		{
 		case 0: 
@@ -880,6 +888,10 @@ public class Hauptmenu extends PApplet
 			{
 				endFight();
 			}	
+		}
+		else if(drawMode == 4 && currentLabyrinth != null) //Labyrinth
+		{
+			currentLabyrinth.draw();
 		}
 		else
 		{
