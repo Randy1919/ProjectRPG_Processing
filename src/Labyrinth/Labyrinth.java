@@ -1,55 +1,61 @@
 package Labyrinth;
 
 import java.io.*;
+import java.util.Random;
+
 import static javax.swing.JOptionPane.*;
 import processing.core.PApplet;
+import processing.core.PImage;
 import Actors.Boss;
+import Actors.BossManager;
 
 /**
  * 
  * @author Xalnaji
  *
  */
-public class Labyrinth extends PApplet {
+public class Labyrinth {
 
 	File LabLayout;
+	PApplet hauptmenu;
+	Boss boss;
+	
+	public PImage imgWall; // Declare a variable of type PImage
+	public PImage imgFloor; // Declare a variable of type PImage
+	public PImage imgChest; // Declare a variable of type PImage
 
 	int[][] nLabMatrix = new int[20][20];
 
-	int nTileWidth = 100;
-	int nTileHeight = 100;
+	int nTileWidth = 30;
+	int nTileHeight = 30;
 
 	int nPlayerHeight = 120;
-	int nPlayerWidth = 90;
+	int nPlayerWidth = 90;	
 	
-	Boss boss = new Boss("Test");
-
-	// ----------------------Dev---------------------------
-	/**
-	 * Dev Main Methode
-	 * 
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		
-		Labyrinth lab = new Labyrinth("layout_static");
-		lab.loadLabyrinth();
-
-		String[] argu = { "--location=100,200", "Labyrinth.Labyrinth" };
-		PApplet.runSketch(argu, lab);
-		
-	}
-
+	String sInfo = "";
+	
+	boolean bShowInfo = false;
+	boolean bExit = false;
+	
 	public void settings() {
-		size(700, 700);
+		hauptmenu.size(1000, 1000);
 	}
 
 	public void setup() {
+		if (new File("Images/labyrinth/wall.jpg").isFile()) {
+			imgWall = hauptmenu.loadImage("Images/labyrinth/wall.jpg");
+		}
+		if (new File("Images/player/floor.jpg").isFile()) {
+			imgFloor = hauptmenu.loadImage("Images/labyrinth/floor.lpg");
+		}
+		if (new File("Images/player/chest.png").isFile()) {
+			imgChest = hauptmenu.loadImage("Images/labyrinth/chest.png");
+		}
 	}
 
-	public void draw() {
+	public boolean draw() {
 
-		background(255);
+		hauptmenu.background(255);
 		
 		int nTranslateToPlayerX = 0;
 		int nTranslateToPlayerY = 0;
@@ -68,9 +74,9 @@ public class Labyrinth extends PApplet {
 			nTranslateY += nTileHeight;
 		}
 		
-		pushMatrix();
+		hauptmenu.pushMatrix();
 
-		translate(-(nTranslateToPlayerX / 2),-(nTranslateToPlayerY / 2));
+		hauptmenu.translate(-(nTranslateToPlayerX / 2),-(nTranslateToPlayerY / 2));
 		int nTilePositionY = 50;
 
 		for (int i = 0; i < this.nLabMatrix.length; i++) {
@@ -79,23 +85,17 @@ public class Labyrinth extends PApplet {
 			for (int j = 0; j < this.nLabMatrix[i].length; j++) {
 
 				if (this.nLabMatrix[i][j] == 1 || this.nLabMatrix[i][j] == 3) {
-					fill(255, 255, 255);
-					stroke(255,255,255);
-					rect(nTilePositionX, nTilePositionY, nTileWidth, nTileHeight);
+					hauptmenu.image(imgFloor, nTilePositionX, nTilePositionY, nTileWidth, nTileHeight);
 
 					if (this.nLabMatrix[i][j] == 3) {					
-						fill(230, 138, 0);
-						stroke(230,138,0);
-						rect(nTilePositionX + 5, nTilePositionY - 40, nPlayerWidth, nPlayerHeight);
+						hauptmenu.fill(230, 138, 0);
+						hauptmenu.stroke(230,138,0);
+						hauptmenu.rect(nTilePositionX + 5, nTilePositionY - 40, nPlayerWidth, nPlayerHeight);
 					}
 				} else if (this.nLabMatrix[i][j] == 2) {
-					fill(0, 200, 0);
-					stroke(0,200,0);
-					rect(nTilePositionX, nTilePositionY, nTileWidth, nTileHeight);
+					hauptmenu.image(imgChest, nTilePositionX, nTilePositionY, nTileWidth, nTileHeight);
 				} else {
-					fill(0, 0, 0);
-					stroke(0,0,0);
-					rect(nTilePositionX, nTilePositionY, nTileWidth, nTileHeight);
+					hauptmenu.image(imgWall, nTilePositionX, nTilePositionY, nTileWidth, nTileHeight);
 				}
 
 				nTilePositionX += nTileWidth;
@@ -104,15 +104,23 @@ public class Labyrinth extends PApplet {
 			nTilePositionY += nTileHeight;
 		}
 		
-		popMatrix();
-	}
-
-	// ----------------------Dev---------------------------
-	/**
-	 * Konstruktor der aufgerufen wird, falls ein Labyrinth dynamisch generiert
-	 * werden soll. (Noch nicht implementiert)
-	 */
-	public Labyrinth() {
+		hauptmenu.popMatrix();
+		
+		if(bShowInfo == true)
+		{
+			hauptmenu.fill(230, 138, 0);
+			hauptmenu.rect(257, 10, 485, 150);
+			
+			hauptmenu.fill(0,0,0);
+			hauptmenu.rect(267, 20, 465, 130);
+			
+			hauptmenu.fill(255, 255, 255);
+			hauptmenu.text("Information freigeschaltet : "+sInfo, 300, 100);
+			hauptmenu.text("Weiter mit LEERTASTE", 300, 150);
+		}
+		
+		
+		return bExit;
 	}
 
 	/**
@@ -121,22 +129,19 @@ public class Labyrinth extends PApplet {
 	 * 
 	 * @param uFilename
 	 */
-	public Labyrinth(String uFilename) {
-		this.LabLayout = new File("LabLayouts/" + uFilename);
+	public Labyrinth(PApplet p, BossManager bs) {
+		hauptmenu = p;
+		this.boss = bs.getCurrentBoss();
+		this.loadRandomLabyrinth();
+		setup();		
+	}
+
+	private void loadRandomLabyrinth() {
 		
-	}
-
-	/**
-	 * 
-	 *
-	private void genLabyrinth() {
-
-	}
-	*/
-	/**
-	 * 
-	 */
-	private void loadLabyrinth() {
+		File[] files = new File("LabLayouts").listFiles();
+		Random rand = new Random();
+		this.LabLayout = files[rand.nextInt(files.length)];
+		
 		try {
 			this.processFile();
 		} catch (IOException eIO) {
@@ -191,8 +196,14 @@ public class Labyrinth extends PApplet {
 	}
 	
 	public void keyPressed() {
-
 		
+		if (hauptmenu.keyCode == 27) {
+		    // leave labyrinth
+		    // transition to menu
+			hauptmenu.key = 0;
+		    this.bExit = true;
+		}
+
 		int x=0;
 		int y=0;
 		
@@ -206,7 +217,7 @@ public class Labyrinth extends PApplet {
 			}
 		}
 		
-		switch (key) {
+		switch (hauptmenu.key) {
 		case 'a':
 			if(this.nLabMatrix[y][x-1] != 0)
 			{
@@ -214,8 +225,9 @@ public class Labyrinth extends PApplet {
 				{
 					this.nLabMatrix[y][x-1] = 3;
 					this.nLabMatrix[y][x] = 1;
-					showMessageDialog(null, this.boss.unlockRandomTrivia(),"Info", INFORMATION_MESSAGE);
-					//System.out.println(this.boss.unlockRandomTrivia());
+					
+					this.sInfo = this.boss.unlockRandomTrivia();
+					this.bShowInfo = true;
 				}
 				else
 				{
@@ -231,8 +243,9 @@ public class Labyrinth extends PApplet {
 				{
 					this.nLabMatrix[y-1][x] = 3;
 					this.nLabMatrix[y][x] = 1;
-					showMessageDialog(null, this.boss.unlockRandomTrivia(),"Info", INFORMATION_MESSAGE);
-					//System.out.println(this.boss.unlockRandomTrivia());
+
+					this.sInfo = this.boss.unlockRandomTrivia();
+					this.bShowInfo = true;
 				}
 				else
 				{
@@ -248,8 +261,9 @@ public class Labyrinth extends PApplet {
 				{
 					this.nLabMatrix[y+1][x] = 3;
 					this.nLabMatrix[y][x] = 1;
-					showMessageDialog(null, this.boss.unlockRandomTrivia(),"Info", INFORMATION_MESSAGE);
-					//System.out.println(this.boss.unlockRandomTrivia());
+
+					this.sInfo = this.boss.unlockRandomTrivia();
+					this.bShowInfo = true;
 				}
 				else
 				{
@@ -265,8 +279,9 @@ public class Labyrinth extends PApplet {
 				{
 					this.nLabMatrix[y][x+1] = 3;
 					this.nLabMatrix[y][x] = 1;
-					showMessageDialog(null, this.boss.unlockRandomTrivia(),"Info", INFORMATION_MESSAGE);
-					//System.out.println(this.boss.unlockRandomTrivia());
+
+					this.sInfo = this.boss.unlockRandomTrivia();
+					this.bShowInfo = true;
 				}
 				else
 				{
@@ -277,9 +292,10 @@ public class Labyrinth extends PApplet {
 
 			}
 			break;
+		case ' ':
+			this.bShowInfo = false;
+			break;
 		}
-		
-		
 	}
 
 	public void keyReleased() {
