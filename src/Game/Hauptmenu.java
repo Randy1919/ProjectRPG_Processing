@@ -105,7 +105,8 @@ public class Hauptmenu extends PApplet
 	
 	public void startLabyrinth()
 	{
-		
+		currentLabyrinth = new Labyrinth(this, bossManager);
+		drawMode = 4;
 	}
 	
 	public void startFight()
@@ -887,6 +888,10 @@ public class Hauptmenu extends PApplet
 			{
 				endFight();
 			}	
+		}
+		else if(drawMode == 4 && currentLabyrinth != null) //Labyrinth
+		{
+			currentLabyrinth.draw();
 		}
 		else
 		{
