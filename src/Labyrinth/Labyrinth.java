@@ -26,47 +26,34 @@ public class Labyrinth {
 
 	int[][] nLabMatrix = new int[20][20];
 
-	int nTileWidth = 100;
-	int nTileHeight = 100;
+	int nTileWidth = 30;
+	int nTileHeight = 30;
 
 	int nPlayerHeight = 120;
 	int nPlayerWidth = 90;	
-
-	// ----------------------Dev---------------------------
-	/**
-	 * Dev Main Methode
-	 * 
-	 * @param args
-	 */
-	/*
-	public static void main(String[] args) {
-		
-		Labyrinth lab = new Labyrinth("layout_static");
-		lab.loadLabyrinth();
-
-		String[] argu = { "--location=100,200", "Labyrinth.Labyrinth" };
-		hauptmenu.runSketch(argu, lab);
-		
-	}
-
-	*/
+	
+	String sInfo = "";
+	
+	boolean bShowInfo = false;
+	boolean bExit = false;
+	
 	public void settings() {
-		hauptmenu.size(700, 700);
+		hauptmenu.size(1000, 1000);
 	}
 
 	public void setup() {
 		if (new File("Images/labyrinth/wall.jpg").isFile()) {
-			imgWall = hauptmenu.loadImage("Images/player/spielerkampf.png");
+			imgWall = hauptmenu.loadImage("Images/labyrinth/wall.jpg");
 		}
 		if (new File("Images/player/floor.jpg").isFile()) {
-			imgFloor = hauptmenu.loadImage("Images/player/spielerkampf.png");
+			imgFloor = hauptmenu.loadImage("Images/labyrinth/floor.lpg");
 		}
 		if (new File("Images/player/chest.png").isFile()) {
-			imgChest = hauptmenu.loadImage("Images/player/spielerkampf.png");
+			imgChest = hauptmenu.loadImage("Images/labyrinth/chest.png");
 		}
 	}
 
-	public void draw() {
+	public boolean draw() {
 
 		hauptmenu.background(255);
 		
@@ -98,9 +85,7 @@ public class Labyrinth {
 			for (int j = 0; j < this.nLabMatrix[i].length; j++) {
 
 				if (this.nLabMatrix[i][j] == 1 || this.nLabMatrix[i][j] == 3) {
-					hauptmenu.fill(255, 255, 255);
-					hauptmenu.stroke(255,255,255);
-					hauptmenu.rect(nTilePositionX, nTilePositionY, nTileWidth, nTileHeight);
+					hauptmenu.image(imgFloor, nTilePositionX, nTilePositionY, nTileWidth, nTileHeight);
 
 					if (this.nLabMatrix[i][j] == 3) {					
 						hauptmenu.fill(230, 138, 0);
@@ -108,13 +93,9 @@ public class Labyrinth {
 						hauptmenu.rect(nTilePositionX + 5, nTilePositionY - 40, nPlayerWidth, nPlayerHeight);
 					}
 				} else if (this.nLabMatrix[i][j] == 2) {
-					hauptmenu.fill(0, 200, 0);
-					hauptmenu.stroke(0,200,0);
-					hauptmenu.rect(nTilePositionX, nTilePositionY, nTileWidth, nTileHeight);
+					hauptmenu.image(imgChest, nTilePositionX, nTilePositionY, nTileWidth, nTileHeight);
 				} else {
-					hauptmenu.fill(0, 0, 0);
-					hauptmenu.stroke(0,0,0);
-					hauptmenu.rect(nTilePositionX, nTilePositionY, nTileWidth, nTileHeight);
+					hauptmenu.image(imgWall, nTilePositionX, nTilePositionY, nTileWidth, nTileHeight);
 				}
 
 				nTilePositionX += nTileWidth;
@@ -124,6 +105,22 @@ public class Labyrinth {
 		}
 		
 		hauptmenu.popMatrix();
+		
+		if(bShowInfo == true)
+		{
+			hauptmenu.fill(230, 138, 0);
+			hauptmenu.rect(257, 10, 485, 150);
+			
+			hauptmenu.fill(0,0,0);
+			hauptmenu.rect(267, 20, 465, 130);
+			
+			hauptmenu.fill(255, 255, 255);
+			hauptmenu.text("Information freigeschaltet : "+sInfo, 300, 100);
+			hauptmenu.text("Weiter mit LEERTASTE", 300, 150);
+		}
+		
+		
+		return bExit;
 	}
 
 	/**
@@ -136,7 +133,7 @@ public class Labyrinth {
 		hauptmenu = p;
 		this.boss = bs.getCurrentBoss();
 		this.loadRandomLabyrinth();
-		
+		setup();		
 	}
 
 	private void loadRandomLabyrinth() {
@@ -199,6 +196,13 @@ public class Labyrinth {
 	}
 	
 	public void keyPressed() {
+		
+		if (hauptmenu.keyCode == 27) {
+		    // leave labyrinth
+		    // transition to menu
+			hauptmenu.key = 0;
+		    this.bExit = true;
+		}
 
 		int x=0;
 		int y=0;
@@ -221,7 +225,9 @@ public class Labyrinth {
 				{
 					this.nLabMatrix[y][x-1] = 3;
 					this.nLabMatrix[y][x] = 1;
-					showMessageDialog(null, this.boss.unlockRandomTrivia(),"Info", INFORMATION_MESSAGE);
+					
+					this.sInfo = this.boss.unlockRandomTrivia();
+					this.bShowInfo = true;
 				}
 				else
 				{
@@ -237,7 +243,9 @@ public class Labyrinth {
 				{
 					this.nLabMatrix[y-1][x] = 3;
 					this.nLabMatrix[y][x] = 1;
-					showMessageDialog(null, this.boss.unlockRandomTrivia(),"Info", INFORMATION_MESSAGE);
+
+					this.sInfo = this.boss.unlockRandomTrivia();
+					this.bShowInfo = true;
 				}
 				else
 				{
@@ -253,7 +261,9 @@ public class Labyrinth {
 				{
 					this.nLabMatrix[y+1][x] = 3;
 					this.nLabMatrix[y][x] = 1;
-					showMessageDialog(null, this.boss.unlockRandomTrivia(),"Info", INFORMATION_MESSAGE);
+
+					this.sInfo = this.boss.unlockRandomTrivia();
+					this.bShowInfo = true;
 				}
 				else
 				{
@@ -269,7 +279,9 @@ public class Labyrinth {
 				{
 					this.nLabMatrix[y][x+1] = 3;
 					this.nLabMatrix[y][x] = 1;
-					showMessageDialog(null, this.boss.unlockRandomTrivia(),"Info", INFORMATION_MESSAGE);
+
+					this.sInfo = this.boss.unlockRandomTrivia();
+					this.bShowInfo = true;
 				}
 				else
 				{
@@ -280,9 +292,10 @@ public class Labyrinth {
 
 			}
 			break;
+		case ' ':
+			this.bShowInfo = false;
+			break;
 		}
-		
-		
 	}
 
 	public void keyReleased() {
