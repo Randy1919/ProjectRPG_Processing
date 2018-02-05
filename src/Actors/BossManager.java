@@ -112,8 +112,14 @@ public class BossManager {
 	private void parseBoss(File f) {
 		try {
 			// Template wird erstellt, zuerst mit Namen der Textdatei
-			Boss template = new Boss(f.getName());
 
+			String name =f.getName();
+			int pos=name.lastIndexOf(".");
+			if(pos>0) {
+				name=name.substring(0, pos);
+			}
+			Boss template = new Boss(name);
+			
 			// File lesen
 			FileReader input;
 
