@@ -59,7 +59,7 @@ public class Labyrinth {
 
 	public boolean draw() {
 
-		hauptmenu.background(255);
+		hauptmenu.background(0);
 		
 		int nTranslateToPlayerX = 0;
 		int nTranslateToPlayerY = 0;
