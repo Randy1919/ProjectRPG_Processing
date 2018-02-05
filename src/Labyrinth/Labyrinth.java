@@ -3,8 +3,8 @@ package Labyrinth;
 import java.io.*;
 import java.util.Random;
 
-import static javax.swing.JOptionPane.*;
 import processing.core.PApplet;
+import processing.core.PFont;
 import processing.core.PImage;
 import Actors.Boss;
 import Actors.BossManager;
@@ -20,6 +20,7 @@ public class Labyrinth {
 	PApplet hauptmenu;
 	Boss boss;
 	
+	public PFont f;
 	public PImage imgWall; // Declare a variable of type PImage
 	public PImage imgFloor; // Declare a variable of type PImage
 	public PImage imgChest; // Declare a variable of type PImage
@@ -42,11 +43,14 @@ public class Labyrinth {
 	}
 
 	public void setup() {
+		hauptmenu.textFont(f, 40);
+		hauptmenu.frameRate(30);
+		
 		if (new File("Images/labyrinth/wall.jpg").isFile()) {
 			imgWall = hauptmenu.loadImage("Images/labyrinth/wall.jpg");
 		}
 		if (new File("Images/player/floor.jpg").isFile()) {
-			imgFloor = hauptmenu.loadImage("Images/labyrinth/floor.lpg");
+			imgFloor = hauptmenu.loadImage("Images/labyrinth/floor.jpg");
 		}
 		if (new File("Images/player/chest.png").isFile()) {
 			imgChest = hauptmenu.loadImage("Images/labyrinth/chest.png");
@@ -85,7 +89,9 @@ public class Labyrinth {
 			for (int j = 0; j < this.nLabMatrix[i].length; j++) {
 
 				if (this.nLabMatrix[i][j] == 1 || this.nLabMatrix[i][j] == 3) {
-					hauptmenu.image(imgFloor, nTilePositionX, nTilePositionY, nTileWidth, nTileHeight);
+					if (imgFloor != null) {
+						hauptmenu.image(imgFloor, nTilePositionX, nTilePositionY, nTileWidth, nTileHeight);
+					}
 
 					if (this.nLabMatrix[i][j] == 3) {					
 						hauptmenu.fill(230, 138, 0);
@@ -93,9 +99,13 @@ public class Labyrinth {
 						hauptmenu.rect(nTilePositionX + 5, nTilePositionY - 40, nPlayerWidth, nPlayerHeight);
 					}
 				} else if (this.nLabMatrix[i][j] == 2) {
-					hauptmenu.image(imgChest, nTilePositionX, nTilePositionY, nTileWidth, nTileHeight);
+					if (imgChest != null) {
+						hauptmenu.image(imgChest, nTilePositionX, nTilePositionY, nTileWidth, nTileHeight);
+					}
 				} else {
-					hauptmenu.image(imgWall, nTilePositionX, nTilePositionY, nTileWidth, nTileHeight);
+					if (imgWall != null) {
+						hauptmenu.image(imgWall, nTilePositionX, nTilePositionY, nTileWidth, nTileHeight);
+					}
 				}
 
 				nTilePositionX += nTileWidth;
@@ -115,7 +125,7 @@ public class Labyrinth {
 			hauptmenu.rect(267, 20, 465, 130);
 			
 			hauptmenu.fill(255, 255, 255);
-			hauptmenu.text("Information freigeschaltet : "+sInfo, 300, 100);
+			hauptmenu.text(sInfo, 300, 100);
 			hauptmenu.text("Weiter mit LEERTASTE", 300, 150);
 		}
 		
@@ -131,6 +141,7 @@ public class Labyrinth {
 	 */
 	public Labyrinth(PApplet p, BossManager bs) {
 		hauptmenu = p;
+		f = hauptmenu.createFont("Arial", 18, true);
 		this.boss = bs.getCurrentBoss();
 		this.loadRandomLabyrinth();
 		setup();		

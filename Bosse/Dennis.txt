@@ -1,16 +1,16 @@
-Name=Randy 2
+Name=Dennis
 Waffe=Kendoschwert
 Rüstung=Kendorüstung
 
 Alter=24
 Geburtsort=Moers
-Verkehrsmittel=Auto
-Videospiel=The Legend of Zelda
-Konsole=Nintendo Switch
+Verkehrsmittel=Beine
+Videospiel=Dark Souls
+Konsole=PC Master Race
 Hobby=Gaming
-Sport=Kendo
-Lieblingsfarbe=Grün
-Lieblingspizza=Hawaii
+Sport=E-Sports
+Lieblingsfarbe=Blau
+Lieblingspizza=Spinat
 Hasspizza=Thunfisch
 Lieblingstemperatur=Heiß
 Hasstemperatur=Kalt
