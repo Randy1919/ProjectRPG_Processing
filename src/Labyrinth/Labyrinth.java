@@ -27,8 +27,8 @@ public class Labyrinth {
 
 	int[][] nLabMatrix = new int[20][20];
 
-	int nTileWidth = 30;
-	int nTileHeight = 30;
+	int nTileWidth = 100;
+	int nTileHeight = 100;
 
 	int nPlayerHeight = 120;
 	int nPlayerWidth = 90;	
@@ -49,10 +49,10 @@ public class Labyrinth {
 		if (new File("Images/labyrinth/wall.jpg").isFile()) {
 			imgWall = hauptmenu.loadImage("Images/labyrinth/wall.jpg");
 		}
-		if (new File("Images/player/floor.jpg").isFile()) {
+		if (new File("Images/labyrinth/floor.jpg").isFile()) {
 			imgFloor = hauptmenu.loadImage("Images/labyrinth/floor.jpg");
 		}
-		if (new File("Images/player/chest.png").isFile()) {
+		if (new File("Images/labyrinth/chest.png").isFile()) {
 			imgChest = hauptmenu.loadImage("Images/labyrinth/chest.png");
 		}
 	}
@@ -70,8 +70,8 @@ public class Labyrinth {
 			for (int j = 0; j < this.nLabMatrix[i].length; j++) {
 				if(this.nLabMatrix[i][j] == 3)
 				{
-					nTranslateToPlayerX = nTranslateX + 650;
-					nTranslateToPlayerY = nTranslateY + 850;
+					nTranslateToPlayerX = nTranslateX;
+					nTranslateToPlayerY = nTranslateY;
 				}
 				nTranslateX += nTileWidth;
 			}
@@ -80,26 +80,25 @@ public class Labyrinth {
 		
 		hauptmenu.pushMatrix();
 
-		hauptmenu.translate(-(nTranslateToPlayerX / 2),-(nTranslateToPlayerY / 2));
+		hauptmenu.translate(-(nTranslateToPlayerX - 400),-(nTranslateToPlayerY - 400));
 		int nTilePositionY = 50;
 
 		for (int i = 0; i < this.nLabMatrix.length; i++) {
 			int nTilePositionX = 50;
-
 			for (int j = 0; j < this.nLabMatrix[i].length; j++) {
-
 				if (this.nLabMatrix[i][j] == 1 || this.nLabMatrix[i][j] == 3) {
 					if (imgFloor != null) {
 						hauptmenu.image(imgFloor, nTilePositionX, nTilePositionY, nTileWidth, nTileHeight);
 					}
-
 					if (this.nLabMatrix[i][j] == 3) {					
 						hauptmenu.fill(230, 138, 0);
 						hauptmenu.stroke(230,138,0);
 						hauptmenu.rect(nTilePositionX + 5, nTilePositionY - 40, nPlayerWidth, nPlayerHeight);
 					}
+					
 				} else if (this.nLabMatrix[i][j] == 2) {
 					if (imgChest != null) {
+						hauptmenu.image(imgFloor, nTilePositionX, nTilePositionY, nTileWidth, nTileHeight);
 						hauptmenu.image(imgChest, nTilePositionX, nTilePositionY, nTileWidth, nTileHeight);
 					}
 				} else {
