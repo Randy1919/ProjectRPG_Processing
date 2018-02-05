@@ -520,8 +520,11 @@ public class Hauptmenu extends PApplet
 			text("Boss:", 700, 490);
 			text(bossManager.bosse[activeBoss].name, 700, 540);
 			
-			float factor = (bossImgs[activeBoss].width * 1f) / bossImgs[activeBoss].height;		
-			image(bossImgs[activeBoss], (830 - (277 / 2)) + ((277 - (factor * 277)) / 2), 317 - (277 / 2), 277 * factor, 277);
+			if(bossImgs[activeBoss]!=null) 
+			{
+				float factor = (bossImgs[activeBoss].width * 1f) / bossImgs[activeBoss].height;		
+				image(bossImgs[activeBoss], (830 - (277 / 2)) + ((277 - (factor * 277)) / 2), 317 - (277 / 2), 277 * factor, 277);
+			}
 			// Bossfenster
 			
 			// Befehlenster
@@ -633,8 +636,11 @@ public class Hauptmenu extends PApplet
 			text("Boss:", 700, 490);
 			text(bossManager.bosse[activeBoss].name, 700, 540);
 			
-			float factor = (bossImgs[activeBoss].width * 1f) / bossImgs[activeBoss].height;		
-			image(bossImgs[activeBoss], (830 - (277 / 2)) + ((277 - (factor * 277)) / 2), 317 - (277 / 2), 277 * factor, 277);
+			if(bossImgs[activeBoss]!=null) 
+			{
+				float factor = (bossImgs[activeBoss].width * 1f) / bossImgs[activeBoss].height;		
+				image(bossImgs[activeBoss], (830 - (277 / 2)) + ((277 - (factor * 277)) / 2), 317 - (277 / 2), 277 * factor, 277);
+			}
 			// Bossfenster
 			
 			// Befehlenster
