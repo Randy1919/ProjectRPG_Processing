@@ -7,6 +7,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.LinkedList;
 
+import Actors.Boss;
+
 
 public class ItemManager {
 	public Item[] waffen;
@@ -133,7 +135,12 @@ public class ItemManager {
 	private void parseWeapon(File f) {
 		try {
 			// Template wird erstellt, zuerst mit Namen der Textdatei
-			Item template = new Item(f.getName());
+			String name =f.getName();
+			int pos=name.lastIndexOf(".");
+			if(pos>0) {
+				name=name.substring(0, pos);
+			}
+			Item template = new Item(name);
 
 			// File lesen
 			FileReader input;
@@ -166,11 +173,6 @@ public class ItemManager {
 				
 				//Wird ein Attribut nicht gefunden gilt der Standard von Item. 
 			}
-			if(template.name.endsWith(".txt")) {
-				String[] name = f.getName().split(".txt");
-				String name1 = name[0];
-				template.name=name1;
-			}
 			
 			//Fertiges Template wird zum einsortieren in die Liste übergeben
 			lw.add(template);
@@ -193,7 +195,12 @@ public class ItemManager {
 	private void parseArmor(File f) {
 		try {
 			// Template wird erstellt, zuerst mit Namen der Textdatei
-			Item template = new Item(f.getName());
+			String name =f.getName();
+			int pos=name.lastIndexOf(".");
+			if(pos>0) {
+				name=name.substring(0, pos);
+			}
+			Item template = new Item(name);
 
 			// File lesen
 			FileReader input;
@@ -244,7 +251,12 @@ public class ItemManager {
 	private void parseItem(File f) {
 		try {
 			// Template wird erstellt, zuerst mit Namen der Textdatei
-			Item template = new Item(f.getName());
+			String name =f.getName();
+			int pos=name.lastIndexOf(".");
+			if(pos>0) {
+				name=name.substring(0, pos);
+			}
+			Item template = new Item(name);
 
 			// File lesen
 			FileReader input;
