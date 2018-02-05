@@ -16,11 +16,11 @@ public class Labyrinth extends PApplet {
 
 	int[][] nLabMatrix = new int[20][20];
 
-	int nTileWidth = 30;
-	int nTileHeight = 30;
+	int nTileWidth = 100;
+	int nTileHeight = 100;
 
-	int nPlayerHeight = 40;
-	int nPlayerWidth = 20;
+	int nPlayerHeight = 120;
+	int nPlayerWidth = 90;
 	
 	Boss boss = new Boss("Test");
 
@@ -35,8 +35,9 @@ public class Labyrinth extends PApplet {
 		Labyrinth lab = new Labyrinth("layout_static");
 		lab.loadLabyrinth();
 
-		String[] argu = { "--location=100,200", "Kampf.Kampf" };
+		String[] argu = { "--location=100,200", "Labyrinth.Labyrinth" };
 		PApplet.runSketch(argu, lab);
+		
 	}
 
 	public void settings() {
@@ -44,13 +45,32 @@ public class Labyrinth extends PApplet {
 	}
 
 	public void setup() {
-		noLoop();
 	}
 
 	public void draw() {
 
 		background(255);
+		
+		int nTranslateToPlayerX = 0;
+		int nTranslateToPlayerY = 0;
+		
+		int nTranslateY = 50;	
+		for (int i = 0; i < this.nLabMatrix.length; i++) {
+			int nTranslateX = 50;
+			for (int j = 0; j < this.nLabMatrix[i].length; j++) {
+				if(this.nLabMatrix[i][j] == 3)
+				{
+					nTranslateToPlayerX = nTranslateX + 650;
+					nTranslateToPlayerY = nTranslateY + 850;
+				}
+				nTranslateX += nTileWidth;
+			}
+			nTranslateY += nTileHeight;
+		}
+		
+		pushMatrix();
 
+		translate(-(nTranslateToPlayerX / 2),-(nTranslateToPlayerY / 2));
 		int nTilePositionY = 50;
 
 		for (int i = 0; i < this.nLabMatrix.length; i++) {
@@ -60,17 +80,21 @@ public class Labyrinth extends PApplet {
 
 				if (this.nLabMatrix[i][j] == 1 || this.nLabMatrix[i][j] == 3) {
 					fill(255, 255, 255);
+					stroke(255,255,255);
 					rect(nTilePositionX, nTilePositionY, nTileWidth, nTileHeight);
 
-					if (this.nLabMatrix[i][j] == 3) {
+					if (this.nLabMatrix[i][j] == 3) {					
 						fill(230, 138, 0);
-						rect(nTilePositionX + 5, nTilePositionY - 15, nPlayerWidth, nPlayerHeight);
+						stroke(230,138,0);
+						rect(nTilePositionX + 5, nTilePositionY - 40, nPlayerWidth, nPlayerHeight);
 					}
 				} else if (this.nLabMatrix[i][j] == 2) {
 					fill(0, 200, 0);
+					stroke(0,200,0);
 					rect(nTilePositionX, nTilePositionY, nTileWidth, nTileHeight);
 				} else {
 					fill(0, 0, 0);
+					stroke(0,0,0);
 					rect(nTilePositionX, nTilePositionY, nTileWidth, nTileHeight);
 				}
 
@@ -79,7 +103,8 @@ public class Labyrinth extends PApplet {
 
 			nTilePositionY += nTileHeight;
 		}
-
+		
+		popMatrix();
 	}
 
 	// ----------------------Dev---------------------------
@@ -103,11 +128,11 @@ public class Labyrinth extends PApplet {
 
 	/**
 	 * 
-	 */
+	 *
 	private void genLabyrinth() {
 
 	}
-
+	*/
 	/**
 	 * 
 	 */
@@ -167,6 +192,7 @@ public class Labyrinth extends PApplet {
 	
 	public void keyPressed() {
 
+		
 		int x=0;
 		int y=0;
 		
@@ -252,10 +278,11 @@ public class Labyrinth extends PApplet {
 			}
 			break;
 		}
+		
+		
 	}
 
 	public void keyReleased() {
-
-		redraw();
 	}
+	
 }
