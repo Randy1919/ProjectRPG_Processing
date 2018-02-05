@@ -24,6 +24,7 @@ public class Labyrinth {
 	public PImage imgWall; // Declare a variable of type PImage
 	public PImage imgFloor; // Declare a variable of type PImage
 	public PImage imgChest; // Declare a variable of type PImage
+	public PImage imgPlayer; // Declare a variable of type PImage
 
 	int[][] nLabMatrix = new int[20][20];
 
@@ -54,6 +55,9 @@ public class Labyrinth {
 		}
 		if (new File("Images/labyrinth/chest.png").isFile()) {
 			imgChest = hauptmenu.loadImage("Images/labyrinth/chest.png");
+		}
+		if (new File("Images/player/spielerkampf.png").isFile()) {
+			imgPlayer = hauptmenu.loadImage("Images/player/spielerkampf.png");
 		}
 	}
 
@@ -91,9 +95,7 @@ public class Labyrinth {
 						hauptmenu.image(imgFloor, nTilePositionX, nTilePositionY, nTileWidth, nTileHeight);
 					}
 					if (this.nLabMatrix[i][j] == 3) {					
-						hauptmenu.fill(230, 138, 0);
-						hauptmenu.stroke(230,138,0);
-						hauptmenu.rect(nTilePositionX + 5, nTilePositionY - 40, nPlayerWidth, nPlayerHeight);
+						hauptmenu.image(imgPlayer,nTilePositionX + 5,nTilePositionY -40,nPlayerWidth,nPlayerHeight);
 					}
 					
 				} else if (this.nLabMatrix[i][j] == 2) {
