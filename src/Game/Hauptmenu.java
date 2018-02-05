@@ -109,6 +109,12 @@ public class Hauptmenu extends PApplet
 		drawMode = 4;
 	}
 	
+	public void endLabyrinth()
+	{
+		currentLabyrinth = null;
+		drawMode = 2;
+	}
+	
 	public void startFight()
 	{
 		spieler.setWaffe(itemManager.waffen[activeWeapon]);
@@ -201,6 +207,14 @@ public class Hauptmenu extends PApplet
 		}
 		return false;
 	}	
+	
+	public void keyPressed()
+	{
+		if(currentLabyrinth != null)
+		{
+			currentLabyrinth.keyPressed();
+		}
+	}
 	
 	public void mousePressed()
 	{
