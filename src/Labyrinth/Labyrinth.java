@@ -44,7 +44,7 @@ public class Labyrinth {
 	}
 
 	public void setup() {
-		hauptmenu.textFont(f, 40);
+		hauptmenu.textFont(f, 20);
 		hauptmenu.frameRate(30);
 		
 		if (new File("Images/labyrinth/wall.jpg").isFile()) {
