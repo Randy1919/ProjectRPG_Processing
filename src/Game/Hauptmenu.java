@@ -105,6 +105,7 @@ public class Hauptmenu extends PApplet
 	
 	public void startLabyrinth()
 	{
+		bossManager.setBossByInt(activeBoss);
 		currentLabyrinth = new Labyrinth(this, bossManager);
 		drawMode = 4;
 	}
