@@ -404,7 +404,7 @@ public class Kampf {
 
 	}
 	
-	// Der Spezialangriff des Spielers
+	// Der Spezialangriff des Gegners wird vorbereitet
 	private void gegnerSpezialangriffVorbereitung() {
 		spezialangriffVorbereitetCOM = true;
 		actor = gegner;
@@ -415,7 +415,7 @@ public class Kampf {
 		damagestep = 1;
 	}
 
-	// Der Spezialangriff des Spielers
+	// Der Spezialangriff des Gegners wird ausgeführt
 	private void gegnerSpezialangriff() {
 		double damage;
 		actor = gegner;
@@ -826,13 +826,16 @@ public class Kampf {
 		if (actor.equals(held)) {
 			if (acted.equals(held)) {
 				if (imgheal != null) {
-					hauptmenu.image(imgheal, 70, 350, 200, 340);
+					hauptmenu.image(imgheal, 120, 350, 200, 340);
 				}
 			} else {
 				if (!avoid.equals("healsteal")) {
 						if (!avoid.equals("dodge")&&!avoid.equals("gegnerspezialbreak")) {
 							if (imghit1 != null) {
 								hauptmenu.image(imghit1, 710, 350, 200, 340);
+							}
+							if (gegner.getArmorName().equals("Heldenkleidung") && acted.equals(gegner)) {
+								drawEasterEggBoss();
 							}
 						} else {
 							hauptmenu.image(imgshieldgegner, 650, 330, 200, 340);
@@ -854,11 +857,15 @@ public class Kampf {
 					if (imghit1 != null) {
 						hauptmenu.image(imghit1, 150, 350, 200, 340);
 					}
+					if (held.getArmorName().equals("Heldenkleidung") && acted.equals(held)) {
+						drawEasterEggPlayer();
+					}
 				} else {
 					hauptmenu.image(imgshieldplayer, 190, 330, 200, 340);
 				}
 			}
 		}
+		
 
 		wait = true;
 		damagestep = 4;
@@ -926,12 +933,7 @@ public class Kampf {
 		wait = true;
 		damagestep = 5;
 
-		if (action.equals("Heldenkleidung") && actor.equals(held)) {
-			drawEasterEggPlayer();
-		}
-		if (action.equals("Heldenkleidung") && actor.equals(gegner)) {
-			drawEasterEggBoss();
-		}
+
 	}
 
 	public void drawStep5() {
@@ -1024,7 +1026,7 @@ public class Kampf {
 
 	public void drawEasterEggPlayer() {
 		if (imgegg != null) {
-			hauptmenu.image(imgegg, 105, 185, 150, 150);
+			hauptmenu.image(imgegg, 155, 185, 150, 150);
 		}
 	}
 
