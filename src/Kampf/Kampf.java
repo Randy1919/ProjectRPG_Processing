@@ -188,7 +188,7 @@ public class Kampf {
 	// Aufgeben
 	private void fliehen() {
 		held.leben = 0;
-		checkWin();
+		damagestep=6;
 	}
 
 	// ****************************************************************
