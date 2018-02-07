@@ -22,6 +22,8 @@ public class Hauptmenu extends PApplet
 	BossManager bossManager;
 	Spieler spieler;
 	
+	PFont font;
+	
 	PImage imgPlayer;
 	PImage[] bossImgs;
 	
@@ -47,10 +49,7 @@ public class Hauptmenu extends PApplet
 	
 	public void setUpMenu()
 	{
-		double d = 72.4975;
-		
-		d = (int)(d * 100.) / 100.;
-		System.out.println(d);
+		font = createFont("Arial", 18, true);
 		
 		itemManager = new ItemManager();
 		bossManager = new BossManager(itemManager);
@@ -119,8 +118,9 @@ public class Hauptmenu extends PApplet
 	
 	public void endLabyrinth()
 	{
+		textFont(font, 40);
 		currentLabyrinth = null;
-		drawMode = 2;
+		drawMode = 1;
 	}
 	
 	public void startFight()
@@ -149,7 +149,7 @@ public class Hauptmenu extends PApplet
 	
 	public void endFight()
 	{
-		textFont(createFont("Arial", 18, true), 40);
+		textFont(font, 40);
 		currentKampf = null;
 		drawMode = 1;
 	}
@@ -380,7 +380,10 @@ public class Hauptmenu extends PApplet
 		}
 		else if(drawMode == 4) //laby
 		{
-			
+			if(hovering(840, 10, 150, 150))
+			{
+				endLabyrinth();
+			}
 		}
 		else
 		{
@@ -953,7 +956,28 @@ public class Hauptmenu extends PApplet
 		}
 		else if(drawMode == 4 && currentLabyrinth != null) //Labyrinth
 		{
+			textFont(font, 20);
 			currentLabyrinth.draw();
+			textFont(font, 40);
+			//back
+			//fill(230, 138, 0);
+			fill(120, 160, 230);
+			if(hovering(840, 10, 150, 150))
+			{
+				fill(137, 137, 137);
+				if(mousePressed)
+				{
+					fill(244,244,244);
+					//chooseBoss(0);
+				}
+			}
+			rect(840, 10, 150, 150);
+			fill(0, 0, 0);
+			rect(850, 20, 130, 130);
+			
+			fill(255, 255, 255);
+			text("Back", 870, 100);
+			//back
 		}
 		else
 		{
