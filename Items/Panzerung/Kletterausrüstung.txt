@@ -1,5 +1,5 @@
 
 Kategorie=Klettern
 Stärke=Boxen
-Schwäche=Kendo
+Schwäche=E-Sports
 Beschreibung=Eine Ausrüstung zum Klettern.

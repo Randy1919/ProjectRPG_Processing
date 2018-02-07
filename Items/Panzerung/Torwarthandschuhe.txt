@@ -1,5 +1,5 @@
 ﻿
 Kategorie=Boxen
-Stärke=Schwimmen
-Schwäche=Kendo
+Stärke=Fußball
+Schwäche=Klettern
 Beschreibung=Torwarthandschuhe zum Fangen von Fußbällen
