@@ -1,0 +1,6 @@
+﻿
+Name=Paprika Pizza
+Kategorie=Paprika
+Typ=Heal
+Schwäche=Kalt
+Beschreibung=Eine Paprika Pizza! Mit Paprika! Essen um Leben zu regenerieren.

@@ -1,4 +1,5 @@
-﻿Kategorie=Kendo
+﻿
+Kategorie=Kendo
 Schaden=5
 Stärke=Boxen
 Schwäche=Kendo

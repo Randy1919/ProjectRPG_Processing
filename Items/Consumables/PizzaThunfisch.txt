@@ -1,4 +1,5 @@
-﻿Name=Thunfisch Pizza
+﻿
+Name=Thunfisch Pizza
 Kategorie=Thunfisch
 Typ=Heal
 Schwäche=Kalt

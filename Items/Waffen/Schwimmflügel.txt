@@ -1,5 +1,6 @@
+﻿
 Kategorie=Schwimmen
-Schaden=10
+Schaden=5
 Stärke=Kendo
 Schwäche=Schwimmen
 Beschreibung=Im schwimmflügel ist eine heftige schusswaffe eingebaut.

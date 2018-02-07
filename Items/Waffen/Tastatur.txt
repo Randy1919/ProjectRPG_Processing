@@ -1,5 +1,5 @@
 ﻿Kategorie=E-Sports
-Stärke=
-Schwäche=
+Stärke=Klettern
+Schwäche=Schwimmen
 Schaden=5
 Beschreibung=Eine hochmoderne Tastatur für E-Sports. Kann aber auch als Knüppel benutzt werden.

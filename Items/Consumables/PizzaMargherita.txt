@@ -1,0 +1,6 @@
+﻿
+Name=Pizza Margherita
+Kategorie=Margherita
+Typ=Heal
+Schwäche=Kalt
+Beschreibung=Eine Pizza Margherita! Mit gar nichts! Essen um Leben zu regenerieren.

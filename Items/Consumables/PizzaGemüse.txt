@@ -1,0 +1,6 @@
+﻿
+Name=Gemüse Pizza
+Kategorie=Gemüse
+Typ=Heal
+Schwäche=Kalt
+Beschreibung=Eine Gemüse Pizza! Mit Gemüse! Essen um Leben zu regenerieren.

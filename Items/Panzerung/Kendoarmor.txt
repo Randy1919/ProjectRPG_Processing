@@ -1,3 +1,4 @@
+﻿
 Name=Kendorüstung
 Kategorie=Kendo
 Stärke=Kendo
