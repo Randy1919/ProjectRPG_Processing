@@ -605,11 +605,11 @@ public class Hauptmenu extends PApplet
 			
 			for(int i = 0; i < bossManager.bosse[activeBoss].triviaCategory.length; i++)
 			{
-				if(i > 5 && i < 10)
+				if((i > 5 && i < 9) || i == 10)
 				{
 					fill(120, 230, 160);
 				}
-				else if (i > 9)
+				else if (i == 9 || i == 11)
 				{
 					fill(230, 160, 120);
 				}
@@ -618,14 +618,14 @@ public class Hauptmenu extends PApplet
 					fill(255, 255, 255);
 				}
 				
-				text(bossManager.bosse[activeBoss].triviaCategory[i] + ": ", 80, 290 + (60 * i));
+				text(bossManager.bosse[activeBoss].triviaCategory[i] + ": ", 60, 290 + (60 * i));
 				if(bossManager.bosse[activeBoss].triviaUnlocked[i])
 				{
-					text(bossManager.bosse[activeBoss].trivia[i], 450, 290 + (60 * i));
+					text(bossManager.bosse[activeBoss].trivia[i], 427, 290 + (60 * i));
 				}
 				else
 				{
-					text("???", 450, 290 + (60 * i));
+					text("???", 427, 290 + (60 * i));
 				}		
 			}
 			//infos
