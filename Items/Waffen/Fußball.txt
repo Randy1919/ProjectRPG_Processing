@@ -1,0 +1,6 @@
+﻿
+Kategorie=Fußball
+Schaden=5
+Stärke=Boxen
+Schwäche=Kendo
+Beschreibung=Ein Fußball.

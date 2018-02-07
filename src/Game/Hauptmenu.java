@@ -21,7 +21,7 @@ public class Hauptmenu extends PApplet
 	ItemManager itemManager;
 	BossManager bossManager;
 	Spieler spieler;
-	
+	 
 	PFont font;
 	
 	PImage imgPlayer;
@@ -633,11 +633,11 @@ public class Hauptmenu extends PApplet
 			
 			for(int i = 0; i < bossManager.bosse[activeBoss].triviaCategory.length; i++)
 			{
-				if((i > 5 && i < 9) || i == 10)
+				if((i > 4 && i < 7) || i == 10||i==8)
 				{
 					fill(120, 230, 160);
 				}
-				else if (i == 9 || i == 11)
+				else if (i == 9 || i == 11||i==7)
 				{
 					fill(230, 160, 120);
 				}
