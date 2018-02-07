@@ -1,6 +1,8 @@
 package Game;
 
 import java.io.File;
+import java.util.Scanner;
+
 import Actors.BossManager;
 import Actors.Spieler;
 import Items.Item;
@@ -50,7 +52,12 @@ public class Hauptmenu extends PApplet
 		
 		itemManager = new ItemManager();
 		bossManager = new BossManager(itemManager);
-		spieler = new Spieler("Awesomeness");
+		spieler = new Spieler("Shirou");
+		
+		Scanner s;
+		s = new Scanner(System.in);
+		System.out.println("Bitte geben sie einen Namen ein:");
+		spieler.name=s.nextLine();
 		
 		bossBeaten = new boolean[bossManager.bosse.length];
 		for(int i = 0; i < bossBeaten.length; i++)
