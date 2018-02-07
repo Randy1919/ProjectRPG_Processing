@@ -170,7 +170,7 @@ public class Labyrinth {
 	 * @throws IOException
 	 */
 	private void processFile() throws IOException {
-		// Lädt die Datei ein.
+		// Lï¿½dt die Datei ein.
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(this.LabLayout.getAbsolutePath()));
 
