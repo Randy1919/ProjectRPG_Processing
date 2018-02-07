@@ -1,4 +1,4 @@
-﻿Name=Dennis Haunschild
+﻿
 Waffe=Tastatur
 Rüstung=Monitor
 

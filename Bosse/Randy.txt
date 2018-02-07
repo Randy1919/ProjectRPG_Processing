@@ -1,4 +1,4 @@
-﻿Name=Randy Salobir
+﻿
 Waffe=Kendoschwert
 Rüstung=Kendorüstung
 Alter=24
