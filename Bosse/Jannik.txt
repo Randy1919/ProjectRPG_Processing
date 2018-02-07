@@ -1,4 +1,4 @@
-Name=Jannik Timmer
+Name=Jannik
 Waffe=Schwimmflügel
 Rüstung=Badehose
 

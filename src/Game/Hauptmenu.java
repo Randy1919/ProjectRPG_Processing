@@ -37,7 +37,7 @@ public class Hauptmenu extends PApplet
 	
 	Item lastItem;
 	
-	String[] buttons = {"Labyrinth", "Kampf", "Ausrüstung"};
+	String[] buttons = {"Labyrinth", "Ausrüstung", "Kampf"};
 	
 	
 	public static void main(String[] args) 
@@ -102,11 +102,11 @@ public class Hauptmenu extends PApplet
 		}
 		else if(nr == 1)
 		{
-			startFight();
+			drawMode = 2;		
 		}
 		else
 		{
-			drawMode = 2;
+			startFight();
 		}
 	}
 	
@@ -281,7 +281,7 @@ public class Hauptmenu extends PApplet
 		}
 		else if(drawMode == 2) //ausrüstung
 		{
-			if(hovering(335 + 145, 300 - 25, 50, 50))
+			if(hovering(335 + 145, 400 - 25, 50, 50))
 			{
 				fill(137, 137, 137);
 				if(mousePressed)
@@ -289,7 +289,7 @@ public class Hauptmenu extends PApplet
 					nextItem(0, false);
 				}
 			}
-			if(hovering(335 - 195, 300 - 25, 50, 50))
+			if(hovering(335 - 195, 400 - 25, 50, 50))
 			{
 				fill(137, 137, 137);
 				if(mousePressed)
@@ -298,7 +298,7 @@ public class Hauptmenu extends PApplet
 				}
 			}
 			
-			if(hovering(335 + 145, 400 - 25, 50, 50))
+			if(hovering(335 + 145, 550 - 25, 50, 50))
 			{
 				fill(137, 137, 137);
 				if(mousePressed)
@@ -306,7 +306,7 @@ public class Hauptmenu extends PApplet
 					nextItem(1, false);
 				}
 			}
-			if(hovering(335 - 195, 400 - 25, 50, 50))
+			if(hovering(335 - 195, 550 - 25, 50, 50))
 			{
 				fill(137, 137, 137);
 				if(mousePressed)
@@ -332,7 +332,7 @@ public class Hauptmenu extends PApplet
 				}
 			}
 			
-			if(hovering(335 + 145, 800 - 25, 50, 50))
+			if(hovering(335 + 145, 770 - 25, 50, 50))
 			{
 				fill(137, 137, 137);
 				if(mousePressed)
@@ -340,7 +340,7 @@ public class Hauptmenu extends PApplet
 					nextItem(3, false);
 				}
 			}
-			if(hovering(335 - 195, 800 - 25, 50, 50))
+			if(hovering(335 - 195, 770 - 25, 50, 50))
 			{
 				fill(137, 137, 137);
 				if(mousePressed)
@@ -349,7 +349,7 @@ public class Hauptmenu extends PApplet
 				}
 			}
 			
-			if(hovering(335 + 145, 900 - 25, 50, 50))
+			if(hovering(335 + 145, 840 - 25, 50, 50))
 			{
 				fill(137, 137, 137);
 				if(mousePressed)
@@ -357,7 +357,7 @@ public class Hauptmenu extends PApplet
 					nextItem(4, false);
 				}
 			}
-			if(hovering(335 - 195, 900 - 25, 50, 50))
+			if(hovering(335 - 195, 840 - 25, 50, 50))
 			{
 				fill(137, 137, 137);
 				if(mousePressed)
@@ -707,16 +707,19 @@ public class Hauptmenu extends PApplet
 			fill(0, 0, 0);
 			rect(20, 180, 630, 800);
 			
-			// kategories	
+			// kategories
+			fill(255,255,255);
+			text("Ausrüstung:", 40, 235);
 			//weapon
 			{
 			int posX = 335;
-			int posY = 300;
+			int posY = 400;
 			fill(230, 138, 0);
 			rect(posX - 140, posY - 25, 280, 50);
 			fill(0, 0, 0);
 			rect(posX - 135, posY - 20, 270, 40);
 			fill(255,255,255);
+			text("Waffe:", posX - 130, posY + 15 - 50);
 			text(itemManager.waffen[activeWeapon].name, posX - 130, posY + 15);
 			//arrowRight
 			fill(120, 160, 230);
@@ -752,12 +755,13 @@ public class Hauptmenu extends PApplet
 			//armor
 			{
 			int posX = 335;
-			int posY = 400;
+			int posY = 550;
 			fill(230, 138, 0);
 			rect(posX - 140, posY - 25, 280, 50);
 			fill(0, 0, 0);
 			rect(posX - 135, posY - 20, 270, 40);
 			fill(255,255,255);
+			text("Rüstung:", posX - 130, posY + 15 - 50);
 			text(itemManager.armors[activeArmor].name, posX - 130, posY + 15);
 			//arrowRight
 			fill(120, 160, 230);
@@ -799,6 +803,7 @@ public class Hauptmenu extends PApplet
 			fill(0, 0, 0);
 			rect(posX - 135, posY - 20, 270, 40);
 			fill(255,255,255);
+			text("Items:", posX - 130, posY + 15 - 50);
 			if(activeItems[0] == -1)
 			{
 				text("Kein Item", posX - 130, posY + 15);
@@ -841,7 +846,7 @@ public class Hauptmenu extends PApplet
 			//item1
 			{
 			int posX = 335;
-			int posY = 800;
+			int posY = 770;
 			fill(230, 138, 0);
 			rect(posX - 140, posY - 25, 280, 50);
 			fill(0, 0, 0);
@@ -889,7 +894,7 @@ public class Hauptmenu extends PApplet
 			//item2
 			{
 			int posX = 335;
-			int posY = 900;
+			int posY = 840;
 			fill(230, 138, 0);
 			rect(posX - 140, posY - 25, 280, 50);
 			fill(0, 0, 0);
