@@ -151,7 +151,8 @@ public class ItemManager {
 			String myLine = null;
 			while ((myLine = bufRead.readLine()) != null) {
 				String[] sa = myLine.split("="); // Split beim =, da Syntax "Variable=Value"
-				if (sa[0].toLowerCase().equals("name")) { //Name(Falls angegeben kann hier der Dateiname überschrieben werde)
+				if(sa.length>1) {
+				if (sa[0].toLowerCase().equals("Name")) { //Name(Falls angegeben kann hier der Dateiname überschrieben werde)
 					template.name = sa[1];
 				}
 				if (sa[0].toLowerCase().equals("kategorie")) { //Kategorie
@@ -170,7 +171,7 @@ public class ItemManager {
 					template.beschreibung = sa[1];
 				}
 					template.slot = 0;
-				
+				}
 				//Wird ein Attribut nicht gefunden gilt der Standard von Item. 
 			}
 			

@@ -1,12 +1,12 @@
-Name=Dennis
-Waffe=Kendoschwert
-Rüstung=Kendorüstung
+﻿Name=Dennis Haunschild
+Waffe=Tastatur
+Rüstung=Monitor
 
 Alter=24
 Geburtsort=Moers
 Verkehrsmittel=Beine
 Videospiel=Dark Souls
-Konsole=PC Master Race
+Konsole=PC
 Hobby=Gaming
 Sport=E-Sports
 Lieblingsfarbe=Blau

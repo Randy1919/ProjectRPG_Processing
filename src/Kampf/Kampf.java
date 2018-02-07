@@ -18,7 +18,7 @@ public class Kampf {
 	// Manager
 	BossManager bm;
 	PApplet hauptmenu;
-	
+
 	public Actor sieger;
 
 	// Spieler
@@ -42,7 +42,7 @@ public class Kampf {
 	public Kampf(Spieler s, BossManager b, PApplet p) {
 		held = s;
 		bm = b;
-		hauptmenu =p;
+		hauptmenu = p;
 		gegner = bm.getCurrentBoss();
 		setup();
 	}
@@ -51,7 +51,7 @@ public class Kampf {
 	// *** Ablauf ***
 	// ****************************************************************
 
-	//Button Betätigung
+	// Button Betätigung
 	public void mousePressed() {
 		// Item Eingaben
 		if (playerturn) {
@@ -108,7 +108,7 @@ public class Kampf {
 			gegner.leben = 0;
 			playerturn = false;
 			onPlayerWin();
-			sieger=held;
+			sieger = held;
 			return 1;
 		}
 
@@ -116,13 +116,13 @@ public class Kampf {
 		if (held.leben <= 0) {
 			held.leben = 0;
 			playerturn = false;
-			sieger=gegner;
+			sieger = gegner;
 			return 2;
 		}
 		return 0;
 	}
 
-	//Wenn Spieler gewinnt
+	// Wenn Spieler gewinnt
 	private void onPlayerWin() {
 		held.siege++;
 	}
@@ -306,7 +306,7 @@ public class Kampf {
 				effektiv = ": Effektiv";
 
 			} else if (gegner.starkOderSchwach(item.kategorie).equals("schwach")) {
-				formerLeben =  gegner.leben;
+				formerLeben = gegner.leben;
 				gegner.leben = gegner.leben + 15;
 				lifechanged = true;
 				acted = gegner;
@@ -314,7 +314,7 @@ public class Kampf {
 				effektiv = ": Ineffektiv";
 
 			} else {
-				formerLeben =  held.leben;
+				formerLeben = held.leben;
 				held.leben = held.leben + 15;
 				lifechanged = true;
 				avoid = "heal";
@@ -356,16 +356,16 @@ public class Kampf {
 					angriff(gegner, held);
 				}
 
-					if (zufall >= 61 && zufall <= 70) {
-						if(bossspezialUsed<3) {
+				if (zufall >= 61 && zufall <= 70) {
+					if (bossspezialUsed < 3) {
 						gegnerSpezialangriffVorbereitung();
-						}else {
-							angriff(gegner, held);						
-						}
+					} else {
+						angriff(gegner, held);
 					}
-					if (zufall >= 71 && zufall <= 80) {
-						verteidigung(gegner);
-					}
+				}
+				if (zufall >= 71 && zufall <= 80) {
+					verteidigung(gegner);
+				}
 
 				if (gegner.leben >= 40) {
 					if (zufall >= 81 && zufall <= 85) {
@@ -403,7 +403,7 @@ public class Kampf {
 		}
 
 	}
-	
+
 	// Der Spezialangriff des Gegners wird vorbereitet
 	private void gegnerSpezialangriffVorbereitung() {
 		spezialangriffVorbereitetCOM = true;
@@ -446,12 +446,12 @@ public class Kampf {
 
 		schaden = damage;
 		damagestep = 1;
-		
-		formerLeben =  held.leben;
+
+		formerLeben = held.leben;
 		lifechanged = true;
 		held.leben = held.leben - damage;// Schaden zufügen
 		spezialangriffVorbereitetCOM = false;
-		gegnerspezialangriffaktiv=true;
+		gegnerspezialangriffaktiv = true;
 		damagestep = 1;
 		bossspezialUsed++;
 	}
@@ -475,11 +475,11 @@ public class Kampf {
 		schaden = 15;
 		gegner.healItem--;
 		lifechanged = true;
-		formerLeben =  gegner.leben;
+		formerLeben = gegner.leben;
 		gegner.leben = gegner.leben + schaden;
 		damagestep = 1;
 	}
-	
+
 	// ****************************************************************
 	// *** Grafik ***
 	// ****************************************************************
@@ -511,15 +511,15 @@ public class Kampf {
 	public Actor acted; // Der Passive
 	public String action;// Das genutze Aktion(oder Item)
 	public String avoid;// Wird für drawDamage benötigt
-	public String effektiv="";// Wird für drawDamage benötigt
+	public String effektiv = "";// Wird für drawDamage benötigt
 	public double schaden;// Schaden
 	public int damagestep;// Indicator für den Draw. 0=Normal, 1= Actor, 2 = action, 3= Acted, 4 =
-					// Schaden, 5 = Rundenwechsel
+	// Schaden, 5 = Rundenwechsel
 	public double formerLeben;
 	public boolean lifechanged = false;
 	public boolean end = false;
-	public boolean gegnerspezialaktiv=false;
-	
+	public boolean gegnerspezialaktiv = false;
+
 	// Button Spalten(X) Positionen
 	public float bts1 = 525;
 	public float bts2 = 726;
@@ -623,40 +623,30 @@ public class Kampf {
 
 	public boolean draw() {
 		if (!wait) {
-			if (checkWin() == 0) {
-				if (damagestep == 0) {
-					drawStep0();
-				} else if (damagestep == 1) {
-					drawStep1();
-				} else if (damagestep == 2) {
-					drawStep2();
-				} else if (damagestep == 3) {
-					drawStep3();
-				} else if (damagestep == 4) {
-					drawStep4();
-				} else if (damagestep == 5) {
-					drawStep5();
-				}
-			} else if (checkWin() == 1) {
-				drawWin();
-				wait = true;
-				end = true;
-			} else {
-				drawLose();
-				wait = true;
-				end = true;
+			if (damagestep == 0) {
+				drawStep0();
+			} else if (damagestep == 1) {
+				drawStep1();
+			} else if (damagestep == 2) {
+				drawStep2();
+			} else if (damagestep == 3) {
+				drawStep3();
+			} else if (damagestep == 4) {
+				drawStep4();
+			} else if (damagestep == 5) {
+				drawStep5();
 			}
 		} else {
 			if (end) {
 				hauptmenu.delay(3000);
 				return true;
-			} else if(!gegnerspezialaktiv){
+			} else if (!gegnerspezialaktiv) {
 				hauptmenu.delay(500);
 				wait = false;
-			}else {
+			} else {
 				hauptmenu.delay(1500);
 				wait = false;
-				gegnerspezialaktiv=false;
+				gegnerspezialaktiv = false;
 			}
 		}
 		return false;
@@ -784,9 +774,9 @@ public class Kampf {
 				}
 			} else {
 				if (!action.equals("Spezialangriff")) {
-				if (imgslashgegner != null) {
-					hauptmenu.image(imgslashgegner, 630, 350, 200, 340);
-				}
+					if (imgslashgegner != null) {
+						hauptmenu.image(imgslashgegner, 630, 350, 200, 340);
+					}
 				}
 			}
 		}
@@ -830,16 +820,16 @@ public class Kampf {
 				}
 			} else {
 				if (!avoid.equals("healsteal")) {
-						if (!avoid.equals("dodge")&&!avoid.equals("gegnerspezialbreak")) {
-							if (imghit1 != null) {
-								hauptmenu.image(imghit1, 710, 350, 200, 340);
-							}
-							if (gegner.getArmorName().equals("Heldenkleidung") && acted.equals(gegner)) {
-								drawEasterEggBoss();
-							}
-						} else {
-							hauptmenu.image(imgshieldgegner, 650, 330, 200, 340);
+					if (!avoid.equals("dodge") && !avoid.equals("gegnerspezialbreak")) {
+						if (imghit1 != null) {
+							hauptmenu.image(imghit1, 710, 350, 200, 340);
 						}
+						if (gegner.getArmorName().equals("Heldenkleidung") && acted.equals(gegner)) {
+							drawEasterEggBoss();
+						}
+					} else {
+						hauptmenu.image(imgshieldgegner, 650, 330, 200, 340);
+					}
 				} else {
 					if (imgheal != null) {
 						hauptmenu.image(imgheal, 690, 350, 200, 340);
@@ -853,7 +843,7 @@ public class Kampf {
 				}
 
 			} else {
-				if (!avoid.equals("dodge")&&!avoid.equals("gegnerspezialbreak")) {
+				if (!avoid.equals("dodge") && !avoid.equals("gegnerspezialbreak")) {
 					if (imghit1 != null) {
 						hauptmenu.image(imghit1, 150, 350, 200, 340);
 					}
@@ -865,7 +855,6 @@ public class Kampf {
 				}
 			}
 		}
-		
 
 		wait = true;
 		damagestep = 4;
@@ -907,13 +896,13 @@ public class Kampf {
 
 			} else {
 				if (!avoid.equals("healsteal")) {
-						if (!avoid.equals("dodge")) {
-							if (imghit2 != null) {
-								hauptmenu.image(imghit2, 710, 350, 200, 340);
-							}
-						} else {
-							hauptmenu.image(imgshieldgegner, 650, 330, 200, 340);
+					if (!avoid.equals("dodge")) {
+						if (imghit2 != null) {
+							hauptmenu.image(imghit2, 710, 350, 200, 340);
 						}
+					} else {
+						hauptmenu.image(imgshieldgegner, 650, 330, 200, 340);
+					}
 				}
 			}
 		} else {
@@ -933,23 +922,33 @@ public class Kampf {
 		wait = true;
 		damagestep = 5;
 
-
 	}
 
 	public void drawStep5() {
 		if (bossturn) {
 			playerturn = true;
-			held.def=false;
+			held.def = false;
 			bossturn = false;
 		} else {
-			gegner.def=false;
+			gegner.def = false;
 			bossturn = true;
 		}
 		if (lifechanged) {
 			lifechanged = false;
 		}
-		effektiv="";
+		effektiv = "";
 		damagestep = 0;
+		if (checkWin() == 1) {
+			drawLeben();
+			drawWin();
+			wait = true;
+			end = true;
+		} else if (checkWin() == 2) {
+			drawLeben();
+			drawLose();
+			wait = true;
+			end = true;
+		}
 	}
 
 	public void drawBackground() {
@@ -1004,23 +1003,23 @@ public class Kampf {
 	public void drawGegnerSpezial() {
 		if (imgbossspezial != null) {
 			hauptmenu.image(imgbossspezial, 20, 180, 961, 531);
-			gegnerspezialaktiv=true;
+			gegnerspezialaktiv = true;
 		}
 	}
 
 	public void drawPlayer() {
 		if (imgplayer != null) {
 			float width = 271f;
-			float factor = imgplayer.height/(imgplayer.width * 1f) ;
-			hauptmenu.image(imgplayer, 80, 400,width, width*factor);
+			float factor = imgplayer.height / (imgplayer.width * 1f);
+			hauptmenu.image(imgplayer, 80, 400, width, width * factor);
 		}
 	}
 
 	public void drawAttackPlayer() {
 		if (imgplayer != null) {
 			float width = 271f;
-			float factor = imgplayer.height/(imgplayer.width * 1f) ;	
-			hauptmenu.image(imgplayer, 130, 400,width, width*factor);
+			float factor = imgplayer.height / (imgplayer.width * 1f);
+			hauptmenu.image(imgplayer, 130, 400, width, width * factor);
 		}
 	}
 
@@ -1039,16 +1038,16 @@ public class Kampf {
 	public void drawBoss() {
 		if (imgboss != null) {
 			float width = 200f;
-			float factor =  imgboss.height/(imgboss.width * 1f);
-			hauptmenu.image(imgboss, 720, 350,width, width*factor);
+			float factor = imgboss.height / (imgboss.width * 1f);
+			hauptmenu.image(imgboss, 720, 350, width, width * factor);
 		}
 	}
 
 	public void drawAttackBoss() {
 		if (imgboss != null) {
 			float width = 200f;
-			float factor =  imgboss.height/(imgboss.width * 1f);	
-			hauptmenu.image(imgboss, 670, 350,width, width*factor);
+			float factor = imgboss.height / (imgboss.width * 1f);
+			hauptmenu.image(imgboss, 670, 350, width, width * factor);
 		}
 	}
 
@@ -1080,9 +1079,9 @@ public class Kampf {
 
 		hauptmenu.text(gegner.name.split("\\s+")[0] + ": ", 555, 100);
 		if (acted.equals(gegner)) {
-			hauptmenu.text( formerLeben + "", 855, 100);
+			hauptmenu.text(formerLeben + "", 855, 100);
 		} else {
-			hauptmenu.text( gegner.leben + "", 855, 100);
+			hauptmenu.text(gegner.leben + "", 855, 100);
 		}
 	}
 
@@ -1143,20 +1142,16 @@ public class Kampf {
 
 		// Button 5 (Fliehen)
 		if (overButton(btflee)) {
-			hauptmenu.	fill(150, 150, 150);
-		} else {
-			hauptmenu.fill(255, 255, 255);
-		}
-		hauptmenu.text("Fliehen", btflee.positionX + 10, btflee.positionY + 40);
-/*
-		// Button 6
-		if (overButton(item6)) {
 			hauptmenu.fill(150, 150, 150);
 		} else {
 			hauptmenu.fill(255, 255, 255);
 		}
-		hauptmenu.text("6", item6.positionX + 10, item6.positionY + 40);
-		*/
+		hauptmenu.text("Fliehen", btflee.positionX + 10, btflee.positionY + 40);
+		/*
+		 * // Button 6 if (overButton(item6)) { hauptmenu.fill(150, 150, 150); } else {
+		 * hauptmenu.fill(255, 255, 255); } hauptmenu.text("6", item6.positionX + 10,
+		 * item6.positionY + 40);
+		 */
 	}
 
 	public void drawItemButtons() {
@@ -1208,8 +1203,8 @@ public class Kampf {
 	}
 
 	boolean overButton(Button h) {
-		if (hauptmenu.mouseX >= h.positionX && hauptmenu.mouseX <= h.positionX + h.weite && hauptmenu.mouseY >= h.positionY
-				&& hauptmenu.mouseY <= h.positionY + h.hoehe) {
+		if (hauptmenu.mouseX >= h.positionX && hauptmenu.mouseX <= h.positionX + h.weite
+				&& hauptmenu.mouseY >= h.positionY && hauptmenu.mouseY <= h.positionY + h.hoehe) {
 			return true;
 		} else {
 			return false;
@@ -1225,13 +1220,13 @@ public class Kampf {
 	public void drawWeapon(Item usedItem) {
 		wait = true;
 		hauptmenu.textFont(f, 30);
-		hauptmenu.text(usedItem.name+" "+acted.starkOderSchwach(usedItem.kategorie), 50, 850);
+		hauptmenu.text(usedItem.name + " " + acted.starkOderSchwach(usedItem.kategorie), 50, 850);
 	}
 
 	public void drawWeapon(String usedItem) {
 		wait = true;
 		hauptmenu.textFont(f, 30);
-		hauptmenu.text(usedItem+effektiv, 50, 850);
+		hauptmenu.text(usedItem + effektiv, 50, 850);
 	}
 
 	public void drawAttacked(Actor defender) {

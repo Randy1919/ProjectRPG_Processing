@@ -1,0 +1,5 @@
+﻿Name=Spinat Pizza
+Kategorie=Spinat
+Typ=Heal
+Schwäche=Kalt
+Beschreibung=Eine Spinat Pizza! Mit Spinat! Essen um Leben zu regenerieren.
