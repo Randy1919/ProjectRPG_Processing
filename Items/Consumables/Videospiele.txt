@@ -1,6 +1,0 @@
-﻿
-Kategorie=Gaming
-Typ=Stun
-Schwäche=Sport
-
-Beschreibung=Videospiele!

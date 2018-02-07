@@ -615,8 +615,16 @@ public class Hauptmenu extends PApplet
 				{
 					text(buttons[i], 700, 645 + posY);
 				}
-				
+
 			}
+		
+			fill(120, 230, 160);
+			text("Stärke", 700, 605 + 240);
+			fill(230, 160, 120);
+			text("Schwäche", 700, 605 + 290);
+			fill(120, 160, 230);
+			text("Ausrüstung", 700, 605 + 340);
+
 
 			//buttons
 			// Befehlfenster		
