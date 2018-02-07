@@ -1,6 +1,7 @@
+﻿
 Kategorie=Power
 Typ=Power
-Stärke=
+Stärke=Spezialangriff
 Schwäche=
 Anzahl=1
 Beschreibung=Eine Kugel aus Energie.

@@ -1,0 +1,6 @@
+﻿
+Kategorie=Boxen
+Schaden=5
+Stärke=Boxen
+Schwäche=Kendo
+Beschreibung=Ein paar Boxhandschuhe

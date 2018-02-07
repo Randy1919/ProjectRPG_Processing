@@ -1,4 +1,5 @@
-﻿Kategorie=E-Sports
+﻿
+Kategorie=E-Sports
 Stärke=Klettern
 Schwäche=Schwimmen
 Schaden=5

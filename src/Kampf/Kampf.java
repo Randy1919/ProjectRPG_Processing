@@ -564,7 +564,9 @@ public class Kampf {
 
 		held.leben = 100;
 		heldSchild = 0;
+		held.def=false;
 		gegner.leben = 100;
+		gegner.def=false;
 		gegnerSchild = 0;
 		spezialangriffEingesetzt = false;
 		heldStun = 0;
@@ -1229,30 +1231,35 @@ public class Kampf {
 	}
 
 	public void drawAttacker(Actor attacker) {
+		hauptmenu.fill(255, 255, 255);
 		wait = true;
 		hauptmenu.textFont(f, 30);
 		hauptmenu.text(attacker.name.split("\\s+")[0], 50, 800);
 	}
 
 	public void drawWeapon(Item usedItem) {
+		hauptmenu.fill(255, 255, 255);
 		wait = true;
 		hauptmenu.textFont(f, 30);
 		hauptmenu.text(usedItem.name + " " + acted.starkOderSchwach(usedItem.kategorie), 50, 850);
 	}
 
 	public void drawWeapon(String usedItem) {
+		hauptmenu.fill(255, 255, 255);
 		wait = true;
 		hauptmenu.textFont(f, 30);
 		hauptmenu.text(usedItem + effektiv, 50, 850);
 	}
 
 	public void drawAttacked(Actor defender) {
+		hauptmenu.fill(255, 255, 255);
 		wait = true;
 		hauptmenu.textFont(f, 30);
 		hauptmenu.text(defender.name.split("\\s+")[0], 50, 900);
 	}
 
 	public void drawDamage(double damage, String avoid) {
+		hauptmenu.fill(255, 255, 255);
 		wait = true;
 		hauptmenu.textFont(f, 30);
 		if (avoid.equals("")) {

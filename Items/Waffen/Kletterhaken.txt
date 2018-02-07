@@ -1,6 +1,6 @@
 
 Kategorie=Klettern
 Schaden=5
-St‰rke=Kendo
-Schw‰che=Schwimmen
+St√§rke=Kendo
+Schw√§che=Schwimmen
 Beschreibung=Ein Kletterhaken um sich irgendwo festzuhalten. Kann man aber auch Gegnern gegen den Kopf hauen.

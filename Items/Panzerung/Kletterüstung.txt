@@ -1,5 +1,5 @@
 
 Kategorie=Klettern
-Stärke=Boxen
-Schwäche=Kendo
-Beschreibung=Eine Ausrüstung zum Klettern.
+StÃ¤rke=Boxen
+SchwÃ¤che=Kendo
+Beschreibung=Eine AusrÃ¼stung zum Klettern.
