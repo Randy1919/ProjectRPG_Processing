@@ -1,0 +1,5 @@
+﻿Name=Thunfisch Pizza
+Kategorie=Thunfisch
+Typ=Heal
+Schwäche=Kalt
+Beschreibung=Eine Thunfisch Pizza! Mit Thunfisch! Essen um Leben zu regenerieren.

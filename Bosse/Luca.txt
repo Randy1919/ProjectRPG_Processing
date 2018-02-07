@@ -1,0 +1,16 @@
+
+Waffe=Kendoschwert
+Rüstung=Kendorüstung
+
+Alter=18
+Geburtsort=Moers
+Verkehrsmittel=Fahrrad
+Videospiel=CS:GO
+Konsole=PC
+Hobby=Gaming
+Sport=Klettern
+Lieblingsfarbe=Grün
+Lieblingspizza=Margherita
+Hasspizza=Gemüse
+Lieblingstemperatur=Heiß
+Hasstemperatur=Kalt

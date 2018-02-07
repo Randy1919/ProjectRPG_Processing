@@ -1,0 +1,4 @@
+﻿Kategorie=Heiß
+Typ=Stun
+Schwäche=Kalt
+Beschreibung=Eine Wasserbombe mit heißem Wasser! Stunt Gegner die keine Hitze mögen!

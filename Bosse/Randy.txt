@@ -1,12 +1,12 @@
-Name=Randy Salobir
+﻿
 Waffe=Kendoschwert
 Rüstung=Kendorüstung
-
 Alter=24
+
 Geburtsort=Moers
 Verkehrsmittel=Auto
-Videospiel=The Legend of Zelda
-Konsole=Nintendo Switch
+Videospiel=Zelda
+Konsole=Switch
 Hobby=Gaming
 Sport=Kendo
 Lieblingsfarbe=Grün

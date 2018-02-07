@@ -1,0 +1,5 @@
+﻿Kategorie=
+Stärke=
+Schwäche=
+Schaden=100
+Beschreibung=Nur zum testen

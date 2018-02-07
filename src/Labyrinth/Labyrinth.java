@@ -8,6 +8,7 @@ import processing.core.PFont;
 import processing.core.PImage;
 import Actors.Boss;
 import Actors.BossManager;
+import Game.Hauptmenu;
 
 /**
  * 
@@ -17,9 +18,9 @@ import Actors.BossManager;
 public class Labyrinth {
 
 	File LabLayout;
-	PApplet hauptmenu;
+	Hauptmenu hauptmenu;
 	Boss boss;
-	
+
 	public PFont f;
 	public PImage imgWall; // Declare a variable of type PImage
 	public PImage imgFloor; // Declare a variable of type PImage
@@ -32,21 +33,23 @@ public class Labyrinth {
 	int nTileHeight = 100;
 
 	int nPlayerHeight = 120;
-	int nPlayerWidth = 90;	
+	int nPlayerWidth = 90;
 	
+	int nCountTrivia = 0;
+
 	String sInfo = "";
-	
+
 	boolean bShowInfo = false;
 	boolean bExit = false;
-	
+
 	public void settings() {
 		hauptmenu.size(1000, 1000);
 	}
 
 	public void setup() {
-		hauptmenu.textFont(f, 40);
+		hauptmenu.textFont(f, 20);
 		hauptmenu.frameRate(30);
-		
+
 		if (new File("Images/labyrinth/wall.jpg").isFile()) {
 			imgWall = hauptmenu.loadImage("Images/labyrinth/wall.jpg");
 		}
@@ -64,16 +67,15 @@ public class Labyrinth {
 	public boolean draw() {
 
 		hauptmenu.background(0);
-		
+
 		int nTranslateToPlayerX = 0;
 		int nTranslateToPlayerY = 0;
-		
-		int nTranslateY = 50;	
+
+		int nTranslateY = 50;
 		for (int i = 0; i < this.nLabMatrix.length; i++) {
 			int nTranslateX = 50;
 			for (int j = 0; j < this.nLabMatrix[i].length; j++) {
-				if(this.nLabMatrix[i][j] == 3)
-				{
+				if (this.nLabMatrix[i][j] == 3) {
 					nTranslateToPlayerX = nTranslateX;
 					nTranslateToPlayerY = nTranslateY;
 				}
@@ -81,10 +83,10 @@ public class Labyrinth {
 			}
 			nTranslateY += nTileHeight;
 		}
-		
+
 		hauptmenu.pushMatrix();
 
-		hauptmenu.translate(-(nTranslateToPlayerX - 400),-(nTranslateToPlayerY - 400));
+		hauptmenu.translate(-(nTranslateToPlayerX - 400), -(nTranslateToPlayerY - 400));
 		int nTilePositionY = 50;
 
 		for (int i = 0; i < this.nLabMatrix.length; i++) {
@@ -94,10 +96,11 @@ public class Labyrinth {
 					if (imgFloor != null) {
 						hauptmenu.image(imgFloor, nTilePositionX, nTilePositionY, nTileWidth, nTileHeight);
 					}
-					if (this.nLabMatrix[i][j] == 3) {					
-						hauptmenu.image(imgPlayer,nTilePositionX + 5,nTilePositionY -40,nPlayerWidth,nPlayerHeight);
+					if (this.nLabMatrix[i][j] == 3) {
+						hauptmenu.image(imgPlayer, nTilePositionX + 5, nTilePositionY - 40, nPlayerWidth,
+								nPlayerHeight);
 					}
-					
+
 				} else if (this.nLabMatrix[i][j] == 2) {
 					if (imgChest != null) {
 						hauptmenu.image(imgFloor, nTilePositionX, nTilePositionY, nTileWidth, nTileHeight);
@@ -114,23 +117,21 @@ public class Labyrinth {
 
 			nTilePositionY += nTileHeight;
 		}
-		
+
 		hauptmenu.popMatrix();
-		
-		if(bShowInfo == true)
-		{
+
+		if (bShowInfo == true) {
 			hauptmenu.fill(230, 138, 0);
 			hauptmenu.rect(257, 10, 485, 150);
-			
-			hauptmenu.fill(0,0,0);
+
+			hauptmenu.fill(0, 0, 0);
 			hauptmenu.rect(267, 20, 465, 130);
-			
+
 			hauptmenu.fill(255, 255, 255);
-			hauptmenu.text(sInfo, 300, 100);
-			hauptmenu.text("Weiter mit LEERTASTE", 300, 150);
+			hauptmenu.text(sInfo, 350, 80);
+			hauptmenu.text("Weiter mit LEERTASTE", 350, 120);
 		}
-		
-		
+
 		return bExit;
 	}
 
@@ -140,20 +141,20 @@ public class Labyrinth {
 	 * 
 	 * @param uFilename
 	 */
-	public Labyrinth(PApplet p, BossManager bs) {
-		hauptmenu = p;
+	public Labyrinth(Hauptmenu h, BossManager bs) {
+		hauptmenu = h;
 		f = hauptmenu.createFont("Arial", 18, true);
 		this.boss = bs.getCurrentBoss();
 		this.loadRandomLabyrinth();
-		setup();		
+		setup();
 	}
 
 	private void loadRandomLabyrinth() {
-		
+
 		File[] files = new File("LabLayouts").listFiles();
 		Random rand = new Random();
 		this.LabLayout = files[rand.nextInt(files.length)];
-		
+
 		try {
 			this.processFile();
 		} catch (IOException eIO) {
@@ -206,111 +207,106 @@ public class Labyrinth {
 
 		}
 	}
-	
+
 	public void keyPressed() {
-		
+
 		if (hauptmenu.keyCode == 27) {
-		    // leave labyrinth
-		    // transition to menu
+			// leave labyrinth
+			// transition to menu
 			hauptmenu.key = 0;
-		    this.bExit = true;
+			hauptmenu.endLabyrinth();
+			hauptmenu.textFont(f, 40);
 		}
 
-		int x=0;
-		int y=0;
-		
+		if (hauptmenu.key == ' ') {
+			this.bShowInfo = false;
+			if(this.nCountTrivia == 10)
+			{
+				hauptmenu.endLabyrinth();
+				hauptmenu.textFont(f, 40);
+			}
+		}
+
+		int x = 0;
+		int y = 0;
+
 		for (int i = 0; i < this.nLabMatrix.length; i++) {
 			for (int j = 0; j < this.nLabMatrix[i].length; j++) {
-				if(this.nLabMatrix[i][j] == 3)
-				{
+				if (this.nLabMatrix[i][j] == 3) {
 					y = i;
 					x = j;
 				}
 			}
 		}
-		
-		switch (hauptmenu.key) {
-		case 'a':
-			if(this.nLabMatrix[y][x-1] != 0)
-			{
-				if(this.nLabMatrix[y][x-1] == 2)
-				{
-					this.nLabMatrix[y][x-1] = 3;
-					this.nLabMatrix[y][x] = 1;
-					
-					this.sInfo = this.boss.unlockRandomTrivia();
-					this.bShowInfo = true;
-				}
-				else
-				{
-					this.nLabMatrix[y][x-1] = 3;
-					this.nLabMatrix[y][x] = 1;
-				}
-			}
-			break;
-		case 'w':
-			if(this.nLabMatrix[y-1][x] != 0)
-			{
-				if(this.nLabMatrix[y-1][x] == 2)
-				{
-					this.nLabMatrix[y-1][x] = 3;
-					this.nLabMatrix[y][x] = 1;
 
-					this.sInfo = this.boss.unlockRandomTrivia();
-					this.bShowInfo = true;
-				}
-				else
-				{
-					this.nLabMatrix[y-1][x] = 3;
-					this.nLabMatrix[y][x] = 1;
-				}
-			}
-			break;
-		case 's':
-			if(this.nLabMatrix[y+1][x] != 0)
-			{
-				if(this.nLabMatrix[y+1][x] == 2)
-				{
-					this.nLabMatrix[y+1][x] = 3;
-					this.nLabMatrix[y][x] = 1;
+		if (!this.bShowInfo) {
+			switch (hauptmenu.key) {
+			case 'a':
+				if (this.nLabMatrix[y][x - 1] != 0) {
+					if (this.nLabMatrix[y][x - 1] == 2) {
+						this.nLabMatrix[y][x - 1] = 3;
+						this.nLabMatrix[y][x] = 1;
 
-					this.sInfo = this.boss.unlockRandomTrivia();
-					this.bShowInfo = true;
+						this.sInfo = this.boss.unlockRandomTrivia();
+						this.bShowInfo = true;
+						this.nCountTrivia++;
+					} else {
+						this.nLabMatrix[y][x - 1] = 3;
+						this.nLabMatrix[y][x] = 1;
+					}
 				}
-				else
-				{
-					this.nLabMatrix[y+1][x] = 3;
-					this.nLabMatrix[y][x] = 1;
-				}
-			}
-			break;
-		case 'd':
-			if(this.nLabMatrix[y][x+1] != 0)
-			{
-				if(this.nLabMatrix[y][x+1] == 2)
-				{
-					this.nLabMatrix[y][x+1] = 3;
-					this.nLabMatrix[y][x] = 1;
+				break;
+			case 'w':
+				if (this.nLabMatrix[y - 1][x] != 0) {
+					if (this.nLabMatrix[y - 1][x] == 2) {
+						this.nLabMatrix[y - 1][x] = 3;
+						this.nLabMatrix[y][x] = 1;
 
-					this.sInfo = this.boss.unlockRandomTrivia();
-					this.bShowInfo = true;
+						this.sInfo = this.boss.unlockRandomTrivia();
+						this.bShowInfo = true;
+						this.nCountTrivia++;
+					} else {
+						this.nLabMatrix[y - 1][x] = 3;
+						this.nLabMatrix[y][x] = 1;
+					}
 				}
-				else
-				{
-					this.nLabMatrix[y][x+1] = 3;
-					this.nLabMatrix[y][x] = 1;
-				}
-				
+				break;
+			case 's':
+				if (this.nLabMatrix[y + 1][x] != 0) {
+					if (this.nLabMatrix[y + 1][x] == 2) {
+						this.nLabMatrix[y + 1][x] = 3;
+						this.nLabMatrix[y][x] = 1;
 
+						this.sInfo = this.boss.unlockRandomTrivia();
+						this.bShowInfo = true;
+						this.nCountTrivia++;
+					} else {
+						this.nLabMatrix[y + 1][x] = 3;
+						this.nLabMatrix[y][x] = 1;
+					}
+				}
+				break;
+			case 'd':
+				if (this.nLabMatrix[y][x + 1] != 0) {
+					if (this.nLabMatrix[y][x + 1] == 2) {
+						this.nLabMatrix[y][x + 1] = 3;
+						this.nLabMatrix[y][x] = 1;
+
+						this.sInfo = this.boss.unlockRandomTrivia();
+						this.bShowInfo = true;
+						this.nCountTrivia++;
+					} else {
+						this.nLabMatrix[y][x + 1] = 3;
+						this.nLabMatrix[y][x] = 1;
+					}
+
+				}
+				break;
 			}
-			break;
-		case ' ':
-			this.bShowInfo = false;
-			break;
 		}
 	}
 
 	public void keyReleased() {
 	}
-	
+
 }
