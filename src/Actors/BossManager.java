@@ -129,7 +129,6 @@ public class BossManager {
 			String myLine = null;
 			while ((myLine = bufRead.readLine()) != null) {
 				String[] sa = myLine.split("="); // Split beim =, da Syntax "Variable=Value"
-				if(sa.length>1) {
 				if (sa[0].toLowerCase().equals("name")) { // Name(Falls angegeben kann hier der Dateiname überschrieben
 															// werde)
 					template.name = sa[1];
@@ -140,7 +139,6 @@ public class BossManager {
 				if (sa[0].toLowerCase().equals("rüstung")) { // Rüstung
 					template.setArmor(items.getArmorByName(sa[1]));
 				}
-				
 				
 				if (sa[0].toLowerCase().equals("alter")) { 
 					template.trivia[0] = sa[1];
@@ -178,7 +176,7 @@ public class BossManager {
 				if (sa[0].toLowerCase().equals("hasstemperatur")) {
 					template.trivia[11] = sa[1];
 				}
-				}
+				
 
 				// Wird keine Waffe oder Rüstung gefunden, setze Debugequip
 				if (template.getWaffe() == null) {
@@ -193,7 +191,6 @@ public class BossManager {
 
 			// Fertiges Template wird zum einsortieren in die Liste übergeben
 			bo.add(template);
-			System.out.println(template.name + " als Boss hinzugefügt");
 
 			// Dann wird das Template geleert
 			template = null;

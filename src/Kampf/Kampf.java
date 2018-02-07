@@ -635,6 +635,8 @@ public class Kampf {
 				drawStep4();
 			} else if (damagestep == 5) {
 				drawStep5();
+			}else if (damagestep == 6) {
+				drawStep6();
 			}
 		} else {
 			if (end) {
@@ -938,16 +940,31 @@ public class Kampf {
 		}
 		effektiv = "";
 		damagestep = 0;
+		if (checkWin() != 0) {
+			damagestep=6;
+		} 
+	}
+	
+	public void drawStep6(){
+		drawBackground();
+		drawBackgroundPicture();
+		drawPlayer();
+		drawBoss();
+		drawLeben();
+		
+		if (!itempressed) {
+			drawTurnButtons();
+		} else {
+			drawItemButtons();
+		}
 		if (checkWin() == 1) {
-			drawLeben();
 			drawWin();
 			wait = true;
-			end = true;
+			end = true;	
 		} else if (checkWin() == 2) {
-			drawLeben();
 			drawLose();
 			wait = true;
-			end = true;
+			end = true;				
 		}
 	}
 
