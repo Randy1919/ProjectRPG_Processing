@@ -1,0 +1,6 @@
+﻿
+Kategorie=Licht
+Schaden=5
+Stärke=Schwimmen
+Schwäche=Klettern
+Beschreibung=Verbrennt Haut.
