@@ -26,6 +26,7 @@ public class Hauptmenu extends PApplet
 	
 	PImage imgPlayer;
 	PImage[] bossImgs;
+	PImage cross;
 	
 	Boolean setUp = false;
 	int drawMode = 0;
@@ -33,6 +34,7 @@ public class Hauptmenu extends PApplet
 	int activeWeapon = 0;
 	int activeArmor = 0;
 	int[] activeItems = {-1,-1,-1};
+	boolean[] bossBeaten;
 	
 	Kampf currentKampf;
 	Labyrinth currentLabyrinth;
@@ -55,6 +57,12 @@ public class Hauptmenu extends PApplet
 		bossManager = new BossManager(itemManager);
 		spieler = new Spieler("Awesomeness");
 		
+		bossBeaten = new boolean[bossManager.bosse.length];
+		for(int i = 0; i < bossBeaten.length; i++)
+		{
+			bossBeaten[i] = false;
+		}
+		
 		File f = new File("Held.txt");
 		if(f.exists()) 
 		{
@@ -65,6 +73,11 @@ public class Hauptmenu extends PApplet
 		if (new File("Images/player/spielerkampf.png").isFile()) 
 		{
 			imgPlayer = loadImage("Images/player/spielerkampf.png");
+		}
+		
+		if (new File("Images/effects/cross.png").isFile()) 
+		{
+			cross = loadImage("Images/effects/cross.png");
 		}
 		
 		bossImgs = new PImage[bossManager.bosse.length];	
@@ -150,8 +163,17 @@ public class Hauptmenu extends PApplet
 	public void endFight()
 	{
 		textFont(font, 40);
-		currentKampf = null;
-		drawMode = 1;
+		
+		if(currentKampf.sieger == spieler)
+		{
+			bossBeaten[activeBoss] = true;
+			drawMode = 0;
+		}
+		else
+		{
+			drawMode = 1;
+		}		
+		currentKampf = null;	
 	}
 	
 	public void nextItem(int slot, boolean previous)
@@ -487,7 +509,13 @@ public class Hauptmenu extends PApplet
 				{
 					float width = boxInnerWidth + 7f;
 					float factor = (bossImgs[i].width * 1f) / bossImgs[i].height;					
-					image(bossImgs[i], (500 - (width / 2)) + posX + ((width - (factor * width)) / 2), 500 - (width / 2), width * factor, width);	
+					image(bossImgs[i], (500 - (width / 2)) + posX + ((width - (factor * width)) / 2), 500 - (width / 2), width * factor, width);
+					if(bossBeaten[i])
+					{
+						tint(230, 160, 120);
+						image(cross, (500 - (width / 2)) + posX, 500 - (width / 2), width, width);
+						tint(255, 255, 255);
+					}
 					//fix resolution, center
 				}	
 				//bossimage
