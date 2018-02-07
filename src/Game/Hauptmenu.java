@@ -22,6 +22,8 @@ public class Hauptmenu extends PApplet
 	BossManager bossManager;
 	Spieler spieler;
 	
+	PFont font;
+	
 	PImage imgPlayer;
 	PImage[] bossImgs;
 	
@@ -35,7 +37,9 @@ public class Hauptmenu extends PApplet
 	Kampf currentKampf;
 	Labyrinth currentLabyrinth;
 	
-	String[] buttons = {"Labyrinth", "Kampf", "Ausrüstung"};
+	Item lastItem;
+	
+	String[] buttons = {"Labyrinth", "Ausrüstung", "Kampf"};
 	
 	
 	public static void main(String[] args) 
@@ -45,6 +49,8 @@ public class Hauptmenu extends PApplet
 	
 	public void setUpMenu()
 	{
+		font = createFont("Arial", 18, true);
+		
 		itemManager = new ItemManager();
 		bossManager = new BossManager(itemManager);
 		spieler = new Spieler("Awesomeness");
@@ -95,11 +101,11 @@ public class Hauptmenu extends PApplet
 		}
 		else if(nr == 1)
 		{
-			startFight();
+			drawMode = 2;		
 		}
 		else
 		{
-			drawMode = 2;
+			startFight();
 		}
 	}
 	
@@ -112,8 +118,9 @@ public class Hauptmenu extends PApplet
 	
 	public void endLabyrinth()
 	{
+		textFont(font, 40);
 		currentLabyrinth = null;
-		drawMode = 2;
+		drawMode = 1;
 	}
 	
 	public void startFight()
@@ -142,7 +149,7 @@ public class Hauptmenu extends PApplet
 	
 	public void endFight()
 	{
-		textFont(createFont("Arial", 18, true), 40);
+		textFont(font, 40);
 		currentKampf = null;
 		drawMode = 1;
 	}
@@ -190,12 +197,15 @@ public class Hauptmenu extends PApplet
 		{
 		case 0: 
 			activeWeapon = current;
+			lastItem = itemManager.waffen[current];
 			break;
 		case 1: 
 			activeArmor = current;
+			lastItem = itemManager.armors[current];
 			break;
 		default: 
 			activeItems[slot-2] = current;
+			lastItem = itemManager.items[current];
 			break;
 		}
 	}
@@ -271,7 +281,7 @@ public class Hauptmenu extends PApplet
 		}
 		else if(drawMode == 2) //ausrüstung
 		{
-			if(hovering(335 + 145, 300 - 25, 50, 50))
+			if(hovering(335 + 145, 400 - 25, 50, 50))
 			{
 				fill(137, 137, 137);
 				if(mousePressed)
@@ -279,7 +289,7 @@ public class Hauptmenu extends PApplet
 					nextItem(0, false);
 				}
 			}
-			if(hovering(335 - 195, 300 - 25, 50, 50))
+			if(hovering(335 - 195, 400 - 25, 50, 50))
 			{
 				fill(137, 137, 137);
 				if(mousePressed)
@@ -288,7 +298,7 @@ public class Hauptmenu extends PApplet
 				}
 			}
 			
-			if(hovering(335 + 145, 400 - 25, 50, 50))
+			if(hovering(335 + 145, 550 - 25, 50, 50))
 			{
 				fill(137, 137, 137);
 				if(mousePressed)
@@ -296,7 +306,7 @@ public class Hauptmenu extends PApplet
 					nextItem(1, false);
 				}
 			}
-			if(hovering(335 - 195, 400 - 25, 50, 50))
+			if(hovering(335 - 195, 550 - 25, 50, 50))
 			{
 				fill(137, 137, 137);
 				if(mousePressed)
@@ -322,7 +332,7 @@ public class Hauptmenu extends PApplet
 				}
 			}
 			
-			if(hovering(335 + 145, 800 - 25, 50, 50))
+			if(hovering(335 + 145, 770 - 25, 50, 50))
 			{
 				fill(137, 137, 137);
 				if(mousePressed)
@@ -330,7 +340,7 @@ public class Hauptmenu extends PApplet
 					nextItem(3, false);
 				}
 			}
-			if(hovering(335 - 195, 800 - 25, 50, 50))
+			if(hovering(335 - 195, 770 - 25, 50, 50))
 			{
 				fill(137, 137, 137);
 				if(mousePressed)
@@ -339,7 +349,7 @@ public class Hauptmenu extends PApplet
 				}
 			}
 			
-			if(hovering(335 + 145, 900 - 25, 50, 50))
+			if(hovering(335 + 145, 840 - 25, 50, 50))
 			{
 				fill(137, 137, 137);
 				if(mousePressed)
@@ -347,7 +357,7 @@ public class Hauptmenu extends PApplet
 					nextItem(4, false);
 				}
 			}
-			if(hovering(335 - 195, 900 - 25, 50, 50))
+			if(hovering(335 - 195, 840 - 25, 50, 50))
 			{
 				fill(137, 137, 137);
 				if(mousePressed)
@@ -366,6 +376,13 @@ public class Hauptmenu extends PApplet
 			if(currentKampf != null)
 			{
 				currentKampf.mousePressed();
+			}
+		}
+		else if(drawMode == 4) //laby
+		{
+			if(hovering(840, 10, 150, 150))
+			{
+				endLabyrinth();
 			}
 		}
 		else
@@ -663,6 +680,28 @@ public class Hauptmenu extends PApplet
 			rect(670, 585, 320, 405);
 			fill(0, 0, 0);
 			rect(680, 595, 300, 385);
+			
+			if(lastItem != null)
+			{
+				fill(230, 138, 0);
+				rect(690, 605, 280, 50);
+				fill(0, 0, 0);
+				rect(695, 610, 270, 40);
+				fill(255,255,255);
+				text(lastItem.name, 700, 645);		
+				if(!lastItem.schwachGegen.equals(""))
+				{
+					fill(230, 160, 120);
+					text("Schwäche:", 700, 705);
+					text(lastItem.schwachGegen, 700, 760);
+				}
+				if(!lastItem.starkGegen.equals(""))
+				{
+					fill(120, 230, 160);
+					text("Stärke:", 700, 830);
+					text(lastItem.starkGegen, 700, 885);
+				}			
+			}	
 			// Befehlfenster
 			
 			// Hauptfenster
@@ -671,16 +710,19 @@ public class Hauptmenu extends PApplet
 			fill(0, 0, 0);
 			rect(20, 180, 630, 800);
 			
-			// kategories	
+			// kategories
+			fill(255,255,255);
+			text("Ausrüstung:", 40, 235);
 			//weapon
 			{
 			int posX = 335;
-			int posY = 300;
+			int posY = 400;
 			fill(230, 138, 0);
 			rect(posX - 140, posY - 25, 280, 50);
 			fill(0, 0, 0);
 			rect(posX - 135, posY - 20, 270, 40);
 			fill(255,255,255);
+			text("Waffe:", posX - 130, posY + 15 - 50);
 			text(itemManager.waffen[activeWeapon].name, posX - 130, posY + 15);
 			//arrowRight
 			fill(120, 160, 230);
@@ -716,12 +758,13 @@ public class Hauptmenu extends PApplet
 			//armor
 			{
 			int posX = 335;
-			int posY = 400;
+			int posY = 550;
 			fill(230, 138, 0);
 			rect(posX - 140, posY - 25, 280, 50);
 			fill(0, 0, 0);
 			rect(posX - 135, posY - 20, 270, 40);
 			fill(255,255,255);
+			text("Rüstung:", posX - 130, posY + 15 - 50);
 			text(itemManager.armors[activeArmor].name, posX - 130, posY + 15);
 			//arrowRight
 			fill(120, 160, 230);
@@ -763,6 +806,7 @@ public class Hauptmenu extends PApplet
 			fill(0, 0, 0);
 			rect(posX - 135, posY - 20, 270, 40);
 			fill(255,255,255);
+			text("Items:", posX - 130, posY + 15 - 50);
 			if(activeItems[0] == -1)
 			{
 				text("Kein Item", posX - 130, posY + 15);
@@ -805,7 +849,7 @@ public class Hauptmenu extends PApplet
 			//item1
 			{
 			int posX = 335;
-			int posY = 800;
+			int posY = 770;
 			fill(230, 138, 0);
 			rect(posX - 140, posY - 25, 280, 50);
 			fill(0, 0, 0);
@@ -853,7 +897,7 @@ public class Hauptmenu extends PApplet
 			//item2
 			{
 			int posX = 335;
-			int posY = 900;
+			int posY = 840;
 			fill(230, 138, 0);
 			rect(posX - 140, posY - 25, 280, 50);
 			fill(0, 0, 0);
@@ -912,7 +956,28 @@ public class Hauptmenu extends PApplet
 		}
 		else if(drawMode == 4 && currentLabyrinth != null) //Labyrinth
 		{
+			textFont(font, 20);
 			currentLabyrinth.draw();
+			textFont(font, 40);
+			//back
+			//fill(230, 138, 0);
+			fill(120, 160, 230);
+			if(hovering(840, 10, 150, 150))
+			{
+				fill(137, 137, 137);
+				if(mousePressed)
+				{
+					fill(244,244,244);
+					//chooseBoss(0);
+				}
+			}
+			rect(840, 10, 150, 150);
+			fill(0, 0, 0);
+			rect(850, 20, 130, 130);
+			
+			fill(255, 255, 255);
+			text("Back", 870, 100);
+			//back
 		}
 		else
 		{

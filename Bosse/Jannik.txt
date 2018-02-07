@@ -1,0 +1,16 @@
+Name=Jannik
+Waffe=Schwimmflügel
+Rüstung=Badehose
+
+Alter=19
+Geburtsort=Bremen
+Verkehrsmittel=Auto
+Videospiel=RimWorld
+Konsole=PC
+Hobby=Gaming
+Sport=Schwimmen
+Lieblingsfarbe=Gelb
+Lieblingspizza=PPP
+Hasspizza=Spinat
+Lieblingstemperatur=Kalt
+Hasstemperatur=Heiß
