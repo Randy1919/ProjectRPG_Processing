@@ -1,0 +1,5 @@
+Name=Badehose
+Kategorie=Schwimmen
+Stärke=Schwimmen
+Schwäche=Kendo
+Beschreibung=Eine Badehose. Effektiv gegen Nässe.

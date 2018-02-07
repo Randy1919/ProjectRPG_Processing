@@ -35,6 +35,8 @@ public class Hauptmenu extends PApplet
 	Kampf currentKampf;
 	Labyrinth currentLabyrinth;
 	
+	Item lastItem;
+	
 	String[] buttons = {"Labyrinth", "Kampf", "Ausrüstung"};
 	
 	
@@ -45,6 +47,11 @@ public class Hauptmenu extends PApplet
 	
 	public void setUpMenu()
 	{
+		double d = 72.4975;
+		
+		d = (int)(d * 100.) / 100.;
+		System.out.println(d);
+		
 		itemManager = new ItemManager();
 		bossManager = new BossManager(itemManager);
 		spieler = new Spieler("Awesomeness");
@@ -190,12 +197,15 @@ public class Hauptmenu extends PApplet
 		{
 		case 0: 
 			activeWeapon = current;
+			lastItem = itemManager.waffen[current];
 			break;
 		case 1: 
 			activeArmor = current;
+			lastItem = itemManager.armors[current];
 			break;
 		default: 
 			activeItems[slot-2] = current;
+			lastItem = itemManager.items[current];
 			break;
 		}
 	}
@@ -367,6 +377,10 @@ public class Hauptmenu extends PApplet
 			{
 				currentKampf.mousePressed();
 			}
+		}
+		else if(drawMode == 4) //laby
+		{
+			
 		}
 		else
 		{
@@ -663,6 +677,28 @@ public class Hauptmenu extends PApplet
 			rect(670, 585, 320, 405);
 			fill(0, 0, 0);
 			rect(680, 595, 300, 385);
+			
+			if(lastItem != null)
+			{
+				fill(230, 138, 0);
+				rect(690, 605, 280, 50);
+				fill(0, 0, 0);
+				rect(695, 610, 270, 40);
+				fill(255,255,255);
+				text(lastItem.name, 700, 645);		
+				if(!lastItem.schwachGegen.equals(""))
+				{
+					fill(230, 160, 120);
+					text("Schwäche:", 700, 705);
+					text(lastItem.schwachGegen, 700, 760);
+				}
+				if(!lastItem.starkGegen.equals(""))
+				{
+					fill(120, 230, 160);
+					text("Stärke:", 700, 830);
+					text(lastItem.starkGegen, 700, 885);
+				}			
+			}	
 			// Befehlfenster
 			
 			// Hauptfenster
