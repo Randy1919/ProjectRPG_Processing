@@ -47,7 +47,7 @@ public class Boss extends Actor{
 			}
 		}
 		
-		for(int i=0;i<schwaechen.length;i++) {
+		for(int i=0;i<staerken.length;i++) {
 			if(s.toLowerCase().equals(staerken[i].toLowerCase())) {
 				return "schwach";
 			}
