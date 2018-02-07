@@ -148,11 +148,11 @@ public class Kampf {
 			if (ThreadLocalRandom.current().nextInt(0, 100 + 1) >= 1) {// Wenn Angriff nicht zufällig daneben geht
 				damage = angreifer.getWaffe().schaden; // Grundschaden
 
-				if (verteidiger.starkOderSchwach(angreifer.getWaffeCat()).equals("stark")) {// Wenn Effektiv verdoppeln
+				if (verteidiger.getArmor().schwachGegen.equals(angreifer.getWaffeCat())||angreifer.getWaffe().starkGegen.equals(verteidiger.getArmorCat())) {// Wenn Effektiv verdoppeln
 					damage = damage * 2;
 					effektiv = ": Effektiv";
 				}
-				if (verteidiger.starkOderSchwach(angreifer.getWaffeCat()).equals("schwach")) {// Wenn Ineffektiv
+				if (verteidiger.getArmor().starkGegen.equals(angreifer.getWaffeCat())||angreifer.getWaffe().schwachGegen.equals(verteidiger.getArmorCat())) {// Wenn Ineffektiv
 																								// halbieren
 					damage = damage / 2;
 					effektiv = ": Ineffektiv";
@@ -212,11 +212,11 @@ public class Kampf {
 
 			damage = angreifer.getWaffe().schaden * 2; // Grundschaden
 
-			if (verteidiger.starkOderSchwach(angreifer.getWaffeCat()).equals("stark")) {// Wenn Effektiv verdoppeln
+			if (verteidiger.getArmor().schwachGegen.equals(angreifer.getWaffeCat())||angreifer.getWaffe().starkGegen.equals(verteidiger.getArmorCat())) {// Wenn Effektiv verdoppeln
 				damage = damage + 5;
 				effektiv = ": Effektiv";
 			}
-			if (verteidiger.starkOderSchwach(angreifer.getWaffeCat()).equals("schwach")) {// Wenn Ineffektiv halbieren
+			if (verteidiger.getArmor().starkGegen.equals(angreifer.getWaffeCat())||angreifer.getWaffe().schwachGegen.equals(verteidiger.getArmorCat())) {// Wenn Ineffektiv halbieren
 				damage = damage - 5;
 				effektiv = ": Ineffektiv";
 			}
@@ -424,11 +424,11 @@ public class Kampf {
 		avoid = "gegnerspezial";
 
 		damage = gegner.getWaffe().schaden * 2; // Grundschaden
-		if (held.starkOderSchwach(gegner.getWaffeCat()).equals("stark")) {// Wenn Effektiv verdoppeln
+		if (held.getArmor().schwachGegen.equals(gegner.getWaffeCat())||gegner.getWaffe().starkGegen.equals(held.getArmorCat())) {// Wenn Effektiv verdoppeln
 			damage = damage * 2;
 			effektiv = ": Effektiv";
 		}
-		if (gegner.starkOderSchwach(gegner.getWaffeCat()).equals("schwach")) {// Wenn Ineffektiv halbieren
+		if (held.getArmor().starkGegen.equals(gegner.getWaffeCat())||gegner.getWaffe().schwachGegen.equals(held.getArmorCat())) {// Wenn Ineffektiv halbieren
 			damage = damage / 2;
 			effektiv = ": Ineffektiv";
 		}
@@ -1235,13 +1235,6 @@ public class Kampf {
 		wait = true;
 		hauptmenu.textFont(f, 30);
 		hauptmenu.text(attacker.name.split("\\s+")[0], 50, 800);
-	}
-
-	public void drawWeapon(Item usedItem) {
-		hauptmenu.fill(255, 255, 255);
-		wait = true;
-		hauptmenu.textFont(f, 30);
-		hauptmenu.text(usedItem.name + " " + acted.starkOderSchwach(usedItem.kategorie), 50, 850);
 	}
 
 	public void drawWeapon(String usedItem) {

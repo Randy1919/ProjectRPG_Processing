@@ -1,11 +1,6 @@
 package Game;
 
 import java.io.File;
-import java.util.Scanner;
-import java.util.concurrent.ThreadLocalRandom;
-
-import Actors.Actor;
-import Actors.Boss;
 import Actors.BossManager;
 import Actors.Spieler;
 import Items.Item;
