@@ -605,6 +605,19 @@ public class Hauptmenu extends PApplet
 			
 			for(int i = 0; i < bossManager.bosse[activeBoss].triviaCategory.length; i++)
 			{
+				if(i > 5 && i < 10)
+				{
+					fill(120, 230, 160);
+				}
+				else if (i > 9)
+				{
+					fill(230, 160, 120);
+				}
+				else
+				{
+					fill(255, 255, 255);
+				}
+				
 				text(bossManager.bosse[activeBoss].triviaCategory[i] + ": ", 80, 290 + (60 * i));
 				if(bossManager.bosse[activeBoss].triviaUnlocked[i])
 				{

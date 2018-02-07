@@ -7,7 +7,7 @@ public class Boss extends Actor{
 	// 3 = Lieblingsvideospielserie, 4 =Lieblingskonsole ,5 = Hobby,  
 	// 6 = Sport, 7 = Lieblingsfarbe, 8 = Lieblingsessen
 	// 9 = Hassessen, 10 = Lieblingstemperatur, 11 = Meistgehasste Temperatur
-	public String[] triviaCategory = {"Alter","Geburtsort","Verkehrsmittel","Videospielreihe","Konsole","Hobby","Sport","Lieblingsfarbe","Lieblingspizza","Hasspizza","Lieblingstemperatur","Hasstemperatur"};	
+	public String[] triviaCategory = {"Alter","Geburtsort","Verkehrsmittel","Videospielreihe","Konsole","Hobby","Sport","Lieblingsfarbe","Lieblingspizza","Lieblingstemperatur","Hasspizza","Hasstemperatur"};	
 	public String[] trivia;
 	public boolean[] triviaUnlocked; 
 	private String[] schwaechen;
@@ -47,7 +47,7 @@ public class Boss extends Actor{
 			}
 		}
 		
-		for(int i=0;i<schwaechen.length;i++) {
+		for(int i=0;i<staerken.length;i++) {
 			if(s.toLowerCase().equals(staerken[i].toLowerCase())) {
 				return "schwach";
 			}
