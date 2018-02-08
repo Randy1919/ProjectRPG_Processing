@@ -356,6 +356,7 @@ public class Kampf {
 			actor = gegner;
 			acted = gegner;
 			action = "Gelähmt";
+			gegner.def=false;
 			avoid = "stun";
 			schaden = 0;
 			spezialangriffVorbereitetCOM = false;
@@ -699,6 +700,7 @@ public class Kampf {
 				action = "Gelähmt";
 				avoid = "stun";
 				schaden = 0;
+				held.def=false;
 				damagestep = 1;
 			}
 		}
