@@ -157,7 +157,7 @@ public class Hauptmenu extends PApplet
 	{
 		textFont(font, 40);
 		currentLabyrinth = null;
-		drawMode = 0;
+		drawMode = 1;
 	}
 	
 	public void startFight()
