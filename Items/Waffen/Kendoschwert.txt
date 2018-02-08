@@ -1,6 +1,6 @@
 ﻿
 Kategorie=Kendo
 Schaden=5
-Stärke=Boxen
+Stärke=Schwimmen
 Schwäche=Kendo
 Beschreibung=Ein einfaches Kendoschwert. 

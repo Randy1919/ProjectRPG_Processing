@@ -78,7 +78,12 @@ public class Kampf {
 					itempressed = false;
 				}
 				// Kampfmenü
+			} else if (anleitung) {
+				if (overButton(btAnl)) {
+					anleitung = false;
+				}
 			} else {
+
 				if (overButton(btang)) {
 					angriff(held, gegner);
 				}
@@ -96,6 +101,9 @@ public class Kampf {
 				}
 				if (overButton(btflee)) {
 					fliehen();
+				}
+				if (overButton(btAnl)) {
+					anleitung = true;
 				}
 			}
 		}
@@ -148,12 +156,15 @@ public class Kampf {
 			if (ThreadLocalRandom.current().nextInt(0, 100 + 1) >= 1) {// Wenn Angriff nicht zufällig daneben geht
 				damage = angreifer.getWaffe().schaden; // Grundschaden
 
-				if (verteidiger.starkOderSchwach(angreifer.getWaffeCat()).equals("stark")) {// Wenn Effektiv verdoppeln
+				if (verteidiger.getArmor().schwachGegen.equals(angreifer.getWaffeCat())
+						|| angreifer.getWaffe().starkGegen.equals(verteidiger.getArmorCat())) {// Wenn Effektiv
+																								// verdoppeln
 					damage = damage * 2;
 					effektiv = ": Effektiv";
 				}
-				if (verteidiger.starkOderSchwach(angreifer.getWaffeCat()).equals("schwach")) {// Wenn Ineffektiv
-																								// halbieren
+				if (verteidiger.getArmor().starkGegen.equals(angreifer.getWaffeCat())
+						|| angreifer.getWaffe().schwachGegen.equals(verteidiger.getArmorCat())) {// Wenn Ineffektiv
+					// halbieren
 					damage = damage / 2;
 					effektiv = ": Ineffektiv";
 				}
@@ -188,7 +199,7 @@ public class Kampf {
 	// Aufgeben
 	private void fliehen() {
 		held.leben = 0;
-		damagestep=6;
+		damagestep = 6;
 	}
 
 	// ****************************************************************
@@ -212,11 +223,14 @@ public class Kampf {
 
 			damage = angreifer.getWaffe().schaden * 2; // Grundschaden
 
-			if (verteidiger.starkOderSchwach(angreifer.getWaffeCat()).equals("stark")) {// Wenn Effektiv verdoppeln
+			if (verteidiger.getArmor().schwachGegen.equals(angreifer.getWaffeCat())
+					|| angreifer.getWaffe().starkGegen.equals(verteidiger.getArmorCat())) {// Wenn Effektiv verdoppeln
 				damage = damage + 5;
 				effektiv = ": Effektiv";
 			}
-			if (verteidiger.starkOderSchwach(angreifer.getWaffeCat()).equals("schwach")) {// Wenn Ineffektiv halbieren
+			if (verteidiger.getArmor().starkGegen.equals(angreifer.getWaffeCat())
+					|| angreifer.getWaffe().schwachGegen.equals(verteidiger.getArmorCat())) {// Wenn Ineffektiv
+																								// halbieren
 				damage = damage - 5;
 				effektiv = ": Ineffektiv";
 			}
@@ -342,6 +356,7 @@ public class Kampf {
 			actor = gegner;
 			acted = gegner;
 			action = "Gelähmt";
+			gegner.def=false;
 			avoid = "stun";
 			schaden = 0;
 			spezialangriffVorbereitetCOM = false;
@@ -424,11 +439,13 @@ public class Kampf {
 		avoid = "gegnerspezial";
 
 		damage = gegner.getWaffe().schaden * 2; // Grundschaden
-		if (held.starkOderSchwach(gegner.getWaffeCat()).equals("stark")) {// Wenn Effektiv verdoppeln
+		if (held.getArmor().schwachGegen.equals(gegner.getWaffeCat())
+				|| gegner.getWaffe().starkGegen.equals(held.getArmorCat())) {// Wenn Effektiv verdoppeln
 			damage = damage * 2;
 			effektiv = ": Effektiv";
 		}
-		if (gegner.starkOderSchwach(gegner.getWaffeCat()).equals("schwach")) {// Wenn Ineffektiv halbieren
+		if (held.getArmor().starkGegen.equals(gegner.getWaffeCat())
+				|| gegner.getWaffe().schwachGegen.equals(held.getArmorCat())) {// Wenn Ineffektiv halbieren
 			damage = damage / 2;
 			effektiv = ": Ineffektiv";
 		}
@@ -489,6 +506,7 @@ public class Kampf {
 
 	public boolean wait;
 	public boolean itempressed;
+	public boolean anleitung;
 	public boolean spezialangriffaktiv = false;
 	public boolean gegnerspezialangriffaktiv = false;
 
@@ -546,7 +564,7 @@ public class Kampf {
 	public Button btdef = new Button(bts1, btr2, btmw, bth);
 	public Button bti = new Button(bts2, btr2, btmw, bth);
 	public Button btflee = new Button(bts1, btr3, btmw, bth);
-	public Button item6 = new Button(bts2, btr3, btmw, bth);
+	public Button btAnl = new Button(bts2, btr3, btmw, bth);
 
 	public void settings() {
 		hauptmenu.size(1000, 1000);
@@ -564,9 +582,9 @@ public class Kampf {
 
 		held.leben = 100;
 		heldSchild = 0;
-		held.def=false;
+		held.def = false;
 		gegner.leben = 100;
-		gegner.def=false;
+		gegner.def = false;
 		gegnerSchild = 0;
 		spezialangriffEingesetzt = false;
 		heldStun = 0;
@@ -625,20 +643,24 @@ public class Kampf {
 
 	public boolean draw() {
 		if (!wait) {
-			if (damagestep == 0) {
-				drawStep0();
-			} else if (damagestep == 1) {
-				drawStep1();
-			} else if (damagestep == 2) {
-				drawStep2();
-			} else if (damagestep == 3) {
-				drawStep3();
-			} else if (damagestep == 4) {
-				drawStep4();
-			} else if (damagestep == 5) {
-				drawStep5();
-			}else if (damagestep == 6) {
-				drawStep6();
+			if (!anleitung) {
+				if (damagestep == 0) {
+					drawStep0();
+				} else if (damagestep == 1) {
+					drawStep1();
+				} else if (damagestep == 2) {
+					drawStep2();
+				} else if (damagestep == 3) {
+					drawStep3();
+				} else if (damagestep == 4) {
+					drawStep4();
+				} else if (damagestep == 5) {
+					drawStep5();
+				} else if (damagestep == 6) {
+					drawStep6();
+				}
+			} else {
+				drawAnleitung();
 			}
 		} else {
 			if (end) {
@@ -678,6 +700,7 @@ public class Kampf {
 				action = "Gelähmt";
 				avoid = "stun";
 				schaden = 0;
+				held.def=false;
 				damagestep = 1;
 			}
 		}
@@ -943,17 +966,17 @@ public class Kampf {
 		effektiv = "";
 		damagestep = 0;
 		if (checkWin() != 0) {
-			damagestep=6;
-		} 
+			damagestep = 6;
+		}
 	}
-	
-	public void drawStep6(){
+
+	public void drawStep6() {
 		drawBackground();
 		drawBackgroundPicture();
 		drawPlayer();
 		drawBoss();
 		drawLeben();
-		
+
 		if (!itempressed) {
 			drawTurnButtons();
 		} else {
@@ -962,11 +985,11 @@ public class Kampf {
 		if (checkWin() == 1) {
 			drawWin();
 			wait = true;
-			end = true;	
+			end = true;
 		} else if (checkWin() == 2) {
 			drawLose();
 			wait = true;
-			end = true;				
+			end = true;
 		}
 	}
 
@@ -1166,11 +1189,15 @@ public class Kampf {
 			hauptmenu.fill(255, 255, 255);
 		}
 		hauptmenu.text("Fliehen", btflee.positionX + 10, btflee.positionY + 40);
-		/*
-		 * // Button 6 if (overButton(item6)) { hauptmenu.fill(150, 150, 150); } else {
-		 * hauptmenu.fill(255, 255, 255); } hauptmenu.text("6", item6.positionX + 10,
-		 * item6.positionY + 40);
-		 */
+
+		// Anleitung
+		if (overButton(btAnl)) {
+			hauptmenu.fill(150, 150, 150);
+		} else {
+			hauptmenu.fill(255, 255, 255);
+		}
+		hauptmenu.text("Anleitung", btAnl.positionX + 10, btAnl.positionY + 40);
+
 	}
 
 	public void drawItemButtons() {
@@ -1237,13 +1264,6 @@ public class Kampf {
 		hauptmenu.text(attacker.name.split("\\s+")[0], 50, 800);
 	}
 
-	public void drawWeapon(Item usedItem) {
-		hauptmenu.fill(255, 255, 255);
-		wait = true;
-		hauptmenu.textFont(f, 30);
-		hauptmenu.text(usedItem.name + " " + acted.starkOderSchwach(usedItem.kategorie), 50, 850);
-	}
-
 	public void drawWeapon(String usedItem) {
 		hauptmenu.fill(255, 255, 255);
 		wait = true;
@@ -1306,4 +1326,46 @@ public class Kampf {
 		}
 	}
 
+	public void drawAnleitung() {
+		hauptmenu.background(0);
+		
+		hauptmenu.textFont(f, 70);
+		hauptmenu.fill(230, 138, 0);
+		
+		//Umrandung
+		hauptmenu.rect(10, 10, 980, 980);	
+		hauptmenu.fill(0, 0, 0);
+		hauptmenu.rect(20, 20, 960, 960);
+		
+		//Text
+		hauptmenu.fill(255,255,255);
+		hauptmenu.text("Anleitung", 350, 100);
+		
+		hauptmenu.textFont(f, 30);		
+		hauptmenu.text("So wird gekämpft:", 50, 160);	
+		hauptmenu.text("- Angriff: Greif mit deiner Waffe an. Doppelter Schaden bei Vorteil.", 50, 240);	
+		hauptmenu.text("              Halber Schaden bei geringer Nachteil.", 50, 280);	
+	
+		hauptmenu.text("- Spezialangriff: Nutze deinen Spezialangriff für mehr Schaden. ", 50, 360);	
+		hauptmenu.text("              Kontert den Gegner wenn er Seinen vorbereitet", 50, 400);	
+		hauptmenu.text("              Nur einmal pro Kampf verwendbar", 50, 440);	
+		
+		hauptmenu.text("- Verteidigung: Entgeht dem nächsten Angriff des Gegners.", 50, 520);	
+		hauptmenu.text("              Bei Spezialangriff nur halben Schaden.", 50, 560);	
+		
+		hauptmenu.text("- Items: Ein Item einsetzen. Pizza heilt, Wurfwaffen lähmen,", 50, 640);	
+		hauptmenu.text("              Powerkugel gibt einem dem Spezialangriff wieder.", 50, 680);	
+		
+		hauptmenu.text("- Fliehen: Gibt den Kampf auf. Du kannst aber jederzeit erneut ", 50, 760);	
+		hauptmenu.text("              gegen den Gegner antreten", 50, 800);	
+		
+		//Button
+		if (overButton(btAnl)) {
+			hauptmenu.fill(150, 150, 150);
+		} else {
+			hauptmenu.fill(255, 255, 255);
+		}
+		hauptmenu.textFont(f, 40);
+		hauptmenu.text("Zurück", btAnl.positionX + 60, btAnl.positionY + 40);
+	}
 }

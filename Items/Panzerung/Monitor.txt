@@ -1,5 +1,5 @@
 ﻿
 Kategorie=E-Sports
-Stärke=Boxen
-Schwäche=Kendo
+Stärke=Klettern
+Schwäche=Boxen
 Beschreibung=Ein hochmoderner Monitor für E-Sports. Wenn man die Helligkeit hochdreht kann man damit aber auch den Gegner blenden um sich zu schützen!

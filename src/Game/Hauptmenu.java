@@ -2,16 +2,16 @@ package Game;
 
 import java.io.File;
 import java.util.Scanner;
-import java.util.concurrent.ThreadLocalRandom;
 
-import Actors.Actor;
-import Actors.Boss;
 import Actors.BossManager;
 import Actors.Spieler;
 import Items.Item;
 import Items.ItemManager;
 import Kampf.Kampf;
 import Labyrinth.Labyrinth;
+import controlP5.Bang;
+import controlP5.ControlP5;
+import controlP5.Textfield;
 import processing.core.PApplet;
 import processing.core.PFont;
 import processing.core.PImage;
@@ -28,8 +28,11 @@ public class Hauptmenu extends PApplet
 	PImage[] bossImgs;
 	PImage cross;
 	
+	ControlP5 cp5;
+	boolean namegiven=false;
+	
 	Boolean setUp = false;
-	int drawMode = 0;
+	int drawMode = 999;
 	int activeBoss = 0;
 	int activeWeapon = 0;
 	int activeArmor = 0;
@@ -49,13 +52,34 @@ public class Hauptmenu extends PApplet
 		PApplet.main("Game.Hauptmenu");		
 	}
 	
+	public void Weiter() {
+		if((!cp5.get(Textfield.class,"Name").getText().equals(""))) {
+		spieler.name=cp5.get(Textfield.class,"Name").getText();
+		cp5.get(Textfield.class,"Name").setVisible(false);
+		cp5.get(Bang.class,"Weiter").setVisible(false);
+		font = createFont("Arial", 18, true);
+		textFont(font, 40);
+		namegiven=true;
+		}
+	}
+	
 	public void setUpMenu()
 	{
 		font = createFont("Arial", 18, true);
 		
 		itemManager = new ItemManager();
 		bossManager = new BossManager(itemManager);
-		spieler = new Spieler("Awesomeness");
+		spieler = new Spieler("Shirou");
+		
+		/*
+		Scanner s;
+		s = new Scanner(System.in);
+		System.out.println("");
+		System.out.println("");
+		System.out.println("Bitte geben sie einen Namen ein:");
+		spieler.name=s.nextLine();
+		s.close();
+		*/
 		
 		bossBeaten = new boolean[bossManager.bosse.length];
 		for(int i = 0; i < bossBeaten.length; i++)
@@ -133,7 +157,7 @@ public class Hauptmenu extends PApplet
 	{
 		textFont(font, 40);
 		currentLabyrinth = null;
-		drawMode = 1;
+		drawMode = 0;
 	}
 	
 	public void startFight()
@@ -425,7 +449,18 @@ public class Hauptmenu extends PApplet
 	{
 		background(0);
 		//noLoop();
-		textFont(createFont("Arial", 18, true), 40);
+		textFont(createFont("Arial", 50, true), 50);
+		
+		
+		font = createFont("Arial", 40, true);
+		cp5= new ControlP5(this);
+		cp5.addTextfield("Name").setPosition(350,300).setSize(250,80).setAutoClear(false).setFont(font).getCaptionLabel().setVisible(false);
+		cp5.addBang("Weiter")
+			.setPosition(350,450)
+				.setSize(250,80)
+				.getCaptionLabel().align(ControlP5.CENTER,ControlP5.CENTER)
+				.setFont(font);
+
 	}
 
 	public void draw() 
@@ -440,9 +475,28 @@ public class Hauptmenu extends PApplet
 		//background(0);
 		
 		//drawMode = 0;
-		if(drawMode == 0) //Choose Boss Menu
+		if(drawMode == 999) //Choose Boss Menu
+		{
+			background(0);
+			fill(230, 138, 0);
+			rect(10,10,980,980);
+			fill(0, 0, 0);
+			rect(20,20,960,960);
+			
+			textFont(font, 50);
+			fill(255,255,255);
+			text("Bitte gib einen Namen ein", 200, 200);
+			textFont(font, 40);
+			
+			if(namegiven) {
+				drawMode=0;
+			}
+			
+			
+		}else if(drawMode == 0) //Choose Boss Menu
 		{	
 			background(0);
+			textFont(font, 40);
 			//Header
 			fill(230, 138, 0);
 			rect(257, 10, 485, 150);
@@ -620,8 +674,16 @@ public class Hauptmenu extends PApplet
 				{
 					text(buttons[i], 700, 645 + posY);
 				}
-				
+
 			}
+		
+			fill(120, 230, 160);
+			text("Stärke", 700, 605 + 240);
+			fill(230, 160, 120);
+			text("Schwäche", 700, 605 + 290);
+			fill(120, 160, 230);
+			text("Ausrüstung", 700, 605 + 340);
+
 
 			//buttons
 			// Befehlfenster		
@@ -633,9 +695,13 @@ public class Hauptmenu extends PApplet
 			
 			for(int i = 0; i < bossManager.bosse[activeBoss].triviaCategory.length; i++)
 			{
-				if((i > 4 && i < 7) || i == 10||i==8)
+				if(i ==5 || i == 10||i==8)
 				{
 					fill(120, 230, 160);
+				}
+				else if (i == 6)
+				{
+					fill(120, 160, 230);
 				}
 				else if (i == 9 || i == 11||i==7)
 				{

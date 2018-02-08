@@ -1,6 +1,6 @@
 ﻿
 Kategorie=Boxen
 Schaden=5
-Stärke=Boxen
-Schwäche=Kendo
+Stärke=E-Sports
+Schwäche=Klettern
 Beschreibung=Ein paar Boxhandschuhe

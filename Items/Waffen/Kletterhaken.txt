@@ -1,6 +1,6 @@
 
 Kategorie=Klettern
 Schaden=5
-Stärke=Kendo
-Schwäche=Schwimmen
+Stärke=Fußall
+Schwäche=E-Sports
 Beschreibung=Ein Kletterhaken um sich irgendwo festzuhalten. Kann man aber auch Gegnern gegen den Kopf hauen.

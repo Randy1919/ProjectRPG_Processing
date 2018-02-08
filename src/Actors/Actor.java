@@ -114,23 +114,4 @@ public class Actor {
 	}
 	
 
-
-	//Gibt zurück ob übergebene Kategorie schwach oder stark gegen den Actor ist
-	public String starkOderSchwach(String s) {
-		
-		for(int i=0;i<schwaechen.length;i++) {
-			if(s.toLowerCase().equals(schwaechen[i].toLowerCase())) {
-				return "stark";
-			}
-		}
-		
-		for(int i=0;i<schwaechen.length;i++) {
-			if(s.toLowerCase().equals(staerken[i].toLowerCase())) {
-				return "schwach";
-			}
-		}
-		
-		return "";
-	}
-
 }

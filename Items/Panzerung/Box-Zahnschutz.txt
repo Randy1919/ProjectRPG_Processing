@@ -1,6 +1,6 @@
 ﻿
 Name=Badehose
-Kategorie=Schwimmen
-Stärke=Schwimmen
-Schwäche=Kendo
-Beschreibung=Eine Badehose. Effektiv gegen Nässe.
+Kategorie=Boxen
+Stärke=E-Sports
+Schwäche=Fußball
+Beschreibung=Ein Box-Zahnschutz

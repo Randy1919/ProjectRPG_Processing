@@ -2,5 +2,5 @@
 Kategorie=Fußball
 Schaden=5
 Stärke=Boxen
-Schwäche=Kendo
+Schwäche=Fußball
 Beschreibung=Ein Fußball.

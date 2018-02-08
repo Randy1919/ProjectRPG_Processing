@@ -126,7 +126,7 @@ public class Boss extends Actor{
 			//Trivias freigeschaltet wurden. Dann Ende setzen um eine Endlosschleife
 			//zu verhindern
 			if (durchgang == triviaUnlocked.length) {
-				return "Es sind bereits alle Informationen freigeschaltet!";
+				return "Bereits alles freigeschaltet!";
 			}
 		}
 
