@@ -53,12 +53,14 @@ public class Hauptmenu extends PApplet
 	}
 	
 	public void Weiter() {
+		if((!cp5.get(Textfield.class,"Name").getText().equals(""))) {
 		spieler.name=cp5.get(Textfield.class,"Name").getText();
 		cp5.get(Textfield.class,"Name").setVisible(false);
 		cp5.get(Bang.class,"Weiter").setVisible(false);
 		font = createFont("Arial", 18, true);
 		textFont(font, 40);
 		namegiven=true;
+		}
 	}
 	
 	public void setUpMenu()
