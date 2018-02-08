@@ -150,7 +150,7 @@ public class Hauptmenu extends PApplet
 	{
 		bossManager.setBossByInt(activeBoss);
 		currentLabyrinth = new Labyrinth(this, bossManager);
-		drawMode = 4;
+		drawMode = 4; 
 	}
 	
 	public void endLabyrinth()
